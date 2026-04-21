@@ -12,16 +12,21 @@
 
 ---
 
-## 来源（3）
+## 来源（4）
 
+- [[agent-world|Agent-World: Scaling Real-World Environment Synthesis for Evolving General Agent Intelligence]] — 1978 环境 + 19822 工具的自我进化 Agent 训练平台，8B/14B 超越闭源模型 | 2026-04 | #Agent #RL #MCP
 - [[gstc-zero-cost-proxy-nas|Zero-Cost Proxy NAS-Driven Collaborative Deployment Optimization]] — GSTC 零成本代理 + JCQDA 部署 + LAMRA 动态替换，AI 服务全生命周期优化 | 2026-04-21 | #NAS #微服务
 - [[joint-deployment-request-routing-microservice-tpds|Joint Deployment and Request Routing for Microservice Call Graphs]] — GMDA-RMPR 两阶段启发式，联合优化微服务部署与路由 | 2023-11 | #微服务 #排队网络
 - [[joint-task-offloading-resource-allocation-model-placement-6g|Joint Task Offloading, Resource Allocation and Model Placement for AIaaS in 6G]] — DA-MAB 策略，边-网-云 AIaaS 两时间尺度优化 | 2024-11 | #6G #AIaaS
 
 ---
 
-## 实体（6）
+## 实体（10）
 
+- [[Guanting Dong]] — 中国人民大学博士生，Agent RL / 工具使用训练方向
+- [[Zhicheng Dou]] — 中国人民大学教授，Agent 系统方向
+- [[中国人民大学]] — 高瓴人工智能学院
+- [[字节跳动 Seed]] — 字节 AI 研究团队，Doubao-Seed 模型
 - [[Menglan Hu]] — 华中科技大学副教授，三篇论文核心通讯作者
 - [[Kai Peng]] — 华中科技大学教授，论文1和2共同作者
 - [[Yi Hu]] — 华中科技大学博士生，论文1和2共同作者
@@ -31,8 +36,13 @@
 
 ---
 
-## 概念（11）
+## 概念（16）
 
+- [[Model Context Protocol (MCP)]] — AI 模型连接外部工具的统一开放标准协议
+- [[Agent RL]] — Agent 在可执行环境中通过闭环交互学习的强化学习方法
+- [[GRPO]] — 无需 critic 的组相对策略优化算法
+- [[POMDP]] — 部分可观测马尔可夫决策过程，Agent 交互的理论框架
+- [[工具依赖图]] — 工具间参数依赖关系的有向加权图，用于任务合成
 - [[神经架构搜索 (NAS)]] — 自动化神经网络架构设计
 - [[零成本代理]] — 无需训练即可评估架构性能
 - [[微服务调用图]] — 微服务间调用关系形成的图结构
