@@ -4,11 +4,14 @@
   "title": "Identify AI model type",
   "titleGenerationStatus": "success",
   "createdAt": 1776689193631,
-  "updatedAt": 1776761500192,
-  "lastResponseAt": 1776761500192,
-  "sessionId": "70490c83-ab85-4e52-a200-98ce4d66d4b5",
+  "updatedAt": 1776763077641,
+  "lastResponseAt": 1776763077641,
+  "sessionId": "257bcd45-824e-4ec7-ac70-220587618a68",
   "providerState": {
-    "providerSessionId": "70490c83-ab85-4e52-a200-98ce4d66d4b5"
+    "providerSessionId": "257bcd45-824e-4ec7-ac70-220587618a68",
+    "previousProviderSessionIds": [
+      "70490c83-ab85-4e52-a200-98ce4d66d4b5"
+    ]
   },
   "usage": {
     "model": "opus",
@@ -18,6 +21,6 @@
     "contextWindow": 200000,
     "contextTokens": 0,
     "percentage": 0,
-    "contextWindowIsAuthoritative": false
+    "contextWindowIsAuthoritative": true
   }
 }

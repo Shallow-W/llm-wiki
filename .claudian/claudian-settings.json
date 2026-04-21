@@ -24,7 +24,9 @@
     "claude": {
       "safeMode": "acceptEdits",
       "cliPath": "",
-      "cliPathsByHost": {},
+      "cliPathsByHost": {
+        "DESKTOP-82B42DC": "C:\\Users\\01\\AppData\\Roaming\\npm\\node_modules\\@anthropic-ai\\claude-code\\bin\\claude.exe"
+      },
       "loadUserSettings": true,
       "enableChrome": false,
       "enableBangBash": false,
