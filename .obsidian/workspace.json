@@ -215,8 +215,9 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "00c3d91ba69b55ce",
+  "active": "5663dd7ccb1f944d",
   "lastOpenFiles": [
+    "log/2026/04-21.md.tmp.932.1776763338987",
     "CLAUDE.md.tmp.932.1776763303387",
     "CLAUDE.md.tmp.932.1776763281731",
     "CLAUDE.md.tmp.932.1776763271618",
@@ -251,7 +252,6 @@
     "log",
     "wiki/index.md",
     "wiki/log/2026/04-21.md",
-    "wiki/log/2026",
-    "wiki/log"
+    "wiki/log/2026"
   ]
 }
