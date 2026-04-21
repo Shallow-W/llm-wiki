@@ -11,14 +11,12 @@
             "id": "eb0a9c0f7018fa6c",
             "type": "leaf",
             "state": {
-              "type": "markdown",
+              "type": "pdf",
               "state": {
-                "file": "wiki/entities/字节跳动-Seed.md",
-                "mode": "source",
-                "source": false
+                "file": "raw/papers/RZ-NAS.pdf"
               },
-              "icon": "lucide-file",
-              "title": "字节跳动-Seed"
+              "icon": "lucide-file-text",
+              "title": "RZ-NAS"
             }
           }
         ]
@@ -200,12 +198,12 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "00c3d91ba69b55ce",
+  "active": "eb0a9c0f7018fa6c",
   "lastOpenFiles": [
+    "wiki/entities/字节跳动-Seed.md",
     "tmp_rznas.txt",
     "raw/papers/RZ-NAS.pdf",
     "字节跳动 Seed.md",
-    "wiki/entities/字节跳动-Seed.md",
     "wiki/index.md",
     "wiki/sources/gstc-zero-cost-proxy-nas.md",
     "wiki/sources/agent-world.md",
@@ -225,7 +223,6 @@
     "wiki/entities/字节跳动-Seed.md.tmp.932.1776768584923",
     "wiki/entities/中国人民大学.md.tmp.932.1776768570692",
     "wiki/entities/Zhicheng-Dou.md",
-    "wiki/entities/Zhicheng-Dou.md.tmp.932.1776768567956",
     "wiki/entities/Guanting-Dong.md",
     "wiki/sources/joint-deployment-request-routing-microservice-tpds.md",
     "wiki/concepts/两时间尺度优化.md",

@@ -4,8 +4,8 @@
   "title": "Identify AI model type",
   "titleGenerationStatus": "success",
   "createdAt": 1776689193631,
-  "updatedAt": 1776770350057,
-  "lastResponseAt": 1776770350057,
+  "updatedAt": 1776770943511,
+  "lastResponseAt": 1776770943511,
   "sessionId": "257bcd45-824e-4ec7-ac70-220587618a68",
   "providerState": {
     "providerSessionId": "257bcd45-824e-4ec7-ac70-220587618a68",
@@ -20,7 +20,6 @@
     "cacheReadInputTokens": 0,
     "contextWindow": 200000,
     "contextTokens": 0,
-    "percentage": 0,
-    "contextWindowIsAuthoritative": true
+    "percentage": 0
   }
 }
