@@ -186,7 +186,7 @@ tags: [综合]
 5. **创建或更新** `wiki/entities/` 中的实体页（人物、组织、产品）。
 6. **创建或更新** `wiki/concepts/` 中的概念页（思想、技术）。
 7. **更新** `wiki/overview/` 中的相关综合页（如果来源改变了整体论点）。
-8. **记录日志** 到 `wiki/log/YYYY/MM-DD.md`，格式：
+8. **记录日志** 到 `log/YYYY/MM-DD.md`，格式：
    ```markdown
    ## [YYYY-MM-DD HH:MM] 摄入 | 来源标题
    - 新增：[[来源标题]]
@@ -262,9 +262,9 @@ tags: [综合]
 查看 [[log]] 了解完整时间线。
 ```
 
-## 日志格式（`wiki/log/YYYY/MM-DD.md`）
+## 日志格式（`log/YYYY/MM-DD.md`）
 
-追加式记录。每日一个文件，存放在 `wiki/log/YYYY/MM-DD.md`。
+追加式记录。每日一个文件，存放在 `log/YYYY/MM-DD.md`。
 
 ```markdown
 # YYYY-MM-DD 日志
@@ -279,7 +279,7 @@ tags: [综合]
 ...
 ```
 
-技巧：`ls wiki/log/2026/ | sort` 可快速浏览某年的所有日志日。
+技巧：`ls log/2026/ | sort` 可快速浏览某年的所有日志日。
 
 ---
 
