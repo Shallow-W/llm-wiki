@@ -1,0 +1,1887 @@
+=== 启发式部署算法，先将服务按实例数量降序排序，再部署到与其他节点平均距离最短的节点；路由阶段采用 Dijkstra 算法确定路径，适用于服务部署与路由的两阶段优化。.pdf ===
+总页数: 18
+
+--- Page 1 ---
+2994 IEEE TRANSACTIONS ON PARALLEL AND DISTRIBUTED SYSTEMS, VOL. 34, NO. 11, NOVEMBER 2023
+Joint Deployment and Request Routing for
+Microservice Call Graphs in Data Centers
+Yi Hu ,H a oW a n g , Liangyuan Wang , Menglan Hu ,K a iP e n g ,
+and Bharadwaj Veeravalli , Senior Member, IEEE
+Abstract —Microservices are an architectural and organizational
+paradigm for Internet application development. In cloud data
+centers, delay-sensitive applications receive massive user requests,
+which are fed into multiple queues and subsequently served by
+multiple microservice instances. Accordingly, effective deployment
+of multiple queues and containers can signiﬁcantly reduce queuing
+delay, processing delay, and communication delay. Due to the in-
+creased complexity of call dependencies and probabilistic routing
+paths, the deployment of service instances fully interacts with
+request routing, bringing great difﬁculties to service orchestra-
+tion. In this case, it is valuable to simultaneously consider service
+deployment and request routing in a ﬁne-grained manner. How-
+ever, most existing studies considered them as two independent
+components with local optimization, while data dependencies and
+the instance-level deployment are ignored. Therefore, this paper
+proposes to jointly optimize the deployment and request routing
+of microservice call graphs based on ﬁne-grained queuing network
+analysis and container orchestration. We ﬁrst formulate the prob-
+lem as a mixed-integer nonlinear program and exploit open Jack-
+son queuing networks to model intrinsic data dependencies and
+analyze response latency. To optimize the overall cost and latency,
+this paper presents an efﬁcient two-stage heuristic algorithm, which
+consists of a resource-splitting-based deployment approach and a
+partition-mapping-based routing method. Further, this paper also
+provides mathematical analysis on the performance and complexity
+of the proposed algorithm. Finally, comprehensive trace-driven
+experiments demonstrate that the overall performance of our ap-
+proach is better than existing microservice benchmarks. The aver-
+age deployment cost is reduced by 27.4% and end-to-end response
+latency is reduced by 15.1% on average.
+Index Terms —Cloud data centers, microservice call graphs,
+queuing theory, request routing, service deployment, services
+computing.
+Manuscript received 4 April 2023; revised 23 July 2023; accepted 19 August
+2023. Date of publication 11 September 2023; date of current version 29
+September 2023. This work was supported in part by the National Key Research
+and Development Program under Grant 2022ZD0117104, in part by the National
+Natural Science Foundation of China under Grants 62171189 and 62272183, and
+in part by the Key Research and Development Program of Hubei Province, China
+under Grants 2022BAA038, 2023BAB074, and 2021BAA026. Recommended
+for acceptance by B. Ucar. (Corresponding author: Menglan Hu.)
+Yi Hu, Hao Wang, Liangyuan Wang, Menglan Hu, and Kai Peng are with the
+Hubei Key Laboratory of Smart Internet Technology, School of Electronic In-
+formation and Communications, Huazhong University of Science, Technology,
+Wuhan 430074, China (e-mail: hust_huyi@hust.edu.cn; whhust@hust.edu.cn;
+hust_wly@hust.edu.cn; humenglan@hust.edu.cn; pkhust@hust.edu.cn).
+Bharadwaj Veeravalli is with the Department of Electrical and Computer
+Engineering, National University of Singapore, Singapore 117576 (e-mail:
+elebv@nus.edu.sg).
+Digital Object Identiﬁer 10.1109/TPDS.2023.3311767I. I NTRODUCTION
+MICROSERVICES are an architectural and organizational
+approach where applications are structured as a col-
+lection of small independent units or services communicating
+through well-deﬁned interfaces [1]. The loosely-coupled and
+independently-deployable microservices are gradually replac-
+ing traditional monolithic applications [2],[3]. In contrast,
+microservices are highly maintainable, scalable and easy to
+develop, accelerating the innovation and evolution for new
+features.
+Nowadays, many cloud service providers such as AWS and
+Azure have deployed numerous microservices to support var-
+ious real-time cloud applications. In cloud data centers, these
+delay-sensitive applications receive a large number of user re-
+quests in every second, which are fed into multiple queues and
+subsequently served by multiple microservice instances [4],[5].
+The user requests are processed by a set of microservices which
+recursively call and frequently communicate with each other,
+thereby forming a microservice call graph [6]. The microservice
+multiplexing will occur when one microservice is present in mul-
+tiple microservice call graphs. The same type of microservice
+containers can be shared by different user requests, which results
+in multi-instance and geographically distributed microservice
+deployment. Hence, the multiple queues and containers for the
+call graphs can be modeled and analyzed by queuing networks.
+In this case, efﬁcient deployment of multiple queues and con-
+tainers can effectively reduce queuing delay, processing delay,
+and communication delay, which brings great opportunities to
+service performance optimization.
+However, due to the increased complexity of call dependen-
+cies and microservice multiplexing, the deployment of service
+instances fully interacts with request routing, raising great chal-
+lenges to service orchestration. On one hand, the effect of service
+deployment highly depends on the ﬁne-grained microservice
+processing and massive requests routed among service instances.
+Microservice multiplexing and container sharing occur in large
+numbers, which allow different user requests to utilize the same
+microservice containers. At the same time, user requests traverse
+certain microservices in a speciﬁc order to complete a service,
+and the frequent communication of adjacent microservice pairs
+is known at a coarse-grained level, which affect the deployment
+strategy. On the other hand, request routing requires deployed
+service instances as a precedent and heavily relies on the
+instance-level routing strategy for service level objectives [7].
+1045-9219 © 2023 IEEE. Personal use is permitted, but republication/redistribution requires IEEE permission.
+See https://www.ieee.org/publications/rights/index.html for more information.
+Authorized licensed use limited to: Huazhong University of Science and Technology. Downloaded on March 26,2026 at 09:05:01 UTC from IEEE Xplore.  Restrictions apply. 
+
+--- Page 2 ---
+HU et al.: JOINT DEPLOYMENT AND REQUEST ROUTING FOR MICROSERVICE CALL GRAPHS IN DATA CENTERS 2995
+Instances required by microservices can be deployed on different
+processors, thus resulting in the multi-instances and multi-queue
+situation. A user request passing through a speciﬁc microservice
+can be routed to containers of the same microservice. In this case,
+containers of the identical microservice across different call
+graphs can be shared, which means that the ﬁne-grained request
+routing heavily relies on microservice deployment scheme at
+the container level. Therefore, to improve the performance of
+delay-sensitive applications, it is highly desirable to jointly
+optimize microservice deployment and request routing based
+on ﬁne-grained queuing network modeling and multi-instance
+orchestration.
+Nevertheless, existing work neglected to explore efﬁcient
+deployment of multiple queues and containers based on queuing
+network modeling for simultaneous reduction of queuing delay,
+processing delay, and communication delay [8],[9],[10].A l -
+though a few previous studies introduced simple queuing models
+and optimized end-to-end latency, yet they failed to employ ﬁne-
+grained container deployment to reduce queuing latency [11],
+[12]. In addition, in most existing work service deployment and
+request routing are investigated as two isolated problems while
+the intrinsic data dependencies among services are ignored [13],
+[14],[15]. Industrial products such as Kubernetes also decou-
+ples deployment and routing as different modules or plug-in
+components [16]. Such decoupling simpliﬁes the development
+and maintenance, but it only supports local optimization in both
+components, which is apparently disadvantageous for global
+performance optimization. Therefore, due to the absence of
+comprehensive research on the joint optimization problem, it
+is recommended to exploit ﬁne-grained multi-instance/queue
+deployment and capture data dependencies to achieve elegant
+microservice orchestration.
+Motivated by the aforementioned needs and difﬁculties, this
+paper jointly optimizes microservice deployment and request
+routing based on queuing network modeling and ﬁne-grained
+container orchestration, while three fundamental challenges
+are to be solved. First, multi-instance and multi-location ser-
+vice deployment decides the mapping of request queues, while
+coarse-grained microservice dependencies affect ﬁne-grained
+service deployment. Owing to complicated call dependencies
+and service multiplexing, the deployment of service instances
+fully interacts with request routing, bringing great difﬁculties
+to service orchestration. In addition, due to limited processor
+resources, different deployment policies may lead to different
+performance in queuing latency, processing latency, and com-
+munication latency. Accordingly, when deploying microservice
+instances, how to determine the trade-off of different latency
+becomes the second challenge. Furthermore, since multiple
+containers and data dependencies result in complex routing
+paths in queuing networks, different routing strategies generate
+various forwarding probabilities and multi-queue requests are
+reasonably mapped to multiple microservice instances. Thus, to
+prevent service failure, how to exactly route user requests via
+the accurate forwarding probability at the container level is the
+third challenge.
+To this end, this paper exploits multi-instance service deploy-
+ment and probabilistic request routing in data centers to deliverhigh performance in cost saving, end-to-end delay minimization,
+and request success rate maximization. In summary, our work
+makes the following contributions:
+1) This article formulates the joint microservice deployment
+and request routing problem (JMDRP) as a mixed-integer
+nonlinear programming (MINLP) model, which captures
+the data dependency and instance-level service process-
+ing for request ﬂows. Also, microservice multiplexing,
+container sharing, and probabilistic routing paths make
+service deployment and request routing tightly coupled
+and complementary. Moreover, we employ the open Jack-
+son queuing network to model and analyze the latency in
+request queuing, processing, and communications, which
+offers guidelines to ﬁne-grained multi-instance deploy-
+ment.
+2) Since the targeting problem is NP-hard, this paper pro-
+poses a two-stage heuristic for joint deployment and
+routing, which illustrates that multi-queue requests from
+different call chains are appropriately mapped to multiple
+microservice instances. Based on the intuition of factor-
+based resource splitting and microservice-level call depen-
+dencies, the ﬁrst stage is referred to as the greedy microser-
+vice deployment algorithm (GMDA), which implements
+ﬁne-grained container deployment to simultaneously re-
+duce queuing delay, processing delay, and communication
+delay. The second is referred to as the request-matching
+and partition-mapping (RMPR) algorithm, which splits
+request ﬂows and routes them to microservice instances
+in a probabilistic manner, further optimizing the response
+latency and request success rate.
+3) This paper also provides mathematical analysis on the
+performance and complexity of the proposed approach
+with complex queuing networks, demonstrating that rea-
+sonably integrating microservice instances and request
+ﬂows effectively improves overall performance. Finally,
+extensive trace-driven simulations are carried out to show
+the superior performance of the proposed algorithm by
+comparing with existing policies. Extensive simulation
+results show that average deployment cost is reduced
+by 27.4%, the average response latency is improved by
+15.1%, and request success rate is improved by 5.47 %
+compared to the benchmark algorithms on average.
+The reminder of this paper is organized as follows. Section II
+reviews the related work. In Section III, we introduce the math-
+ematical model. Section IVpresents the proposed algorithm and
+optimization objectives. Complexity analysis and theorems are
+offered in Section V. Finally, Section VIprovides the perfor-
+mance evaluation, with conclusions following in Section VII.
+II. R ELATED WORK
+A. Service Deployment
+Service deployment, resource allocation and request routing
+in cloud computing data centers have attracted the attention of
+many researchers. Yuan et al. [17] proposed a dual-objective
+task scheduling algorithm for distributed green data centers.
+By jointly determining the task distribution across multiple
+Authorized licensed use limited to: Huazhong University of Science and Technology. Downloaded on March 26,2026 at 09:05:01 UTC from IEEE Xplore.  Restrictions apply. 
+
+--- Page 3 ---
+2996 IEEE TRANSACTIONS ON PARALLEL AND DISTRIBUTED SYSTEMS, VOL. 34, NO. 11, NOVEMBER 2023
+servers and the task service rate of each server, a multi-objective
+optimization method is formulated to maximize the service
+provider’s proﬁt and minimize the average probability of a task
+loss across all applications. Zhu et al. [18] proposed a scheduling
+method called matching and multi-round assignment (MMA),
+which optimized the completion time and total cost of all submit-
+ted tasks under constraints of safety and reliability. Both work
+coarsely modeled user requests as a complete monolithic task
+and did not consider the ﬁne-grained composition of services. H.
+S a m ie ta l . [19] designed an efﬁcient resource-aware method for
+containerized microservices to realize the on-demand deploy-
+ment of user-requested microservices in fog computing centers.
+Jiao et al. [20] proposed a multi-objective genetic simulated
+annealing algorithm for the service deployment problem of the
+C4ISR system under the service architecture, which enhanced
+the local search and global search capabilities. Zhang et al. [21]
+established a relaxed subgraph isomorphism model for the ser-
+vice deployment problem and proposed a graph-matching search
+strategy to effectively reduce the average end-to-end delay. In
+t h ew o r ko f [19],[20],[21], the microservice monomer was
+modeled as an independent module, which ignored the data de-
+pendency and execution sequence dependency of microservices.
+Meanwhile, they did not consider the ﬁne-grained deployment
+of multiple queues and containers for user requests. In contrast,
+this paper capture call relationships among microservices to
+implement instance-level deployment and probabilistic routing.
+B. Request Routing
+There are also some studies that have developed heuristic
+algorithms to consider the request latency, resource consumption
+or network throughput under the multi-objective constraints of
+microservice deployment and routing optimization. In [22],Y u
+et al. took maximizing the throughput of the service chain as the
+optimization goal and proposed an efﬁcient heuristic algorithm
+to solve the service chain deployment problem under multi-core
+processors. Guo et al. [23] believed that the resource occupation
+is related to nodes and link locations, and proposed a service
+chain placement method based on dynamic programming to ﬁnd
+a near-optimal solution. Zhang et al. [24] proposed a candidate
+path-based service chain deployment (CPBSD) algorithm to
+solve the joint optimization problem of bandwidth and com-
+puting resource utilization. The work of [22],[23],[24] solved
+the problem of microservice deployment under multiple target
+constraints in a data center, but did not carefully focus on the de-
+pendency of neighbouring microservices and routing problems.
+Some existing work that optimizes request routing strategies
+in a network topology to improve service speed and reduce
+response latency has been investigated in detail. Niu et al. [25]
+modeled the request routing problem as a non-cooperative game
+model, which used the Nash negotiation solution to coordi-
+nate resource allocation, and proposed a message queue-based
+load balancing algorithm that reduced the average response
+time of microservice chains. Mirhosseini et al. [26] proposed a
+coarse-grained multi-thread scheduling strategy for the network
+architecture, which shortened the service response time. Zhaoet al. [27] proposed a distributed redundant placement frame-
+work named Sample Average Approximation (SAA-RP), which
+allowed one candidate to be scheduled to multiple sites for faster
+response to service requests. Gamal et al. [28] established a
+multi-objective evolutionary algorithm based on decomposition
+for transmission delay and processing delay, which effectively
+reduced the request response latency. The above work did not
+consider service deployment, while in this paper we jointly
+optimize deployment and request routing at the container level.
+C. Joint Microservice Deployment and Routing
+It is worth noting that microservice deployment and request
+routing are two tightly coupled subproblems. The deployment
+scheme of microservice instances decides the routing of request
+ﬂows, while the performance of the microservice deployment
+can only be reﬂected after the routing is determined. Thus, they
+are interact directly and a global optimal solution is desired
+by jointly solving two coupled subproblems. The work of Yu
+et al. [29] is similar to ours. Responding to the dual objectives
+of extending and optimizing the system’s energy consumption,
+they proposed a three-stage algorithm to determine the number
+of microservice instances and the request routing scheme in
+turn, but the transmission delay of requests was ignored and the
+optimization of the system response latency was very limited.
+Feng et al. [30] proposed a fast approximation algorithm based
+on the queuing length, which ﬁrst determined the deployment
+area of virtual network functions in a distributed cloud network
+and then performed network resource allocation in multiple
+clouds. However, this scheme had a high additional cost in terms
+of network resources and did not take into account the data inter-
+dependencies and communications among microservices. Also,
+they neglected to leverage efﬁcient ﬁne-grained deployment of
+multiple queues and containers. In contrast,this paper jointly
+optimizes the deployment and request routing of microservice
+call graphs based on ﬁne-grained queuing network analysis
+and container orchestration. We propose a two-stage heuristic
+framework to simultaneous reduce queuing delay, processing
+delay, and communication delay.
+III. M ODELS
+A. System Models
+The target system is a service mesh deployed in a data center,
+which comprises a number of symmetric multi-core processors.
+Each processor consists of a number of identical processing
+cores sharing its memory. Accordingly, the communications
+among the cores in the same processor are negligible. The
+underlying network of the data center is modeled by a graph
+G=(V,E), where the set Vdenotes all processors vandE
+denotes the set of network links which connect two processors
+betweenviandvj. Let the parameter Cvrepresent the number
+of cores in a processor, which speciﬁes the total computing
+resources available on each processor. In a production system,
+each microservice is encapsulated into an image and instantiated
+in a container. When a container in a pod is used by a speciﬁc
+microservice, it calls no more than the number of cores the
+Authorized licensed use limited to: Huazhong University of Science and Technology. Downloaded on March 26,2026 at 09:05:01 UTC from IEEE Xplore.  Restrictions apply. 
+
+--- Page 4 ---
+HU et al.: JOINT DEPLOYMENT AND REQUEST ROUTING FOR MICROSERVICE CALL GRAPHS IN DATA CENTERS 2997
+TABLE I
+NOTATION AND TERMINOLOGY
+processor actually has. Hence, we assume that each core can
+only virtualize one container and one container can only deploy
+one microservice instance/image for each microservice in our
+paper. In the following, the terms “image”, “container” and
+“container” can exchange. Besides, let cvindicate the the ﬁxed
+operating expense (OPEX) of a processor vonce it is used.
+The linkevi,vj=(Dvi,vj)belongs to the set E, whereDvi,vj
+indicates the propagation delay between two processors. Key
+notations are listed in Table I. In this paper, we mainly consider
+the end-to-end delay constraint, while the bandwidth constraint
+is neglected due to the high bandwidth of optical ﬁber networks
+in data centers. Last but not least, Dvi,vjis zero if two processors
+viandvjare same; Dvi,vjis non-zero if two processors viand
+vjare different.
+B. Service Models
+A number of services are to be deployed in the data center. For
+simplicity, this paper investigates that a service request consists
+of a number of microservice nodes which are linearly structured
+as a microservice call chain, thereby forming a special call graph.
+Fig. 1. Microservice cloud application for Hotel Reservation.
+A request arriving at a microservice has an association with the
+service process at the former microservice. Thus, the different
+service requests may contain the same microservice node. A user
+request can be routed to containers of the same microservice. In
+this case, the identical microservice from different call chains
+can be multiplexed.
+Let the notation mindicate a speciﬁc microservice which
+belongs to the set M.L e tRdenote the set of user service requests
+andFdenote the set of request ﬂows. Consequently, each
+service request r∈Rcan be modeled as a request ﬂow fr=
+(Mr,vfr,λfr)∈Fwhich needs to traverse a set of microser-
+vice nodes Mr={m1,m2,...,m |Mr||mi∈M}. The notation
+vfrindicates the equivalent ingress processor which the ﬁrst
+microservice within the request ﬂow arrives at and λfrdenotes
+the request arrival rate following a Poisson process. As shown in
+Fig.1, there is a microservice-based cloud application consisting
+of six microservices for the hotel reservation. Let the notation
+Λmrepresent the processing rate of a core for a microservice m,
+which obeys an exponential distribution. For different microser-
+vice nodes, the capability of a processing core is different. For
+two consecutive nodes in a service call chain, there exists the
+data dependence. In other words, the data input of a node mi
+is the output of the ancestor node mi−1, while the output of a
+nodemiis the input of the descendant node mi+1. This means
+that a user request ﬂow for the service chain must be processed
+sequentially by all microservices. Different call chains traverse
+different microservices, which results in various request routing
+paths in the case of multiple request queues and instance sharing.
+Also, the same microservice container may appear in multiple
+routing paths, which means that different deployment schemes
+will result in different routing strategies. Furthermore, the set
+of call chains containing the identical microservice will also
+vary, which subsequently affects microservice deployment at the
+coarse-grained routing level. Thus, the complex interplay among
+microservice multiplexing, container sharing, and microservice
+call chains leads to the mutual inﬂuence and inseparability of
+service deployment and request routing.
+For each microservice, multiple containers would exist on
+different processors, which are independent of each other when
+they process service requests. If a request ﬂow fris served
+successfully within the maximum service delay dmax
+fr, one or
+Authorized licensed use limited to: Huazhong University of Science and Technology. Downloaded on March 26,2026 at 09:05:01 UTC from IEEE Xplore.  Restrictions apply. 
+
+--- Page 5 ---
+2998 IEEE TRANSACTIONS ON PARALLEL AND DISTRIBUTED SYSTEMS, VOL. 34, NO. 11, NOVEMBER 2023
+more containers of the microservice in Mrneed to be tra-
+versed in a speciﬁc order. Otherwise, the request ﬂow would
+be failed. Let Nm
+v∈Rrepresent the number of cores allocated
+in the processor vfor a microservice m. Moreover, the data
+dependency among microservice nodes is considerable when
+deploying service instances. It is desirable to exploit data locality
+in service deployment because deploying containers on proper
+processing cores reduces communication delay among different
+processors signiﬁcantly. We use a binary variable xm
+v∈{0,1}
+to indicate whether the microservice m∈Mis deployed at
+v∈V(1 if so, 0 otherwise). Base on the variables xm
+vand
+Nm
+v, the inequality (3)expresses the resource constraint for each
+processor. Since microservice instances can be instantiated at
+multiple processors, the notation yf
+mindicates which processor v
+should process a microservice mof the request ﬂow fbelonging
+to the service request r. In fact, yf
+mis a subset of Vfor each
+request ﬂow. We explain how to determine xm
+vandyf
+min
+Section IV.
+∀mi,mj∈M,∀vi/prime∈V:/summationdisplay
+vj/prime∈Vxmivi/primeP(r)mi,vi/prime
+mj,vj/primexmjvj/prime=1 (1)
+xm
+v=/braceleftbigg1,i f Nm
+v>0
+0,i f Nm
+v≤0(2)
+∀v∈V:/summationdisplay
+m∈Mxm
+vNm
+v≤Cv (3)
+Depending on the variable yf
+m, the microservice mmay not
+be available at a processor vwhen a request ﬂow arrives there,
+if the processor vdo not belong to the set yf
+m. Otherwise, if
+it is determined to be dealt at this processor, the number of
+this microservice instances Nm
+vis sufﬁciently available. Thus,
+we need to determine which instance will process a matching
+user request. Let P(r)mi,vi/prime
+mj,vj/primebe the decision variable of request
+routing, which denotes the probability that a request is routed
+from a microservice mideployed at the processor vi/primeto a
+microservice mjdeployed at vj/prime. It also denotes the portion
+of the ﬂow frouted from vi/primetovj/prime. Hence, it can be expressed
+in(1)and satisfy the (2).
+C. Request Models
+For each microservice node, the request can be processed at
+any container of the microservice. Once a user request reaches
+a microservice node, it will be routed to containers of the node
+for processing. As shown in Fig. 2, when a request arrives at
+microservice instances, it enqueues and waits in the queue until
+it is processed. After a microservice node processes the request,
+it calls its successor node to process the request. Thus, contain-
+ers of a microservice employs remote procedure calls (RPCs)
+to call other containers of the successor node to implement
+this, which involves data transfer and incurs communication
+delay. Accordingly, after a request reaches the system, it is
+either processed in containers of a microservice immediately,
+or transmitted between two processors, or it stays in a queue
+of a processor. We shall allocate sufﬁcient computing resources
+for each microservice such that numerous user requests can be
+distributed among multiple containers and processed in time,
+without saturating the system. In addition, user request ﬂows
+Fig. 2. Example of queuing process of service deployment and request
+routing.
+must be routed to the proper processors, which minimizes the
+average response latency.
+Probabilistic request routing allows multiple different routing
+paths to exist for each request ﬂow. Accordingly, there are com-
+plex routing paths for request ﬂows from different microservice
+call chains, and each user request will probabilistically select
+these paths. Considering the condition of microservice container
+sharing, there exists an intersection between different request
+ﬂows, thus resulting in complex dynamics within the overall
+queuing system. Thus, the probabilistic routing strategy is criti-
+cal in achieving joint optimization of deployment and routing. In
+fact, user requests randomly arrive in the system and obey a Pois-
+son process. Each request ﬂow will be sequentially processed by
+all microservices on the targeting service chain, which incurs the
+response latency in a data center. This paper aims to minimize the
+long-term average latency of all requests for all microservices
+through the joint optimization of microservice deployment and
+request routing. Based on the above discussion and assumptions,
+this section elaborates on how queuing network theory can be
+applied to the request model, and a data center scenario with
+multiple request ﬂows is analyzed.
+In practice, different service requests may require different
+microservice invocation order, which means the various Mr.
+Since some microservices are shared by multiple service re-
+quests, it can be seen that request ﬂows may be merged on
+the same processor. According to the open Jackson queuing
+theory, all user requests can be modeled as a larger and more
+complex queuing network by considering the interactions among
+service request ﬂows. Speciﬁcally, microservice multiplexing
+and container sharing allow user requests from different call
+chains to use the shared microservice containers. Service con-
+tainers required by the microservice within a call chain can be
+deployed on multiple processors, thus resulting in the presence
+of multiple containers and request queues. Then, a request ﬂow
+will follow a probabilistic forwarding strategy to avoid network
+congestion, which is beneﬁt to handle the massively concur-
+rent user requests. Forwarding probabilities between processors
+where neighbouring microservices are located depend on service
+requests and deployment options. Overall, the forwarding prob-
+abilityP(r)mi,vi/prime
+mj,vj/primeindicates the distribution of request routing
+paths and trafﬁc for each request.
+Authorized licensed use limited to: Huazhong University of Science and Technology. Downloaded on March 26,2026 at 09:05:01 UTC from IEEE Xplore.  Restrictions apply. 
+
+--- Page 6 ---
+HU et al.: JOINT DEPLOYMENT AND REQUEST ROUTING FOR MICROSERVICE CALL GRAPHS IN DATA CENTERS 2999
+Fig. 3. Example of a queuing network of deployed containers and request ﬂows in a data center.
+Fig. 3describes an example of this scenario, where there
+are four request ﬂows f1,f2,f3andf4with respective related
+properties f1=(M1={A,B,C,D },v1,λf1),f2=(M2=
+{B,C,E},v3,λf2),f3=(M3={D,C,E,A },v2,λf3)and
+f4=(M4={C,E},v2,λf4). Different microservices are
+called by different user requests. Also, it is obvious to know how
+these requests are routed to the containers and how the comput-
+ing resources are assigned to microservice nodes. For example,
+when the request ﬂow f1passesBplaced on the processor v1to
+the microservice C, it is depicted that B→Chas two request
+routing paths v1→v2andv1→v5→v4. According to the
+parameter P(r)mi,vi/prime
+mj,vj/prime, two request arrival rates are P(1)B,v1
+C,v2λ1
+andP(1)B,v1
+C,v4λ1, respectively. Besides, the microservice Con
+the processor v4is shared by three request ﬂows f1,f2andf3
+together. Since different request ﬂows may share some service
+instances, ﬂows can be merged in a queuing network in terms of
+Burke’s theorem and the linear additivity of Poisson ﬂow. Let
+the variable λm
+vdenotes the total arrival rate on containers of the
+microservice min the processor v, which is expressed by (4).
+λm
+v=/summationdisplay
+f∈F,v f=vxm
+vfλf
++/summationdisplay
+r∈R|M|/summationdisplay
+i=1|V|/summationdisplay
+i/prime=1P(r)mi,vi/prime
+m,v/summationtext
+r∈RP(r)mi,vi/prime
+m,vxmivi/primexmivi/primeλmivi/prime (4)
+In(4), the expression/summationtext
+f∈F,v f=vxm
+vfλfindicates the to-
+tal request rate of all request ﬂows arriving at the proces-
+sorv, which is the ingress exactly. At the same time, let
+P(r)mi,vi/prime
+m,v/summationtext
+r∈RP(r)mi,vi/prime
+m,vxmivi/primexmivi/primeλmivi/primedenote the sum of the request arrival
+rate of different request ﬂows routed to the processor vwhere
+containers of the microservice mexist. Thus, merging differ-
+ent request ﬂows which pass through the same microserviceinstances into an equivalent single request ﬂow is made properly.
+Due to the additivity of the Poisson process, the merged equiva-
+lent request arrival rate still satisfy the Poisson distribution. The
+microservice instances are independent and an M/M/c queuing
+system consists of all containers of the same microservice. In
+this queuing system, the service intensity of the system is deﬁned
+asρm
+v, which is expressed by (5):
+∀m∈M,∀v∈V:ρm
+v=λm
+v
+NmvΛm(5)
+whereρm
+vdenotes the service intensity of the microservice m
+on the processor vwhose value should be less than 1. If the
+request arrival rate is greater than the service capability, the
+network congestion and violation of the maximum tolerable
+delay will occur, which result in service failure. To ensure that all
+microservice nodes can be properly called and to prevent some
+requests from failing, the probabilistic forwarding mechanism
+of request routing is used to regulate the request arrival rate on
+each processor in time.
+When service instances in the data center reaches a steady
+state, the average number of service requests for the microservice
+min this queuing system is Lmv, which is expressed by (6):
+∀m∈M,∀v∈V:Lmv=ρ0m
+v+ρm
+v
+(1−ρmv)2pm
+v (6)
+where these parameters are formulated as follows.
+p0m
+v=⎡
+⎣Nm
+v−1/summationdisplay
+j=0ρ0m
+vj
+j!+Nm
+vρ0m
+vNm
+v
+Nmv!(Nmv−ρ0mv)⎤
+⎦−1
+ρ0m
+v=λm
+v
+Λm,pm
+v=ρ0m
+vNm
+v
+Nmv!p0m
+v (7)
+Authorized licensed use limited to: Huazhong University of Science and Technology. Downloaded on March 26,2026 at 09:05:01 UTC from IEEE Xplore.  Restrictions apply. 
+
+--- Page 7 ---
+3000 IEEE TRANSACTIONS ON PARALLEL AND DISTRIBUTED SYSTEMS, VOL. 34, NO. 11, NOVEMBER 2023
+Consequently, the average response time of service requests
+Wmvincluding the service queuing waiting delay and the average
+processing delay can be expressed by (8).
+∀m∈M,∀v∈V:Wmv=ρm
+v
+λmv(1−ρmv)2pm
+v+1
+Λm(8)
+In order to accurately analyze the average response latency
+of user requests in a data center with multiple request ﬂows,
+it is necessary to consider the communication delay Di,j
+such as propagation delay, in addition to the average response
+time. For example, there is a user request ﬂow f=frand
+the variable RP(f)={f1,f2,...,f|RP(f)|}is deﬁned as the
+set of routing paths. It is thought that all the microservices
+which all request routing paths traverse sequentially should be
+the established set Mr.T h ek-th request routing path fk=
+{yfk
+m1,yfk
+m2,...,yfk
+m|Mr|}records the processors through which
+the request passes. The notation E[Tfk]denotes the average
+response latency of the k-th path. To ensure the quality of service,
+the average response latency of any request routing path should
+be less than dmax
+fr. Therefore, we have the (9):
+E/bracketleftbig
+Tfk/bracketrightbig
+=|fk|/summationdisplay
+i=1xmi
+fk
+iWmi
+fk
+i+|fk|−1/summationdisplay
+j=1Dfk
+j,fk
+j+1
+s.t.|Mr|
+=|fk|,E/bracketleftbig
+Tfk/bracketrightbig
+≤dmax
+fr(9)
+where the variable fk
+i=yfk
+midenotes the i-th index in the k-th
+pathfk, which represents that the microservice mi∈Mris
+made on the processor yfk
+mi. There may exist multiple forwarding
+paths for a request ﬂow. For example, the request ﬂow f3has two
+request routing paths f31={v2,v3,v1}andf32={v2,v4,v1},
+whose set of paths is RP(f3)={f31,f32}. In order to achieve
+the expectation of the average response latency, it is essential
+to calculate the probability of each path for a request ﬂow. For
+each request ﬂow, let E[Tresp
+f]denote the total average response
+latency of all routing paths, which is represented by (10).
+E/bracketleftBig
+Tresp
+f/bracketrightBig
+=E/bracketleftbig
+E/bracketleftbig
+Tfk/bracketrightbig/bracketrightbig
+=|RP(f)|/summationdisplay
+k=1⎛
+⎝⎛
+⎝|Mr|−1/productdisplay
+i=1xmi
+fk
+iP(r)mi,yfk
+mi
+mi+1,yfk
+mi+1xmi+1
+fk
+i+1⎞
+⎠
+⎛
+⎜⎝|fk|/summationdisplay
+i=1xmi
+fk
+iWmi
+fk
+i+|fk|−1/summationdisplay
+j=1Dfk
+j,fk
+j+1⎞
+⎟⎠⎞
+⎟⎠ (10)
+In summary, when multiple user requests and service request
+ﬂows are taken into consideration, the additivity of Poisson ﬂows
+and Burke’s theorem are used to model the request routing. To
+analyze the performance of the microservice instances deployed
+on processors more easily, the request ﬂows arriving on the same
+type of microservice instances are merged into an equivalent
+single request ﬂow. Further, the average response latency of user
+requests should consider both the average queuing latency and
+the communication delay.IV . A LGORITHM
+To solve the joint microservice deployment and request rout-
+ing problem (JMDRP), we design an efﬁcient two-stage heuris-
+tic algorithm to improve the overall performance. Consider a
+simpliﬁed version of the problem, where each microservice is
+only deployed on one processor with a unique resource capacity.
+The simpliﬁed JMDRP is regarded as the combination of a bin
+packing problem and number partition problem, which are all
+NP-hard [31],[32]. Hence, the JMDRP is NP-hard as well.
+Besides, we propose the optimization objectives based on the
+above models and relationships between parameters and vari-
+ables. Then, we propose the greedy microservice deployment
+algorithm (GMDA) for deploying microservice instances in a
+ﬁne-grained manner, which minimizes the deployment cost in
+the worst case. The effective deployment of multiple queues and
+containers also can signiﬁcantly reduce queuing delay and com-
+munication delay, boosting overall service performance. Finally,
+for the service request routing, we design a request-matching
+partition-mapping (RMPR) algorithm to improve the success
+rate and further reduce the average response latency, which
+enables the efﬁcient routing of request ﬂows and determines
+the forwarding probability at the instance-level.
+A. Optimization Objectives
+The major objective is to minimize the total cost of resources
+in data centers. Thus, the (11) is formulated as follows.
+/summationdisplay
+mcostmNm+/summationdisplay
+v∈/uniontextf∈F
+m∈Myf
+mcv (11)
+where the parameter |/uniontextf∈F
+m∈Myf
+m|denotes the number of proces-
+sors which deploy one microservice instance at least and costm
+denotes the deployment cost per service container. In order to
+minimize the deployment cost, our approach must fully utilize
+the computing resources of each used processor yf
+m.
+We also consider the long-term success rate of service requests
+as an additional metric. The more request ﬂows get served within
+the time limit dmax
+fr, the fewer service requests are dropped or
+fail. Thus, we have the following equation:
+max η F
+=1−/vextendsingle/vextendsingle/vextendsingleFfail/parenleftBig
+E/bracketleftBig
+Tresp
+f/bracketrightBig
+>dmax
+f/parenrightBig/vextendsingle/vextendsingle/vextendsingle
+|F|(12)
+f=⎧
+⎪⎨
+⎪⎩1,min
+fk∈RP(f)E/bracketleftbig
+Tfk/bracketrightbig
+≤dmax
+f/logicalandtextE/bracketleftBig
+Tresp
+f/bracketrightBig
+≤dmax
+f
+0,max
+fk∈RP(f)E/bracketleftbig
+Tfk/bracketrightbig
+>dmax
+f/logicalortextE/bracketleftBig
+Tresp
+f/bracketrightBig
+>dmax
+f
+(13)
+whereηFdenotes the proportion of request ﬂows that are suc-
+cessfully served. The notation |F|denotes the total number of
+ﬂows and Ffaildenotes the set of user requests whose average
+response latency in the steady state exceeds the maximum tol-
+erable latency. If a request ﬂow is successfully served, fequals
+to 1; otherwise, fequals to 0.
+Authorized licensed use limited to: Huazhong University of Science and Technology. Downloaded on March 26,2026 at 09:05:01 UTC from IEEE Xplore.  Restrictions apply. 
+
+--- Page 8 ---
+HU et al.: JOINT DEPLOYMENT AND REQUEST ROUTING FOR MICROSERVICE CALL GRAPHS IN DATA CENTERS 3001
+Further, we consider the average response latency as another
+metric, which is related to λm
+vandNm
+v. Since microservice in-
+stances may be deployed on different processors, assigning user
+requests to the processor with more instances is preferred, which
+ensures that the expectation of all the average response latency
+is as short as possible. Therefore, the sum of the end-to-end
+average response latency of all service request ﬂows should be
+minimized in the data center, which is expressed by (14).
+E[Tresp
+total]
+=/summationdisplay
+f∈FE/bracketleftBig
+Tresp
+f/bracketrightBig
+=/summationdisplay
+f∈F|RP(f)|/summationdisplay
+k=1⎛
+⎝|Mr|−1/productdisplay
+i=1xmi
+fk
+iP(r)mi,yfk
+mi
+mi+1,yfk
+mi+1xmi+1
+fk
+i+1⎞
+⎠
+E/bracketleftbig
+Tfk/bracketrightbig
+s.t. (1), (2), (3), (5) (14)
+To sum up, the average response delay including the queuing
+delay and communication delay of all requests is summed. If
+fewer processor nodes are used, the deployment cost will be
+lower and the average end-to-end communication delay will
+be smaller. As the success rate, the performance cost and the
+average response latency are conﬂicting optimization objectives
+in most scenarios, attention is paid to balancing the relationship
+among these optimization objectives.
+B. Fine-Grained and Resource-Aware Microservice
+Deployment
+Since the microservice deployment problem is NP-hard, it is
+very difﬁcult and expensive to ﬁnd an optimal solution to the
+joint optimization problem of service deployment and request
+routing in a large-scale data center network. Therefore, the
+GMDA algorithm is proposed. The advantages of the GMDA
+algorithm are as follows: 1) reducing the total cost of microser-
+vice deployment, 2) guaranteeing the average response latency
+and 3) improving the success rate of user service requests.
+Algorithm 1is the pseudo-code for the GMDA and consists
+of three steps.
+Step 1: Calculate the total computing resource requirements
+for each microservice. Different user requests have different la-
+tency requirements in the data center. With the maximum latency
+limit, the computing resources required by the microservice m
+are denoted as Nm, which is expressed by (15). Microservices
+with high requirements for computing resources are prioritized
+because these microservices appear in multiple user requests.
+Actually, prioritizing deployment improves the request success
+rate and guarantees the average response time.
+Nm=m∈Mf/summationdisplay
+fNm(f) (15)
+In(15), the variable Nm(f)denotes the computing resources
+required by the microservice mto process the request ﬂow f
+within the maximum delay. The computing resources requiredto process user requests increase as Nmincreases, and Nm
+is determined by minimizing the variable w(f)m, which is
+represented by (16).
+min
+Nm(f)w(f)m∗≥w(f)m
+v/bracketleftBig
+dmax
+f−(|Mf|−1)×maxD vi,vj/bracketrightBig
+/summationtext
+m∈Mfw(f)m
+v
+(16)
+where let w(f)m
+vdenote the average queuing latency of
+the microservice min aM/M/c/ ∞queuing system and
+w(f)m
+v/summationtext
+m∈Mfw(f)m
+vdenote the maximum delay rate of the microser-
+vicemin the corresponding request ﬂow. Afterwards, microser-
+vices are sorted in descending order by their Nm. As soon
+as containers of the microservice mare deployed, the set of
+undeployed microservices M_List is immediately updated.
+Step 2: Match eligible processors to microservices. The com-
+puting resources required by the microservice mshould be con-
+centrated on the same processor, which can effectively reduce
+the average response latency. Microservices with high computa-
+tional resource requirements have a high call rate, and deploying
+their containers by priority can reduce the performance cost and
+improve the request success rate.
+ReCv≥1
+ωNm,0<1
+ω≤1 (17)
+In(17), the notation ReCvindicates the remaining computing
+resources of each processor and ωdenotes the resource splitting
+factor. Two sets are deﬁned to distinguish the properties of
+all processors. Let the notation Activate _List denote the set
+of processors which have existed microservice instances and
+Free _List denote the set of processors which are completely
+idle. The microservice deployment process is as follows. In
+the GMDA, we take a microservice mfromM_List , match
+it to the processor in Activate _List and add the processors
+that satisfy the requirements to Available _V(m)(Lines 4-
+5i nA l g o r i t h m 1). Then, if there is no right processor in the
+Activate _List and theFree _List is a non-empty set, our
+approach will place microservice instances Nmon the pro-
+cessor with the lowest communication delay and satisfying
+the inequation ReCv≥Nm, which is selected from the set
+Free _List (Lines 6–11 in Algorithm 1). After executing the
+above procedure, if Available _V(m)is still an empty set, the
+processors in Free _List that satisfy the conditions are moved
+toAvailable _V(m).
+Step 3: The required computing resources of the microser-
+vicemare adaptively allocated to the selected processors. In
+fact, there are many optional processors in Available _V(m).
+In the GMDA, the processor with the maximum remaining
+computing resources ReCvis the most appropriate one to
+deploy the microservice m. This is because the centralization
+of computing resources can improve the efﬁciency of service
+processing. According to the theorem 1, the microservice mcan
+be distributed across multiple processors at the cost of adding
+a tolerable additional response delay. As shown in Fig. 4, each
+microservice may be deployed on mutiple processors due to
+the insufﬁcient computing resources. We sort the processors in
+descending order by ReCv. The microservice mis deployed
+Authorized licensed use limited to: Huazhong University of Science and Technology. Downloaded on March 26,2026 at 09:05:01 UTC from IEEE Xplore.  Restrictions apply. 
+
+--- Page 9 ---
+3002 IEEE TRANSACTIONS ON PARALLEL AND DISTRIBUTED SYSTEMS, VOL. 34, NO. 11, NOVEMBER 2023
+Algorithm 1: GMDA.
+Input: The set of computing resources of processors C;
+The set of total computing resource requirements for
+each microservice NM; The set of remaining computing
+resources for each processor ReC ;
+Output: A two-dimensional set of placement results for
+each microservice X={xm
+v,Nm
+v};
+1: Initiate ReC={C},M_List={M},Free _List=
+{V},Activate _List=φ,Available _V(m)=φ
+2: Sort all microservices in the MList in an descending
+order byNM;
+3:whileM_List/negationslash=φdo
+4: Get the ﬁrst microservice min theM_List , reset
+Available _V(m)←φ;
+5: Search the Activate _List and add each processor v
+intoAvailable _V(m)if it satisﬁes ReCv≥1
+ωNm;
+6: ifAvailable _V(m)=φthen
+7: Search the Free _List and add each processor v
+intoAvailable _V(m)if it satisﬁes ReCv≥Nm;
+8: end if
+9: ifAvailable _V(m)=φthen
+10: Search the Free _List and add each processor v
+intoAvailable _V(m)if it satisﬁes
+ReCv≥1
+ωNm;
+11: end if
+12: ifAvailable _V(m)=φthen
+13: the microservice is failed to be deployed;
+14: continue;
+15: end if
+16: Sort all processors in Available _V(m)in an
+ascending order by ReCvand communication delay
+Dvi,vj;
+17: forviinAvailable _V(m)do
+18: ifReCvi−Nm≥0then
+19: Place the microservice mat the processor vi;
+20: xm
+vi←1,Nm
+vi←Nm,ReCvi←ReCvi−Nm;
+21: Remove the microservice mfrom theM_List
+and move the processor vito theActivate _List
+if it is selected from the Free _List ;
+22: break;
+23: end if
+24: ifReCvi−Nm<0then
+25: Place the microservice mat the processor vi;
+26: xm
+vi←1,Nm
+vi←ReCvi;
+27: Move the processor vito the
+Activate _List if it is selected from the
+Free _List ;
+28: Nm←Nm−ReCvi;
+29: end if
+30: end for
+31: remove the microservice mfromM_List and
+updateReC,NM
+32: end while
+33: returnX
+Fig. 4. Example of microservice instances deployed on several processors.
+on the ﬁrst one if the remaining computing resources of the ﬁrst
+processor are not less than Nm. Conversely, when the remaining
+computing resources are less than Nm, the required containers
+will be are deployed separately. Then, these used processors
+are moved from Free _List toActivate _List .I ns u m m a r y ,t h e
+goal is to centrally deploy microservices, fully utilize remaining
+computing resources and reduce the performance cost. The
+GMDA algorithm repeats this process until no more processors
+are available for allocation (Lines 16–30 in Algorithm 1). If/summationtext
+Available _V(m)ReCvis less than Nm, this means that the
+microservice instances Nmwill not be fully placed and will be
+removed from the M_List .
+Fig. 5presents a concise example to illustrate the mi-
+croservice deployment algorithm, where there are two re-
+quest ﬂows f1=(M1={A,B,C,D },λf1=4 ) andf2=
+(M2={B,C,E},λf2=5 ) . Due to the heterogeneity of
+microservices, the processing rates of a container for ﬁve
+microservices are given as ΛA=4.3,ΛB=3.6,ΛC=2.1,
+andΛD=ΛE=5.5. Without loss of generality, the process-
+ing capacity values are randomly generated and all param-
+eter settings are normalized based on Section VI. In addi-
+tion, we assume that the user request rates follow a widely
+adopted pattern known as the Poisson arrival pattern, which
+accurately captures steady and ﬂuctuating arrival rates. For
+the sake of simplicity, we guarantee a consistent number
+of required containers across various deployment schemes.
+Fig. 5(a) and(b)shows two microservice deployment strategies
+Nm
+1= [[2,0,0],[4,0,0],[0,5,0],[0,1,0],[0,0,1]]andNm
+2=
+[[2,0,0],[2,2,0],[2,3,0],[0,1,0],[0,0,1]], respectively. The
+deterministic routing probabilities P(r)mi,vi/prime
+mj,vj/primeassociated with
+corresponding deployment schemes are all set to 1. As shown
+in Fig. 5, the routing paths RP(f)for each request ﬂow are
+represented by dashed arrows among interprocessors and solid
+arrows within intraprocessors.
+When employing deployment scheme Nm
+1, the expected
+end-to-end response latency for f1andf2is 2.22 and 3.25,
+respectively. In contrast, with the deployment scheme Nm
+2,
+the expected end-to-end response latency are 6.48 and 3.49,
+respectively. Our proposed deployment strategy demonstrates
+Authorized licensed use limited to: Huazhong University of Science and Technology. Downloaded on March 26,2026 at 09:05:01 UTC from IEEE Xplore.  Restrictions apply. 
+
+--- Page 10 ---
+HU et al.: JOINT DEPLOYMENT AND REQUEST ROUTING FOR MICROSERVICE CALL GRAPHS IN DATA CENTERS 3003
+Fig. 5. Example of container deployment of microservice call chains.
+the superior latency performance. Especially, GMDA reduces
+the average response latency by 2.5x compared to FFD in the
+same routing probabilities for the request ﬂow f1. If certain
+microservice call chains are highly latency-sensitive, adopting
+the deployment scheme of Fig. 5(b) will result in violating
+latency constraints, thus reducing the overall success rate. In
+this case, more microservice containers will be required to
+meet latency requirements, which means higher deployment
+costs. However, our algorithm only needs to add fewer or no
+microservice containers while guaranteeing latency.
+The GMDA algorithm deploys these microservices on pro-
+cessors in an efﬁcient way. It not only reduces the cost for
+service providers, but also accurately calculates the microservice
+deployment location xm
+vand the number of containers Nm
+v.
+For microservice deployment, microservice multiplexing and
+container sharing make full use of microservice instances. If
+the ﬁne-grained routing policy is optimal, a poor deployment
+scheme may fail to meet user requirements and increase deploy-
+ment costs.
+C. Multi-Queue Request Matching and Partition Mapping
+In order to achieve the joint optimization of microservice
+deployment and request routing, it is essential and important
+to make a reasonable deployment scheme and determine the
+routing forwarding probability as well as the routing paths ofservice requests. Inspired by the work of [32],[33], the request-
+matching and partition-mapping (RMPR) algorithm is designed
+to solve this problem, which requires two steps to determine the
+values of Yf
+mandP(r)mi,vi/prime
+mj,vj/prime.
+Step 1: Cluster service request ﬂows. The clustering and
+partitioning of request ﬂows for each microservice consists of
+the set of the request arrival rate and a tuple whose size is equal
+to the number of processors on which the speciﬁc microservice
+is deployed (i.e./summationtext
+v∈Vxm
+v). The elements within the tuple are
+sorted in descending order, while these tuples are sorted in
+descending order by the sum of values in this tuple. Assuming
+that the microservice mis placed on three processors, the length
+of the tuple is 3, which means that the request ﬂows containing
+the microservice mare divided into three partitions. Initially,
+the arrival rate of each request ﬂow is a separate tuple, with the
+remaining values being zero.
+For example, the set of arrival rates of request ﬂows is
+{f1(λ)=4,f2(λ)=9,f3(λ)=7,f4(λ)=6,f5(λ)=2}.I n
+descending order of their ﬁrst element, the initial sorted state
+is [(9,0,0), (7,0,0), (6,0,0), (4,0,0), (2,0,0)]. When the clus-
+tering and partitioning process is performed, given the tuples
+(x1,y1,z1)and(x2,y2,z2)which are the two tuples with the
+largest value of the ﬁrst element in the set, the combination is
+(x1+z2,y1+y2,z1+x2)in order to replace the old position.
+Before replacing, a standard normalization is performed on
+the merged tuple, which subtracts the smallest value in the
+tuple. For instance, the result is the set [(9,7,0), (6,0,0), (4,0,0),
+(2,0,0)], and the normalized value 0 and the tuples [(9,0,0),
+(7,0,0)] are added to the stacks of Normalize _values and
+recover _List respectively. Combining the next two largest
+tuples yields the set [(9,7,6), (4,0,0), (2,0,0)], which after the
+normalization is expressed by [(4,0,0), (3,1,0), (2,0,0)]. Thus, the
+normalized value 6 and the tuples [(9,7,0), (6,0,0)] are added to
+Normalize _values andrecover _List respectively. Combin-
+ing the next pair of tuples results in [(4,1,3),(2,0,0)], which
+after the normalization is expressed by [(3,2,0),(2,0,0)]. Then,
+the value 1 and the tuple [(4,0,0),(3,1,0)]are added to
+the stacks Normalize _values andrecover _List respectively.
+Combining the last two generates (1,0,0). For a ﬁnal partition
+difference of 1, the partitions (9), (7,2) and (6,4) happens to be
+optimal (Lines 2–8 in Algorithm 2). Finally, rebuilding a binary
+tree according to the Normalize _values andrecover _List is
+essential to trace back the partition, where each branch repre-
+sents the request ﬂow. In this example, the request ﬂows can be
+divided into three clusters [f2,f3+f5,f1+f4], which is the
+optimal aggregation and partitioning (Line 9 in Algorithm 2).
+Step 2: Determine the request ﬂow mapping and routing
+probability matrix. For the set Tuple(fm)obtained by clus-
+tering, it is sorted by the sum of the request arrival rate of each
+partition in non-increasing order. Then, the RMPR algorithm
+iteratively traverses the processors on which the corresponding
+microservice is deployed, sorts them in descending order and as-
+signs the microservice requests/ceilingleftbig
+λfm[i]Λm/ceilingrightbig
+in each partition to
+any processor which has sufﬁcient computing resources (Lines
+10–18 in Algorithm 2). Otherwise, the trafﬁc of microservice
+requests is split and distributed across multiple processors. By
+repeating the above process, the request routing mapping process
+Authorized licensed use limited to: Huazhong University of Science and Technology. Downloaded on March 26,2026 at 09:05:01 UTC from IEEE Xplore.  Restrictions apply. 
+
+--- Page 11 ---
+3004 IEEE TRANSACTIONS ON PARALLEL AND DISTRIBUTED SYSTEMS, VOL. 34, NO. 11, NOVEMBER 2023
+Algorithm 2: RMPR.
+Input: A two-dimensional set of placement results for each
+microservice X={xm
+v,Nm
+v|∀m∈M,∀v∈V};T h e
+set of all microservice request ﬂows that use
+microservice m
+fm={f|∀r∈R,∀fr∈F,∃m∈Mr};T h es e to f
+partition for each micoservice multi _flow _List ;T h e
+arrival rate λof the request ﬂows f;
+Output: Request routing results for each service request
+Yf
+m; The set of forwarding probability p(r)mi,vi/prime
+mj,vj/prime;
+1: Begin: Initiate recover _List=φ,
+Normalize _values=φ
+2:whilemulti _flow _List has more than one partition
+do
+3: Sort all elements in the multi _flow _List in
+descending order;
+4:multi _flow _List[0]andmulti _flow _List[1]are
+added in reverse order and get a new tuple
+temp _multi _flow _List ;
+5: Add two original tuples to the recover _List and
+sorttemp _multi _flow _List in descending order in
+terms of all values;
+6: Normalize the temp _multi _flow _List and add the
+subtracted normalized value to the
+Normalize _values ;
+7: Replace two original tuples with the normalized
+temp _multi _flow _List ;
+8:end while
+9: Using the backtracking method, construct an
+ascending binary tree partition Tuple(fm)based on
+multi _flow _List ,recover _List and
+Normalize _values ;
+10: Sort all X(Nm
+v)in descending order to get the set of
+available resources {Nm
+v};
+11: whileTuple(fm)/negationslash=φdo
+12: Fetch the ﬁrst request ﬂow partition in the set
+Tuple(fm)[0];
+13: forNm
+viin{Nm
+v}do
+14: ifNm
+vi≥(⌈λfm[i]/Λm⌉then
+15: Record the resources allocated to fm[i]on the
+processor vias⌈λfm[i]/Λm⌉;
+16: yfm[i]
+m←vi,Nm
+vi←Nm
+vi−⌈λfm[i]/Λm⌉;
+17: remove the request ﬂow;
+18: break;
+19: end if
+20: ifNm
+vi/negationslash=0 & &Nm
+vi<⌈λfm[i]/Λm⌉then
+21: Record the resources allocated to fm[i]on the
+processor viasNm
+vi;
+22: yfm[i]
+m←vi,Nm
+vi←0;
+23: λfm[i]=λfm[i]−Nm
+viΛm;
+24: end if
+25: end for
+26: end while
+27: Assign the proportion of all request weights fairly
+according to Yf
+mandNm
+v
+28: returnYf
+mandP(r)mi,vi/prime
+mj,vj/prime
+Fig. 6. Example of request routing of microservice call chains.
+is completed (Lines 11–26 in Algorithm 2). Moreover, it is
+worth noting that the routing of the remaining request ﬂows
+must take into account the order of the processors. In particular,
+we useYF
+M, which is a |F|×|M|matrix, to save the results of
+request routing to one or more processors when each user request
+ﬂowftraverses each microservice m. Finally, Yf
+mandNm
+vare
+considered to obtain the forwarding probability P(r)mi,vi/prime
+mj,vj/primeand
+the associated location information about microservices.
+As mentioned above, we use the same request ﬂow at-
+tributes and variables. Also, a same deployment scheme N=
+[[2,0,0],[4,0,0],[0,1,4],[0,0,1],[0,0,1]]is provided for
+request routing, which is determined by GMDA. As illustrated
+in Fig. 6, two different routing strategies are employed, one of
+which is our proposed approach (Fig. 6(a)) and the other is a
+proportionality-based routing strategy (Fig. 6(b)). Moreover, the
+routing paths for each request ﬂow are represented by dashed
+arrows among processors and solid arrows within processors.
+Note that we label the routing probabilities P(r)mi,vi/prime
+mj,vj/primewith
+red symbols. When RMPR is adopted, the expected average
+response latency for the two request ﬂows is 2.46 and 3.83,
+respectively. When the fully fair routing policy is applied, their
+expected average response latency is 2.81 and 3.85, respectively.
+Hence, if the maximum tolerated latency constraints are almost
+the same, our routing policy can make the expected value of
+the average response latency smaller, which means that we
+can reduce the number of microservice containers and save on
+deployment costs, while still satisfying user requirements.
+Authorized licensed use limited to: Huazhong University of Science and Technology. Downloaded on March 26,2026 at 09:05:01 UTC from IEEE Xplore.  Restrictions apply. 
+
+--- Page 12 ---
+HU et al.: JOINT DEPLOYMENT AND REQUEST ROUTING FOR MICROSERVICE CALL GRAPHS IN DATA CENTERS 3005
+Each user request within a request ﬂow will choose corre-
+sponding routing paths based on probabilities. Container sharing
+and microservice multiplexing create overlap among different
+request ﬂows, resulting in a complex and ﬁne-grained queuing
+system. In this case, our RMPR algorithm can achieve balanced
+request matching and partition mapping for multiple queues
+and improve request success rates. It is important to note that
+effective deployment strategies with bad routing policies can
+still result in poor end-to-end response latency. Therefore, joint
+optimization of both service deployment and request routing is
+essential to achieve overall performance improvements.
+V. A NALYSIS
+First, sorting M(Line 2) requires O(|M|log2|M|)compu-
+tation for the GMDA algorithm and sorting Available _V(m)
+(Line 15) requires O(|V|log2|V|)computation at most. Next,
+the ﬁrst while-loop (Line 3) terminates in M=|M|iterations
+and searching sets to ﬁnd vailable _V(m)runs|V|times. The
+for-loop (Line 16) terminates in max{Available _V(m)}=
+|V|iterations at most. Besides, determining the all Nm
+with the half-interval search requires O(|M||F|log2|C|)com-
+putation. Thus, the computation complexity of GMDA is
+O(|M|(|F|log2|C|+log2|M|+|V|log2|V|+|V|).
+Second, for the RMPR algorithm, we sort the ﬂows which
+traverse the speciﬁc microservice min descending order, which
+requiresO(|F|log2|F|)computation at most (Line 2). Next,
+the ﬁrst while-loop (Line 3) terminates in |multi _flow _List|
+iterations. For each iteration, the partitioning ﬂows needs
+O(|multi _flow _List|log2|multi _flow _List|)computation,
+which can be done in lines 4-6. Reconstructing tree (Line 9)
+requiresO(|F|)at most. The second while-loop (Line 4) requires
+O(|multi _flow _List||V|)computation. Thus, the computa-
+tion complexity of the RMPR algorithm is O(|M|(|F|log2|F|+
+|V|log2|V|+|F||V|)).
+Theorem 1: The average queuing time ratio between a
+M/M/1/∞queuing system and a M/M/c/ ∞queuing system
+is at least cin the worst case.
+Proof: Given that a user request ﬂow is a Poisson ﬂow with
+the arrival rate λand the service capability of each container is
+μ, the service intensity of M/M/c/ ∞is expressed by (18).
+ρ1=λ
+μ(18)
+The average queuing length can be calculated by (19):
+Lq=ρc+1
+1
+(c−1)!(c−ρ1)2p0 (19)
+p0=⎛
+⎝c−1/summationdisplay
+j=0ρ1j
+j!+cρ1c
+c!(c−ρ1)⎞
+⎠−1
+(20)
+According to the Little formula, the average waiting time Wq1
+of theM/M/c/ ∞queuing system is expressed as follows:
+Wq1=Lq
+λ(21)The user request arrives and are divided into cqueues with
+probability1
+c. Thus, the user request arrival rate for each system
+becomesλ
+c. The service intensity of M/M/1/∞isρ2.
+ρ2=λ
+cμ(22)
+According to ρ2, the average waiting time Wq2of the
+M/M/1/∞queuing system is represented by (23).
+Wq2=ρ2
+μ(1−ρ2)(23)
+Based on the above formulation, we can obtain the ratio by
+(24).
+Wq2
+Wq1=c−2/summationdisplay
+j=0/parenleftBig
+λ
+μ/parenrightBigj
+c!/parenleftBig
+c−λ
+μ/parenrightBig
+j!/parenleftBig
+λ
+μ/parenrightBigc−1+c (24)
+Generally, the total processing capacity of the queuing system
+should be greater than the arrival rate of user requests to ensure
+a steady state of the system. In the worst case, the total system
+processing capacity will be equal to the request arrival rate.
+lim
+λ→cμλ
+cμ=1 (25)
+lim
+λ→cμWq2
+Wq1=c (26)
+The above result shows that the M/M/c/ ∞queuing system
+outperforms the queueing system M/M/1/∞in terms of the
+average queuing time. /square
+Theorem 2: For aM/M/c/ ∞queuing system, when the
+number of service containers is expanded by a factor of k(where
+kis a positive integer greater than 1), the average queuing time
+is reduced by a factor of at least k.
+Proof: Given that a user request ﬂow follows a Poisson pro-
+cess with the arrival rate λ, the service capability of each service
+container is μand the number of service containers is c,t h e
+average waiting time of M/M/c/ ∞is deﬁned as Wq1by(27):
+Wq1=P01ρ1λc−1
+c!(1−ρ1)2μc(27)
+where
+ρ1=λ
+cμ(28)
+p01=⎛
+⎝c−1/summationdisplay
+j=0(cρ1)j
+j!+c(cρ1)c
+c!(c−cρ1)⎞
+⎠−1
+(29)
+When the number of service containers is increased by k
+times, the average waiting time is expressed by (30):
+Wq2=P02ρ2λkc−1
+(kc)!(1−ρ2)2μkc(30)
+On the basis of the above formulation, we are able to obtain
+the following equations.
+Wq2
+Wq1=1
+kAc (31)
+Authorized licensed use limited to: Huazhong University of Science and Technology. Downloaded on March 26,2026 at 09:05:01 UTC from IEEE Xplore.  Restrictions apply. 
+
+--- Page 13 ---
+3006 IEEE TRANSACTIONS ON PARALLEL AND DISTRIBUTED SYSTEMS, VOL. 34, NO. 11, NOVEMBER 2023
+Ac=(1−ρ1)2/summationtextc−1
+j=0(λ
+µ)j+kc−c
+j!c!
+(kc!)+(λ
+µ)kc
+(kc)!(1−ρ1)
+(1−ρ2)2/summationtextkc−1
+j=0(λ
+µ)j
+j!+(λ
+µ)kc
+(kc)!(1−ρ2)
+(32)
+In order to calculate the range of values of Ac,l e tn=j+
+kc−c, and we have:
+c−1/summationdisplay
+j=0/parenleftBig
+λ
+μ/parenrightBigj+kc−c
+j!c!
+(kc!)=kc−1/summationdisplay
+n=kc−c/parenleftBig
+λ
+μ/parenrightBign
+(n−kc+c)!c!
+(kc!)(33)
+kc−1/summationdisplay
+n=kc−c/parenleftBig
+λ
+μ/parenrightBign
+(n−kc+c)!c!
+(kc!)<kc−1/summationdisplay
+j=0/parenleftBig
+λ
+μ/parenrightBigj
+j!(34)
+Each term of the denominator in (33) is greater than the
+corresponding term of the numerator and Acis constantly less
+than 1. Finally, the following expression is formulated by (35):
+Wq2
+Wq1<1
+k(35)
+The above proof shows that when the number of service
+containers is increased by a factor of k, the average queuing
+time of the M/M/c/ ∞queuing system will be reduced to at
+least1/kof the original. /square
+VI. P ERFORMANCE EVA L UAT I O N
+In this section, we present trace-driven simulations to evaluate
+the performance of the two-stage heuristic algorithm framework
+as compared with other baselines. Our experimental setup is
+based on real-world traces in data center networks.
+A. Experiment Settings
+Microservices and call graphs: Luo et al. [6]summarized
+a variety of microservice call graphs and modeled them with
+tree structures, the vast majority of which are pipelined chains.
+For simplicity, we extract and preprocess independent pipelined
+request chains from the call graphs. Traced by this article,
+the number of microservices is typically scaled from 2 to 50.
+The number of requests ranges from 10 to 1000, and each
+request traverses a long call chain which consists of at most
+14 microservices in our setup, where the length of chain mostly
+ranges from 2 to 9.
+Network topology and processors: Data center network topol-
+ogy (e.g., fat tree) has been investigated in [34],[35]. In our
+experiments, a full connection service mesh or connection graph
+is considered to model a data center, which contains from 10 to
+64 processors. Besides, there is also sufﬁcient switch capacity
+and network bandwidth to serve each request. The resource
+capacity (the number of cores) per processor is scaled from 8
+to 64. The processing core of processors indicates the ability
+of handling a unit microservice requests, which serve differ-
+ent types of microservices at different speeds. Furthermore, as
+microservice-based requests are typically latency-sensitive, we
+believe that the maximum communication latency between two
+processors should not exceed 5 percent of the user-tolerated
+latency in a data center.Distribution of request ﬂow rate and containers: In data center
+networks, [36],[37] show that the arrival rate of requests follows
+an interval time distribution. In our experiment conﬁgurations, it
+is assumed that the arrival rate of request ﬂows follows a Poisson
+distribution scaling from 1 to 10. It is worth noting that the
+same user request ﬂow can arrive multiple times. Following the
+open Jackson queuing theory, each service instance of the same
+microservice has the same exponential service rate. Multiple
+service requests can be routed to the same containers, and a
+request can be routed to different processors and eventually
+merged. The service rate per core or container is less than the
+average arrival rate since microservice architectures typically
+require the deployment of hundreds of containers. To ensure
+that the simulation is scalable and large-scale, it is assumed that
+processing rate Λmof a single core varies from 1 to 5 for each
+microservice.
+Baseline algorithms: We choose two robust benchmark al-
+gorithms consisting of Random Local Search (RLS) [38] and
+modiﬁed First Fit Decreasing (FFD) [39],[40], which are widely
+used in resource management and combined with the GMDA in
+the experiment. We also implement a variant DRS algorithm [41]
+with probabilistic request routing, the modiﬁcation of which is
+to accommodate our joint optimization problem. Moreover, a
+three-stage algorithm LEGO [29] is used as a baseline for the
+joint deployment and routing, which adopts the deterministic
+routing policy and balanced deployment. To comprehensively
+evaluate the performance of GMDA-RMPR, we compare it with
+them and calculate average values as simulation results through
+a large number of repeated experiments.
+B. Performance Results
+Total deployment cost: Our experiment takes the hetero-
+geneity of microservices into account, which means that one
+container of different microservices requires the speciﬁc de-
+ployment cost. Thus, total deployment cost depends on the
+number of occupied microservice containers and the number
+of active processors. As demonstrated in Fig. 7(b), for all ﬁve
+algorithms, the sum of the equivalent deployment cost of the
+used processors goes up when the number of requests scales
+from 10 to 1000. Actually, the average costs are 7309.9, 9033,
+10749.8, 7309.9 and 7417 for GMDA-RMPR, DRS, RLS, FFD
+and LEGO, respectively. As illustrated in Fig. 7(c), it can be seen
+that when the number of microservices in the data center varies
+from 10 to 40 and the number of processors ranges from 10 to 50,
+our algorithm averagely improves the performance by 46.5 %,
+34.65%and 7.28%as compared with DRS, RLS and LEGO.
+Fig. 7(a) shows that as the arrival rate of requests varies from
+2 to 9, the deployment cost evenly reduce 46.13 %as compared
+with DRS and 33.49 %as compared with RLS, while LEGO
+remains almost the same with our method and increases by only
+2.5%. It is important to note that the sum of the performance
+cost are almost same for GMDA-RMPR and FFD because both
+of them determine the number of cores in the exact identical
+strategy.
+Total number of used processors: As the capacity of available
+processors increases, some results regarding the number of
+processors in service can be observed obviously. As shown in
+Authorized licensed use limited to: Huazhong University of Science and Technology. Downloaded on March 26,2026 at 09:05:01 UTC from IEEE Xplore.  Restrictions apply. 
+
+--- Page 14 ---
+HU et al.: JOINT DEPLOYMENT AND REQUEST ROUTING FOR MICROSERVICE CALL GRAPHS IN DATA CENTERS 3007
+Fig. 7. Performance comparison of equivalent deployment costs with different algorithms.
+Fig. 8. Performance comparison of total number of used processors with different algorithms.
+Fig. 8(d), it can be seen that the number of used processors
+deploying microservice instances decreases slightly when com-
+puting resources are sufﬁcient, while GMDA-RMPR and FFD
+always use the least number of processors and DRS uses the
+most. In terms of the Fig. 8(b), when the type of microservices is
+20 and the number of requests gradually goes up to 800, the aver-
+age number of used processors is 17.1, 38.3, 25.4, 17.1 and 29.2
+for GMDA-RMPR, DRS, RLS, FFD and LEGO, respectively.
+Further, Fig. 8(a)shows that as the average arrival rate of requests
+varies from 2 to 9, the total number of used processors evenly
+reduce 63.2 %as compared with DRS, 32.7 %as compared
+with RLS and 52.3 %as compared with LEGO because they
+require more resources to meet the latency performance. Wealso evaluate the type of microservices, which don not have a
+huge impact on the number of used processors. As shown in Fig.
+8(c), our two-stage heuristic algorithm framework maintains a
+relatively low occupancy of processors, while the other baseline
+algorithms have a stable trend. In the case of larger microservices
+types, the number of used processors reduces 65.6 %as compared
+with DRS, 32.3 %as compared with RLS and 54 %as compared
+with LEGO.
+Iteration cost: To evaluate the actual execution cost of
+all algorithms, the steps of iterations with ﬁnding the rela-
+tively optimal feasible solution are measured. As illustrated in
+Fig. 13, the average step of iterations for GMDA-RMPR, DRS,
+RLS, FFD and LEGO are 35.2, 359.1, 12.9, 9.7 and 17.5,Authorized licensed use limited to: Huazhong University of Science and Technology. Downloaded on March 26,2026 at 09:05:01 UTC from IEEE Xplore.  Restrictions apply. 
+
+--- Page 15 ---
+3008 IEEE TRANSACTIONS ON PARALLEL AND DISTRIBUTED SYSTEMS, VOL. 34, NO. 11, NOVEMBER 2023
+Fig. 9. Performance comparison of the average response latency for different scenarios.
+Fig. 10. Performance comparison of the relative enhancement ratio.
+respectively. With the number of requests increasing, the step
+of iterations for FFD and RLS is consistently the lowest, while
+DRS is much higher than other algorithms because it needs to
+search in large feasible space. Specially, RLS adopts the greedy
+deployment scheme and searches for routing policies within a
+neighborhood of fair probabilistic routing rules. Considering the
+performance metrics and the iteration cost, it is indicated that
+the our algorithm is the most cost-effective as compared with
+other algorithms.
+Average response latency: All algorithms are executed for
+1000 times and we calculate the average value as the ultimate
+simulation result. Without loss of generality, the number of
+processors is ﬁxed at 50 and the number of user requests scales
+from 50 to 500. Let Trespdenote the average response latency,
+which is an important performance metric. Meanwhile, let the
+notationTratiorepresent the latency performance enhancement
+ratio, which is described by (36).
+Tratio(DRS)=1−Tresp(GMDA−RMPR)
+Tresp(DRS)(36)
+Afterwards, the improvement in average latency compared
+with the algorithm DRS can be obtained by (36). Similarly, the
+above equation can be computed for FFD, RLS and LEGO.
+Figs. 9and 10show that our two-stages heuristic algorithm
+always outperforms in Tresp. The improvement ratio increases
+from 7.26 %to 26.7%between GMDA-RMPR and RLS when
+the number of user requests increases. On average, our ap-
+proach improves by 19.2 %between GMDA-RMPR and FFD,
+by 4%between GMDA-RMPR and DRS, and by 8.1 %betweenGMDA-RMPR and LEGO. In addition, the resource splitting
+factorωvarying from 1 to 10 is shown in Fig. 12.A st h e
+resource splitting ratio scales from 3 to 8, the average response
+latency of our algorithm outperforms all other baselines. In
+addition, the average enhancement ratio compared with DRS,
+FFD, RLS and LEGO is reduced by 15.3 %, 31.7%, 24.7%and
+20.9%, respectively. Then, with the factor ωincreasing, the
+performance remains almost unchanged as the granularity of the
+split resources is already much smaller than user requirements.
+The impact of request arrival interval is depicted in Figs. 9(c)
+and10(c) . The user request arrival interval represents the average
+interval between two microservice call chains, which implicitly
+indicates the density of the request ﬂows and intuitively reﬂects
+the arrival rate of user requests per unit time in a steady state.
+With the average request arrival rate increasing, the average
+response latency compared with RLS and LEGO reduces 6.6 %
+and 10.3%, respectively. Also, it reduces from 3.55 %to 15.1%
+compared with DRS and from 2.7 %to 25.4%between GMDA-
+RMPR and FFD. This simulation result apparently demon-
+strates that our proposed framework obtains better performance
+than the benchmarks whatever the request arrival rate is. The
+GMDA-RMPR is more stable and has a lower average response
+latency due to its ability of leveraging fragmented computational
+resources efﬁciently and adapting to the varying requests inter-
+vals, which reasonably determines the distribution of containers
+and the probability of request forwarding. Macroscopically, our
+algorithm is able to separate request ﬂows with larger rate and
+route them to multiple microservice instances severally without
+violating the tolerable latency.
+Authorized licensed use limited to: Huazhong University of Science and Technology. Downloaded on March 26,2026 at 09:05:01 UTC from IEEE Xplore.  Restrictions apply. 
+
+--- Page 16 ---
+HU et al.: JOINT DEPLOYMENT AND REQUEST ROUTING FOR MICROSERVICE CALL GRAPHS IN DATA CENTERS 3009
+Fig. 11. Performance comparison of the request success rate.
+Fig. 12. Average response latency in different resource splitting factors ωand their enhancement ratio.
+Fig. 13. Normalized Average Iteration Runtime for deploying 40 Microser-
+vices.
+At the same time, the performance with the number of mi-
+croservices is evaluated in Figs. 9(b) and 10(b) . It is proved
+that the average response latency of all algorithms increases
+as the number of microservice types increases. Fig. 10(b)
+shows that the decrease of average response latency is 9.3 %,
+25.9%,6 . 5 4%and 18.4%for RLS, FFD, DRS and LEGO,
+respectively. Our two-stages algorithm can fully leverage re-
+sources, which analyzes the relational request information instatic large-scale business scenarios by the clustering and map-
+ping, and reserves more computational resources for microser-
+vices with more required demands and less latency-tolerant
+requests. Subsequently, appropriate forwarding probabilities are
+devised to achieve a low response time globally. Furthermore,
+although the latency performance of DRS and RLS is close
+to our algorithm under some conditions, they require at least
+twice as many computational resources as ours. In general,
+our proposed framework outperforms the other algorithms in
+terms of average response latency as the number of requests,
+the number of microservices, and the resource split ratio are
+varied.
+Request success rate: As illustrated in Fig. 11(a) , when the
+number of user requests gradually increases, the average request
+success rates of GMDA-RMPR, RLS, DRS, FFD and LEGO
+are 75.7%, 76.2%, 74.3%, 92.6%and 67.1%, respectively.
+Speciﬁcally, FFD tends to deploys microservices in terms of
+request ﬂows, leading to high success rates. When the request
+ﬂow requires much more computing resources than the data
+center can provide, microservice clustering will result in some
+microservices being fully provisioned, while certain microser-
+vices can only provision fewer containers. Despite adopting
+optimal routing policies, user latency requirements are still not
+satisﬁed. To investigate the impact of the frequency of user
+request arrival interval which changes the success rate of our
+proposed joint optimization algorithm, the notation λranges
+Authorized licensed use limited to: Huazhong University of Science and Technology. Downloaded on March 26,2026 at 09:05:01 UTC from IEEE Xplore.  Restrictions apply. 
+
+--- Page 17 ---
+3010 IEEE TRANSACTIONS ON PARALLEL AND DISTRIBUTED SYSTEMS, VOL. 34, NO. 11, NOVEMBER 2023
+from 1 to 7. Fig. 11(c) depicts that when the number of user
+requests is ﬁxed to a larger value, the success rate goes down
+with the request arrival rate increasing and the average request
+success rates of GMDA-RMPR, RLS, DRS, FFD and LEGO
+are 81.4%, 79.6%,8 0%, 95.7%and 68.2%, respectively. It
+could be seen that our approach maintains a higher value of
+the request success rate. For all algorithms, it is obvious that
+due to the increase of the computational resources required by
+user requests, processors can only provide restricted resources,
+which results in the response time beyond the maximum tol-
+erant latency and the request fails to be served. Meanwhile, we
+evaluate the performance with different number of processors as
+shown in Fig. 11(b) . It is proved that the request success rate of
+all algorithms increases as the number of processors increases.
+When the number of processors is sufﬁcient, all algorithms
+achieve a high success rate of requests. It is worth noting that the
+request success rate is affected by the resource capacity and the
+deployment scheme of microservice containers with the same
+request arrival rate. When the number of processors ranges from
+15 to 35, the average request success rates of GMDA-RMPR,
+RLS, DRS and LEGO are 88.75 %, 85.7%, 87.9%and 76.7%,
+respectively.
+VII. C ONCLUSION
+In this paper, we have studied the joint optimization prob-
+lem of microservice deployment and request routing based
+on ﬁne-grained queuing network modeling and multi-instance
+orchestration, which aims to reduce the total cost and end-to-end
+response latency, and improve the success rate of requests. To
+achieve a trade-off, we have formulated the JMDRP as a MINLP
+problem which is NP-hard and employed the open Jackson queu-
+ing network to model call dependencies and analyze the response
+latency. To this end, this paper proposes a two-stage heuristic for
+joint deployment and routing, which illustrates that multi-queue
+requests from different call chains are appropriately mapped
+to multiple microservice instances. For the multi-instance mi-
+croservice deployment, a resource-splitting-based GMDA algo-
+rithm is proposed to implement ﬁne-grained container deploy-
+ment to simultaneously reduce queuing delay, processing delay,
+and communication delay. Furthermore, the theoretical analysis
+proves that the designed algorithm minimizes the processor
+usage cost while maintaining the response time limit. For the
+request routing, we have developed an RMPR algorithm to
+determine the forwarding probability and improve the success
+rate of request ﬂows, which is inspired by the clustering and
+mapping. Finally, our extensive simulations have shown that the
+overall performance of our approach outperforms other bench-
+marks. On average, our method improves the request success
+rate by 5.47 %when computing resources are sufﬁcient. In addi-
+tion, the GMDA-RMPR algorithm not only reduces the average
+response latency by 15.1 %in various scenarios, but also cuts the
+deployment cost by 27.4 %as compared to other baselines. More-
+over, our algorithm minimizes deployment costs while main-
+taining low latency and high success rates through probabilistic
+mapping of multiple queues and microservice multiplexing. As
+further future work, we will consider multi-resource networkenvironments (i.e. bandwidth and database access) as well as di-
+verse network topologies and hope to solve the dynamic request
+scheduling problem in a real-life microservice architecture.
+REFERENCES
+[1] Y . Gan et al., “An open-source benchmark suite for microservices and their
+hardware-software implications for cloud & edge systems,” in Proc. 24th
+Int. Conf. Architectural Support Program. Lang. Operating Syst. , 2019,
+pp. 3–18.
+[2] H. Qiu, S. S. Banerjee, S. Jha, Z. T. Kalbarczyk, and R. K. Iyer, “{FIRM}:
+An intelligent ﬁne-grained resource management framework for {SLO-
+Oriented} microservices,” in Proc. 14th USENIX Symp. Operating Syst.
+Des. Implementation , 2020, pp. 805–825.
+[3] M. Shahrad et al., “Serverless in the wild: Characterizing and optimizing
+the serverless workload at a large cloud provider,” in Proc. USENIX Annu.
+Tech. Conf. , 2020, pp. 205–218.
+[4] K. Rzadca et al., “Autopilot: Workload autoscaling at Google,” in Proc.
+15th Eur. Conf. Comput. Syst. , 2020, pp. 1–16.
+[5] E. Oakes et al., “{SOCK}: Rapid task provisioning with {Serverless-
+Optimized} containers,” in Proc. USENIX Annu. Tech. Conf. , 2018,
+pp. 57–70.
+[6] S. Luo et al., “Characterizing microservice dependency and performance:
+Alibaba trace analysis,” in Proc. ACM Symp. Cloud Comput. , 2021,
+pp. 412–426.
+[7] J. Ding, R. Cao, I. Saravanan, N. Morris, and C. Stewart, “Characterizing
+service level objectives for cloud services: Realities and myths,” in Proc.
+IEEE Int. Conf. Autonomic Comput. , 2019, pp. 200–206.
+[8] V . Bushong et al., “On microservice analysis and architecture evolution: A
+systematic mapping study,” Appl. Sci. , vol. 11, no. 17, 2021, Art. no. 7856.
+[9] S. R. Chowdhury, M. A. Salahuddin, N. Limam, and R. Boutaba,
+“Re-architecting NFV ecosystem with microservices: State of the art
+and research challenges,” IEEE Netw. , vol. 33, no. 3, pp. 168–176,
+May/Jun. 2019.
+[10] J. Santos, T. Wauters, B. V olckaert, and F. De Turck, “Towards low-latency
+service delivery in a continuum of virtual resources: State-of-the-art
+and research directions,” IEEE Commun. Surveys Tuts. , vol. 23, no. 4,
+pp. 2557–2589, Fourth Quarter 2021.
+[11] T. L. Duc, R. G. Leiva, P. Casari, and P.-O. Östberg, “Machine learning
+methods for reliable resource provisioning in edge-cloud computing: A
+survey,” ACM Comput. Surveys , vol. 52, no. 5, pp. 1–39, 2019.
+[12] M. Söylemez, B. Tekinerdogan, and A. Koluk ısa Tarhan, “Challenges and
+solution directions of microservice architectures: A systematic literature
+review,” Appl. Sci. , vol. 12, no. 11, 2022, Art. no. 5507.
+[13] V . M. Bhasi, J. R. Gunasekaran, P. Thinakaran, C. S. Mishra, M. T.
+Kandemir, and C. Das, “Kraken: Adaptive container provisioning for
+deploying dynamic dags in serverless platforms,” in Proc. ACM Symp.
+Cloud Comput. , 2021, pp. 153–167.
+[14] A. F. Baarzi and G. Kesidis, “Showar: Right-sizing and efﬁcient scheduling
+of microservices,” in Proc. ACM Symp. Cloud Comput. , 2021, pp. 427–441.
+[15] Y . Zhang, W. Hua, Z. Zhou, G. E. Suh, and C. Delimitrou, “Sinan:
+ML-based and QoS-aware resource management for cloud microservices,”
+inProc. 26th ACM Int. Conf. Architectural Support Program. Lang.
+Operating Syst. , 2021, pp. 167–181.
+[16] C. Carrión, “Kubernetes scheduling: Taxonomy, ongoing issues and chal-
+lenges,” ACM Comput. Surveys , vol. 55, no. 7, pp. 1–37, 2022.
+[17] H. Yuan, J. Bi, M. Zhou, Q. Liu, and A. C. Ammari, “Biobjective task
+scheduling for distributed green data centers,” IEEE Trans. Automat. Sci.
+Eng. , vol. 18, no. 2, pp. 731–742, Apr. 2020.
+[18] Q.-H. Zhu, H. Tang, J.-J. Huang, and Y . Hou, “Task scheduling for multi-
+cloud computing subject to security and reliability constraints,” IEEE/CAA
+J. Automatica Sinica , vol. 8, no. 4, pp. 848–865, Apr. 2021.
+[19] H. Sami, A. Mourad, and W. El-Hajj, “Vehicular-OBUs-as-on-demand-
+fogs: Resource and context aware deployment of containerized micro-
+services,” IEEE/ACM Trans. Netw. , vol. 28, no. 2, pp. 778–790,
+Apr. 2020.
+[20] Z. Jiao, J. Zhang, P. Yao, L. Wan, and L. Ni, “Service deployment of
+C4ISR based on genetic simulated annealing algorithm,” IEEE Access ,
+vol. 8, pp. 65498–65512, 2020.
+[21] J. Zhang, P. Yu, W. Li, and Q. Zheng, “End-to-end service deployment
+using graph matching search for B5G/6G networks,” in Proc. Comput.,
+Commun. IoT Appl. , 2021, pp. 65–70.
+Authorized licensed use limited to: Huazhong University of Science and Technology. Downloaded on March 26,2026 at 09:05:01 UTC from IEEE Xplore.  Restrictions apply. 
+
+--- Page 18 ---
+HU et al.: JOINT DEPLOYMENT AND REQUEST ROUTING FOR MICROSERVICE CALL GRAPHS IN DATA CENTERS 3011
+[22] H. Yu et al., “Octans: Optimal placement of service function chains in
+many-core systems,” IEEE Trans. Parallel Distrib. Syst. , vol. 32, no. 9,
+pp. 2202–2215, Sep. 2021.
+[23] W. Guo, H. Hu, and Y . Liu, “Service function chain optimization deploy-
+ment mechanism based on node and link inﬂuence,” in Proc. IEEE 7th Int.
+Conf. Comput. Sci. Netw. Technol. , 2019, pp. 385–389.
+[24] Y . Zhang, X. Cao, H. Yu, and G. Sun, “Service function chain deployment
+based on candidate paths,” in Proc. Int. Conf. U.K.-China Emerg. Technol. ,
+2021, pp. 139–145.
+[25] Y . Niu, F. Liu, and Z. Li, “Load balancing across microservices,” in Proc.
+IEEE Conf. Comput. Commun. , 2018, pp. 198–206.
+[26] A. Mirhosseini, B. L. West, G. W. Blake, and T. F. Wenisch, “Express-lane
+scheduling and multithreading to minimize the tail latency of microser-
+vices,” in Proc. IEEE Int. Conf. Autonomic Comput. , 2019, pp. 194–199.
+[27] H. Zhao, S. Deng, Z. Liu, J. Yin, and S. Dustdar, “Distributed redundancy
+scheduling for microservice-based applications at the edge,” IEEE Trans.
+Serv. Comput. , vol. 15, no. 3, pp. 1732–1745, May/Jun. 2022.
+[28] M. Gamal et al., “Mapping and scheduling of virtual network functions
+using multi objective optimization algorithm,” in Proc. 19th Int. Symp.
+Commun. Inf. Technol. , 2019, pp. 328–333.
+[29] Y . Yu, J. Yang, C. Guo, H. Zheng, and J. He, “Joint optimization of service
+request routing and instance placement in the microservice system,” J.
+Netw. Comput. Appl. , vol. 147, 2019, Art. no. 102441.
+[30] H. Feng, J. Llorca, A. M. Tulino, D. Raz, and A. F. Molisch, “Approxima-
+tion algorithms for the NFV service distribution problem,” in Proc. IEEE
+Conf. Comput. Commun. , 2017, pp. 1–9.
+[31] R. Grandl, G. Ananthanarayanan, S. Kandula, S. Rao, and A. Akella,
+“Multi-resource packing for cluster schedulers,” ACM SIGCOMM Com-
+put. Commun. Rev. , vol. 44, no. 4, pp. 455–466, 2014.
+[32] R. E. Korf, “A complete anytime algorithm for number partitioning,” Artif.
+Intell. , vol. 106, no. 2, pp. 181–203, 1998.
+[33] Q. Zhang, Y . Xiao, F. Liu, J. C. Lui, J. Guo, and T. Wang, “Joint opti-
+mization of chain placement and request scheduling for network function
+virtualization,” in Proc. IEEE 37th Int. Conf. Distrib. Comput. Syst. , 2017,
+pp. 731–741.
+[34] B. Lebiednik, A. Mangal, and N. Tiwari, “A survey and evaluation of data
+center network topologies,” 2016, arXiv:1605.01701 .
+[35] Y . Liu, J. K. Muppala, M. Veeraraghavan, D. Lin, and M. Hamdi,
+Data Center Networks: Topologies, Architectures and Fault-Tolerance
+Characteristics . Berlin, Germany: Springer Science & Business Media,
+2013.
+[36] T. Benson, A. Akella, and D. A. Maltz, “Network trafﬁc characteristics of
+data centers in the wild,” in Proc. 10th ACM SIGCOMM Conf. Internet
+Meas. , 2010, pp. 267–280.
+[37] W. Xia, P. Zhao, Y . Wen, and H. Xie, “A survey on data center networking
+(DCN): Infrastructure and operations,” IEEE Commun. Surveys Tuts. ,
+vol. 19, no. 1, pp. 640–656, First Quarter 2017.
+[38] E. Aarts, E. H. Aarts, and J. K. Lenstra, Local Search in Combinatorial
+Optimization . Princeton, NJ, USA: Princeton Univ. Press, 2003.
+[39] A. Alahmadi, A. Alnowiser, M. M. Zhu, D. Che, and P. Ghodous,
+“Enhanced ﬁrst-ﬁt decreasing algorithm for energy-aware job schedul-
+ing in cloud,” in Proc. Int. Conf. Comput. Sci. Comput. Intell. , 2014,
+pp. 69–74.
+[40] G. Dósa, “The tight bound of ﬁrst ﬁt decreasing bin-packing algorithm
+is,” in Proc. 1st Int. Symp. Combinatorics, Algorithms, Probabilistic Exp.
+Methodol. , Hangzhou, China, Springer, 2007, pp. 1–11.
+[41] T. Z. Fu, J. Ding, R. T. Ma, M. Winslett, Y . Yang, and Z. Zhang, “DRS:
+Auto-scaling for real-time stream analytics,” IEEE/ACM Trans. Netw. ,
+vol. 25, no. 6, pp. 3338–3352, Dec. 2017.
+Yi Hu is working toward the PhD degree with the
+School of Electronic Information and Communica-
+tions, Huazhong University of Science and Technol-
+ogy. His research interests includes cloud computing
+and distributed systems.
+Hao Wang is working toward the ME degree with
+the School of Electronic Information and Communi-
+cations, Huazhong University of Science and Tech-
+nology.
+Liangyuan Wang is working toward the EdD de-
+gree with the School of Electronic Information and
+Communications, Huazhong University of Science
+and Technology. His research interests includes edge
+computing and distributed systems.
+Menglan Hu received the BE degree in electronic
+and information engineering from the Huazhong Uni-
+versity of Science and Technology, China, in 2007,
+and the PhD degree in electrical and computer engi-
+neering from the National University of Singapore,
+Singapore, in 2012. He is currently an associate
+professor with the School of Electronic Information
+and Communications, Huazhong University of Sci-
+ence and Technology, China. His research interests
+include cloud computing, computer networks, dis-
+tributed systems, and mobile computing.
+Kai Peng received the BE, MS, and PHD degrees
+from the Huazhong University of Science and Tech-
+nology, in 1999, 2002, and 2006, respectively. He
+is currently a professor with the School of Elec-
+tronic Information and Communications, Huazhong
+University of Science and Technology, China. His
+research interests include cloud computing and com-
+puter networks.
+Bharadwaj Veeravalli (Senior Member, IEEE) re-
+ceived the BSc degree in physics from Madurai-
+Kamaraj University, India, in 1987, the master’s de-
+gree in electrical communication engineering from
+the Indian Institute of Science, Bangalore, India, in
+1991, and the PhD degree from the Department of
+Aerospace Engineering, Indian Institute of Science,
+Bangalore, India, in 1994. He received gold medals
+for his bachelor’s degree overall performance and for
+an outstanding PhD thesis (IISc, Bangalore India), in
+the years 1987 and 1994, respectively. He is currently
+a tenured professor with the Department of Electrical and Computer Engi-
+neering, Communications and Information Engineering (CIE) division and the
+National University of Singapore, Singapore. His main research interests include
+cloud/grid/cluster computing, scheduling in parallel and distributed systems,
+and multimedia computing. He is one of the earliest researchers in the ﬁeld of
+Divisible Load Theory (DLT). He is currently serving on the editorial board of
+IEEE Transactions on Cloud Computing as an associate editor.
+Authorized licensed use limited to: Huazhong University of Science and Technology. Downloaded on March 26,2026 at 09:05:01 UTC from IEEE Xplore.  Restrictions apply. 
+

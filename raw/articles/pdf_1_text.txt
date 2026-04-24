@@ -1,0 +1,2164 @@
+=== GSTC(MMC)_1.23.pdf ===
+总页数: 16
+
+--- Page 1 ---
+1
+Zero-Cost Proxy NAS-Driven Collaborative
+Deployment Optimization for the Full Lifecycle of
+AI Services
+Kai Peng, Yue Y ang, Jing Lu, Xinyi Y ang, Yi Hu, and Menglan Hu
+Abstract—With the widespread deployment of artificial intelligence (AI), neural architecture search (NAS) reduces the human cost
+of model design. Zero-cost proxies further speed up selection, while microservice-based AI services enhance deployment flexibility.
+However, existing frameworks still face three challenges. NAS design is disconnected from practical deployment, existing proxies focus
+on general metrics instead of deployment needs, and models lack adaptability to dynamic scenarios. These issues waste resources
+and increase latency, limiting deployment efficiency. To address these problems, we propose a zero-cost proxy-driven framework for
+full-lifecycle joint optimization of neural architectures. By using information-quantity quantization encoding, we build the GSTC zero-
+cost proxy model to evaluate both architecture performance and deployment requirements without any training. Based on the M/M/C
+queueing model, we design the JCQDA algorithm and the LAMRA algorithm. They bridge the gap between architecture design and
+deployment, and enable load-aware dynamic model replacement, respectively. Together, they form an end-to-end optimization pipeline.
+This framework effectively resolves the above issues. It improves resource utilization and service quality, while reducing latency and the
+duality gap. It provides an efficient solution for full-lifecycle optimization of AI services. Finally, we rigorously prove the model performance
+through theoretical analysis and experiments.
+Index Terms—neural architecture search, zero-cost proxy, AI service, full-lifecycle optimization, dynamic deployment
+✦
+1 INTRODUCTION
+WITHthe rapid development of artificial intelligence
+(AI) technologies, AI services [1], [2] have been
+widely deployed in intelligent manufacturing [3], [4], smart
+healthcare [5], [6], and autonomous driving [7], [8], becom-
+ing a key driver of industrial upgrading. The traditional
+“Software as a Service” (SaaS) model focuses on delivering
+standardized functions. It is difficult for this model to meet
+the rigid requirements of modern applications for person-
+alized performance optimization, low-latency response, and
+dynamic resource scheduling. The large-scale deployment
+of AI services urgently requires a shift in the technical
+paradigm from “standardized software delivery” to “full
+lifecycle collaborative optimization.”
+Modern AI service’s microservice architecture links per-
+formance tightly to neural architecture, deployment, and
+routing, making siloed optimizations ineffective. A loosely
+coupled microservice architecture [9], [10] splits complex
+functions into modules that collaborate on tasks such as
+object detection and semantic understanding, improving
+scalability, maintainability, and customizability, but com-
+plicating deployment and resource management. Unlike
+traditional microservices [11], [12], AI service performance
+is tightly coupled with neural network architecture design
+[13], service deployment strategy [14], and request routing
+mechanism [15]. Specifically, the architecture design sets the
+baseline of performance and computational cost, deploy-
+•Corresponding author: Menglan Hu.
+•K. Peng, Y. Yang, J. Lu, X. Yang, Y. Hu, and M. Hu are with Hubei Key
+Laboratory of Smart Internet Technology, School of Electronic Information
+and Communication, Huazhong University of Science and Technology,
+Wuhan, China, 430074. E-mail:{pkhust, d202581406, lujing011621,
+xinyiyang, hust huyi, humenglan}@hust.edu.cn.ment strategy affects resource utilization and communica-
+tion overhead, and routing strategy determines response
+latency. Taking an end-to-end AI quality inspection service
+in a smart factory as an example, its chained stages in-
+clude data preprocessing [16], object classification [17], and
+semantic segmentation [18]. These stages must satisfy the
+low-latency and high-reliability requirements in industrial
+scenarios. Yet, traditional solutions ignore edge computing
+power in architecture design, distribute dependent services
+in deployment strategy, and handle dynamic workloads
+only by scaling out instances. These problems lead to de-
+layed inspection responses and wasted resources. These is-
+sues highlight an urgent need for full lifecycle collaborative
+optimization of AI services. Existing related studies have
+recognized the importance, achieving in aspects such as au-
+tomation of architecture design and the resource allocation
+efficiency of deployment strategies [19]. During industrial
+deployment of AI models, the performance is effectively
+improved and deployment energy consumption is reduced.
+Nevertheless, full lifecycle management of AI services
+still exists key problems, including “design-deployment dis-
+connection” and insufficient dynamic collaboration, which
+seriously limit system effectiveness. On one hand, neural
+architecture search (NAS) [13], [20] enables automated de-
+sign of high-performance models. However, most methods
+optimize accuracy and efficiency in isolation, neglecting
+practical deployment constraints such as available comput-
+ing power and network topology. As a result, NAS-designed
+architectures may underperform on edge nodes [1] and
+in cloud data centers [2], and may even waste resources.
+On the other hand, research on AI service deployment
+and routing mainly focuses on resource allocation and traf-
+
+--- Page 2 ---
+2
+fic scheduling, with NAS architecture optimization rarely
+incorporated into deployment decisions. Instead, require-
+ments are met only by scaling instances or adjusting paths,
+making it difficult to fundamentally improve the fit between
+services and resources. Meanwhile, dynamic collaboration
+between deployment and architecture remains limited. Most
+current approaches only have adjusted containers or virtual
+machines at runtime. They lack mechanisms for dynamic
+optimization and replacement at the architecture level,
+breaking the collaborative link from architecture design to
+dynamic deployment execution. Together, these problems
+limit the effectiveness of AI service lifecycle management.
+The root causes are that architecture evaluation is sepa-
+rated from deployment constraints, design strategies lack
+dynamic adaptation, and resource collaboration has broken
+links.
+To achieve the collaborative objective of “zero-cost
+evaluation, static deployment, and dynamic adjustment,”
+current research needs to overcome three core challenges:
+architecture evaluation, feature integration, and dynamic
+collaboration. First, there is a lack of efficient architecture
+evaluation tools aligned with deployment needs. Traditional
+NAS [21] is computationally expensive and difficult to in-
+terpret. Existing zero-cost proxies rely on general metrics
+such as gradients [22], [23] and complexity [24], which
+poorly capture deployment-oriented architecture features,
+so resource constraints are difficult to incorporate during
+the design stage. Second, the architecture features selected
+by zero-cost proxies need to be deeply integrated with
+deployment strategies. Conflicting objectives like accuracy,
+inference speed, and resource consumption, must be con-
+sidered together. Latency also needs to be decomposed at
+a fine-grained level through the M/M/C queuing model.
+In addition, deployment needs must be balanced between
+centralized deployment and same-node deployment. This
+requires resolving variable coupling in multi-objective opti-
+mization. Finally, in dynamic scenarios, workload changes
+must be sensed in real time, and both architectures and
+deployment plans should be updated jointly. This avoids
+delayed responses that can cause excessive latency or re-
+source waste. These challenges cover the full process from
+architecture design to dynamic operation. They also provide
+a clear problem focus for the targeted solutions proposed in
+this paper.
+To address these challenges, this paper proposes a joint
+optimization model that integrates zero-cost proxy NAS
+with deployment and routing. This is the first work to
+realize collaborative optimization over the full lifecycle,
+including architecture design, deployment routing, and dy-
+namic adjustment. Our main contributions are as follows:
+1) We propose GSTC, a zero-cost proxy model based
+on information-quantity quantization encoding that
+goes beyond traditional proxies relying on generic
+metrics. GSTC is the first to exploit both the di-
+minishing nature of information propagation in
+neural networks and operation-level differences in
+information utilization to guide encoding design. It
+considers four dimensions: total path information
+(G), path information variation (S), total information
+at output nodes (T), and information variation atoutput nodes (C). By capturing structural and task
+features, GSTC can evaluate performance without
+training. It greatly reduces training cost and sup-
+ports customized design, providing a deployment-
+aware architectural foundation for optimization.
+2) We propose the Joint Communication and Queue-
+Aware Deployment Algorithm (JCQDA), which
+tightly couples architectures selected by the zero-
+cost proxy with deployment decisions, bridging
+architecture design and deployment optimization.
+JCQDA uses an M/M/C queuing model to char-
+acterize communication, queuing, and processing
+delays at a fine-grained level. It further introduces
+a service-server affinity mechanism to balance con-
+solidating instances of the same service (reducing
+queuing delay) and co-locating dependent services
+(reducing communication delay). This establishes a
+design–deployment loop, where architectural char-
+acteristics guide deployment and deployment feed-
+back validates architectural adaptability, improving
+the efficiency of AI service systems.
+3) To improve robustness under dynamic workloads,
+we design the Load-Aware Model Replacement Al-
+gorithm (LAMRA). Together with GSTC and JC-
+QDA, LAMRA forms an end-to-end pipeline of
+“zero-cost evaluation, static deployment, and dy-
+namic adjustment.” It monitors load fluctuations
+in real time, selects suitable architectures from the
+GSTC-pre-evaluated library, and synchronously up-
+dates JCQDA-based deployment plans, coordinat-
+ing architecture replacement with deployment ad-
+justment. This enables full-lifecycle collaboration
+under complex and varying production workloads.
+The remainder of this paper is organized as follows.
+Section 2 discusses related work. Section 3 introduces the
+problem formulation. The algorithm design is presented in
+Section 4. In Section 5, we provide a theoretical analysis
+of the proposed new optimization framework. Section 6
+evaluates the performance of the algorithm, and Section 7
+concludes the paper.
+2 RELATEDWORK
+2.1 Zero-Cost NAS Proxy
+In AI service deployment, zero-cost proxy models are
+crucial for aligning model design with system resources,
+but existing proxies are often decoupled from deployment
+requirements and thus fail to support full-lifecycle opti-
+mization. Activation-based proxies [24], [25], relying on
+properties of activation functions, fail to adapt to multi-task
+scenarios such as medical image segmentation and indus-
+trial defect detection. Gradient-based proxies [22], [26], [27]
+require many forward and backward propagations, which
+incur high computational cost and limit responsiveness in
+dynamic environments. Complexity-based proxies [23] use
+FLOPs and parameter counts but ignore network structure,
+making it difficult to distinguish heterogeneous architec-
+tures with similar complexity. To overcome these limita-
+tions, we propose GSTC for deployment-adaptive architec-
+ture evaluation. This model is independent of specific acti-
+
+--- Page 3 ---
+3
+vation functions and quantifies information-transmission ef-
+ficiency of network operations, enabling unified evaluation
+across multi-task, hybrid deployment scenarios. Operating
+directly on network topology without expensive computa-
+tion, GSTC evaluates each architecture faster than gradient-
+based proxies, supporting timely deployment adjustment
+and shifting the focus from general architecture evaluation
+to deployment-oriented, real-time model selection.
+2.2 AI Service Deployment
+In AI service deployment, prior work has rarely in-
+tegrated neural network architecture design with deploy-
+ment planning. Most studies optimize only deployment or
+runtime in isolation. For instance, Hu et al. [1] improved
+system performance via DNN deployment and bandwidth
+allocation based on human-like network architectures. Zhou
+et al. [2] focused on task offloading for generative AI in
+6G edge-cloud settings. Chai et al. [28] jointly optimized
+task offloading, resource allocation, and model placement.
+However, none of these adopted NAS, so architectures
+cannot be adapted to deployment resource constraints at the
+design stage, while deployment efficiency and adaptabil-
+ity remain limited. Additionally, other research considers
+architecture-related optimization but still lacks a closed-loop
+collaborative mechanism or strong dynamic adaptation. For
+example, Lu et al. [29] investigated edge-cloud collaborative
+adaptive NAS, while Lyu et al. [30] implemented multi-
+objective NAS for resource-constrained edge devices. Niu
+et al. [31] proposed ChainNet for loss-aware optimization
+only in the edge deployment phase without model-level
+dynamic replacement. Similarly, Sedghani et al. [32] opti-
+mized resource selection and component deployment only
+at design time. To fill these gaps, we construct a collabo-
+rative framework that integrates architecture design with
+deployment planning. GSTC evaluates architecture perfor-
+mance and reduces evaluation costs at the design phase.
+On this basis, JCQDA uses the M/M/C queuing model to
+characterize communication, queuing, and processing delay
+and derive a deployment strategy that minimizes end-to-
+end latency, thereby bridging the long-standing separation
+between NAS and deployment requirements.
+2.3 Dynamic Service Deployment
+In dynamic service deployment, current research still
+suffers from single-dimensional adjustment, disconnect
+from AI service design, and lack of full-lifecycle coordi-
+nation, making it unsuitable for complex load fluctuations.
+Specifically, studies [9], [33], [34] all neglected model archi-
+tecture optimization: Sami et al. [33] enabled on-demand fog
+cluster formation and real-time containerized deployment
+on volunteer devices but only adjusted container placement,
+with the level of dynamism dependent on available device
+resources. Wu et al. [9] merely modified container types and
+load ratios with a predefined DNN library. Tortonesi et al.
+[34] focused only on virtual machine resource scheduling,
+resulting in a narrow optimization objective. Conversely,
+studies [35], [36], [37] lacked dynamic model replacement.
+[35], [36] only adjusted service deployment or offloading via
+reinforcement learning or prediction, failing to adapt model
+architectures to load. Ji et al. [37] obtained edge resourcesTABLE 1: Notation and Terminology
+Notation Definition
+pNumber of edges in the current path
+sDistance between the starting node and the input node
+Xi Quantized operation encoding at nodei
+qTotal number of paths in the current architecture
+nNumber of edges in the theoretically longest single path
+VSet of all serversv∈V
+ESet of network links between two servers
+CCPUInitial number of CPU cores in a server
+CGPUInitial amount of GPU memory in a server
+MSet of all AI servicesm∈M
+CGPU
+MSet of GPU memory requirements of each AI service
+RSet of all user service requestsr∈R
+Mr Set of AI services included in requestr
+λr Arrival rate of requestr
+Nv
+m Instances of AI servicemon serverv
+xr
+m Binary variable for AI servicembelonging toM r
+λm Overall arrival rate of AI servicem
+Pv
+m Routing probability of AI servicemto serverv
+λv
+m Arrival rate of AI servicemon serverv
+Tr Service latency of request chainr
+TAvg Average end-to-end latency of all requests
+via an auction mechanism but still deployed only existing
+models. Therefore, we design the LAMRA dynamic model
+replacement algorithm and close the loop with the JCQDA
+static deployment scheme. LAMRA continuously monitors
+load changes, combines GSTC pre-screened architectures
+with model parameter counts and inference rates, and se-
+lects models for replacement via Pareto frontier analysis.
+Meanwhile, JCQDA provides a stable static deployment
+foundation for dynamic replacement. Together with GSTC,
+these components build a lifecycle optimization chain that
+coordinates architecture design and deployment execution
+under dynamic loads, which fills the gap in architecture-
+deployment co-design and load-aware adaptation.
+3 MODELS
+The full-lifecycle collaborative optimization framework
+for AI services (Fig. 1) has three layers. The user access layer
+receives requests from AI applications in various intelligent
+scenarios and forwards them to the computing layer via
+wireless communication. The computing layer consists of
+a server cluster, where each server independently executes
+the JCQDA deployment strategy and the LAMRA dynamic
+model replacement algorithm. The model design layer uses
+the GSTC zero-cost proxy to construct AI models that meet
+service requirements. Simultaneously, it receives real-time
+feedback from the user access layer to further adjust model
+architectures. The updated models are then delivered to the
+computing layer to refine deployment strategies, enabling
+better adaptation to environmental changes and more flexi-
+ble, efficient AI services. Table 1 lists the notations and terms
+used in this paper.
+
+--- Page 4 ---
+4
+in 3*3 MP 3*3 out1*1
+MP2x2y2z
+in
+ 3*3
+ MP
+ 3*3
+ out
+1*1
+MP
+2x
+2y
+2zin 1*1 MP 3*3 out
+ in
+ 1*1
+ MP
+ 3*3
+ out2n2n-12n-22n-3
+in 1*1 MP 3*3 out
+ in
+ 1*1
+ MP
+ 3*3
+ out2n2n-12n-22n-3
+in 3*3 MP 3*3 out
+ in
+ 3*3
+ MP
+ 3*3
+ out2n2n-12n-22n-3
+in 3*3 MP 3*3 out
+ in
+ 3*3
+ MP
+ 3*3
+ out2n2n-12n-22n-3
+3*3 MP out
+ 3*3
+ MP
+ out2n-12n-2
+3*3 MP out
+ 3*3
+ MP
+ out2n-12n-2
+1*1 out
+ 1*1
+ out2n-1
+1*1 out
+ 1*1
+ out2n-1
+g2inM
+P
+M
+P
+g1
+g3
+g4
+GG:the total architecture 
+information quantityMultiply by  2n
+Multiply by  2n-1
+Multiply by  2n-2
+Multiply by  2n-3
+|g1-g2|...|g2-g4||g3-g4|S:the path information 
+difference quantity
+S
+T:the total information   
+          received by the output node
+|t1-t2|...|t2-t4||t3-t4|
+C    C:the information difference                     
+received by the output nodeArchitecture 1 
+Architecture 2 
+Architecture R                       
+...GSTC Model
+Score=a· G+b· S+p· T+q· Cproxy score 1
+proxy score 2
+proxy score R
+...
+Ranked by 
+proxy scorepolicy network  training 
+Architecture M
+............
+Rproxy score M
+true accuracy M[x  y  z  a  b  p  q]
+o
+ut
+inM
+Po
+ut
+M
+Po
+ut
+o
+ut
+t1
+t3
+t2
+t4
+ To
+ut
+inM
+Po
+ut
+M
+Po
+ut
+o
+ut
+t1
+t3
+t2
+t4
+ Tg4 g3g1 g2
+t1 t2
+t3 t4Differential training based on 
+ranking correlation
+V1
+V2
+V3
+ V4
+V5
+V6f1f2
+f3Basic  Microservice tasks
+OObject Classification
+CScene Classification
+R Room Layou t
+J Jigsaw Puzzle
+S Semantic 
+Segmentation
+A  Autoencoding
+N  Surface NormalBasic  Microservice tasks
+OObject Classification
+CScene Classification
+R Room Layou t
+J Jigsaw Puzzle
+S Semantic 
+Segmentation
+A  Autoencoding
+N  Surface Normal
+O
+O
+O
+J
+J
+O
+O
+O
+J
+J
+C
+C
+C
+C
+ C
+C
+C
+C
+R
+R
+R
+ R
+R
+R
+A
+A
+A
+A
+S
+N
+S
+S
+S
+N
+S
+N
+S
+S
+S
+N
+Scene Understandin g 3D Reconstruction  Image Enhancement and Analysis Autonomous Driving Intelligent Quality Inspection
+outliers
+outliers
+θF
+θF
+θF
+J
+J
+J
+J
+J
+J
+ J
+J
+J
+Optimal architecture 
+for server applications
+Physical  Server
+Server Core (idle)
+Server Core (occupancy)
+Communication Path
+Service Chain
+O
+OPhysical  Server
+Server Core (idle)
+Server Core (occupancy)
+Communication Path
+Service Chain
+O
+f1 Scene Understandin g
+ C
+C
+ R
+R
+ S
+S
+ O
+O f1 Scene Understandin g
+ C
+ R
+ S
+ O
+f2 3D Reconstruction
+ O
+O
+ N
+N
+ R
+R
+ A
+A f2 3D Reconstruction
+ O
+ N
+ R
+ A
+f3  Image Enhancement and Analysis
+ A
+A
+ J
+J
+ C
+C
+ S
+S f3  Image Enhancement and Analysis
+ A
+ J
+ C
+ S
+Application scenariosDynamic 
+feedback
+User Access LayerComputing LayerModel Design Layer
+Fig. 1: Overall framework of the collaborative optimization model for the full lifecycle of AI services.
+3.1 Deployment-Aware Zero-Cost Proxy Design
+Traditional NAS fully trains candidate models, incur-
+ring high computational cost and long search time, which
+increase deployment cost and reduce efficiency. Most exist-
+ing zero-cost proxies overlook differences in network struc-
+tures and tasks, making it hard to align model deployment
+with resource constraints. To address this, we develop a
+zero-cost proxy by quantifying architectural features and
+integrating information propagation characteristics. This ap-
+proach provides a basis for efficient and low-cost deploy-
+ment of AI services.
+3.1.1 Quantized Encoding
+Here we take architectures from the NASBench101 [38]
+dataset as an example. First, we decompose each architec-
+ture into paths. For each branch node, including the input
+node, we take the output node as the endpoint and select
+the longest path starting from the current node, as shown
+in Fig. 2. Previous work shows that effective information
+propagation decays with increasing network depth [39],
+[40]. Building on this, we further assume that effective infor-
+mation decreases exponentially as network depth increases.
+Based on this assumption, we encode the information flow
+of the architecture.
+After quantizing connections, we also quantize opera-
+tions to form a unified encoding framework. In terms of the
+information usage amount, usage frequency, and retained
+amount, the following assumptions are made regarding
+information utilization rates of different operations:The amount of information used: each3×3convolution
+and3×3pooling operation uses 9 variables per calculation,
+while each1×1convolution uses 1 variable;
+The frequency of information used: when the stride is
+1, each variable is used 9 times in a3×3convolution or
+3×3pooling, but only once in a1×1convolution;
+The amount of information retained: a3×3convolution
+can retain part of the information from all 9 variables,
+while a3×3pooling retains only the information of the
+maximum variable, and a1×1convolution retains part of
+the information from the current variable.
+From the above assumptions, the information utiliza-
+tion of operations is ranked as3×3convolution>3×3
+pooling>1×1convolution. To maximize their separability
+and stay consistent with the path-connection encoding, we
+also encode operations using the exponential decay scheme.
+The encoding values lie inh
+2n−1,2−(n−1)i
+, and are uni-
+formly spaced within this interval to enlarge differences.
+The input and output nodes do not process information and
+are therefore encoded as 1, as shown in Fig. 2b.
+It is important to note that due to the black-box nature
+of neural networks, this encoding is not a strict quantitative
+measure in the information-theoretic sense, but a hypothesis
+built on existing conclusions, designed to emphasize dif-
+ferences in information transmission and utilization across
+connections and operations.
+3.1.2 GSTC Model Design
+We construct a new proxy model based on quantitative
+encoding. For more comprehensive architecture evaluation,
+we define four variables: total path information (G), path
+
+--- Page 5 ---
+5
+in 3*3 MP 3*3 out1*1
+MP2x2y2z
+in
+ 3*3
+ MP
+ 3*3
+ out
+1*1
+MP
+2x
+2y
+2z
+(a) CNN cell structure
+in 1*1 MP 3*3 out
+ in
+ 1*1
+ MP
+ 3*3
+ out2n2n-12n-22n-3
+in 1*1 MP 3*3 out
+ in
+ 1*1
+ MP
+ 3*3
+ out2n2n-12n-22n-3
+in 3*3 MP 3*3 out
+ in
+ 3*3
+ MP
+ 3*3
+ out2n2n-12n-22n-3
+in 3*3 MP 3*3 out
+ in
+ 3*3
+ MP
+ 3*3
+ out2n2n-12n-22n-3
+3*3 MP out
+ 3*3
+ MP
+ out2n-12n-2
+3*3 MP out
+ 3*3
+ MP
+ out2n-12n-2
+1*1 out
+ 1*1
+ out2n-1
+1*1 out
+ 1*1
+ out2n-1 (b) Quantized path encoding
+Fig. 2: Quantized operation encoding.
+information variation (S), total information at output nodes
+(T), and information variation at output nodes (C). Their
+values are given by Eq. 1, Eq. 3, Eq. 4, and Eq. 6, respectively.
+In these equations,pdenotes the number of edges in the
+current path,srepresents the distance from the starting
+node of the current path to the input node of the archi-
+tecture,X iindicates the quantized encoding value of the
+operation at thei-th node in the path,qexpresses the total
+number of paths in the architecture, andnis the number
+of edges in the theoretically longest single path within the
+given constraints.
+Total path information (G) can be calculated by Eq. 1.
+G=qX
+l=1gl (1)
+g=p−1X
+i=0Xi·2n−s−i(2)
+Path information variation (S) is given by Eq. 3.
+S=1
+(q−1)!X
+u∈[1,q]
+v∈[1,q]|gu−gv|(3)
+Total information at output nodes (T) is shown in Eq. 4.
+T=qX
+l=1tl (4)
+t=X p·2n−p+1(5)
+Information variation at output node (C) is Eq. 6.
+C=1
+2X
+u∈[1,q]
+v∈[1,q]|tu−tv|(6)
+Finally, we take total path information (G) as the ref-
+erence. Using min-max feature scaling, the path-related
+variables and the output-node-related variables are normal-
+ized separately. We then sum the four variables to obtain
+the zero-cost proxy model GSTC based on the proposed
+information-quantity quantization encoding, as in Eq. 7.
+GSTC=G+S+Gmax−G min
+Tmax−Tmin·T+Gmax−G min
+Cmax−C min·C(7)
+3.1.3 General Evaluation Metrics
+The standard formulas for calculating the number of
+parameters in a CNN model are summarized as follows:The number of parameters in a convolutional layer
+Params convis given by Eq. 8:
+Params conv= (K w×K h×C in+ 1)×C out (8)
+whereK wis the kernel width,K his the kernel height,C in
+is the number of input channels, andC outis the number of
+output channels. The term “+1” indicates a bias parameter
+for each kernel. If the model has no bias, this term is 0.
+The amount of parameters in a fully connected layer
+Params fccan be calculated using Eq. 9:
+Params fc=M×N+N(9)
+whereMis the number of input neurons, andNis the
+number of output neurons. The finalNdenotes the number
+of bias terms. If the model has no bias, this term is set to 0.
+The number of parameters in a batch normalization
+layer Params bncan be calculated by Eq. 10:
+Params bn= 2×C(10)
+whereCrepresents the number of channels in the input
+feature map. Since a batch normalization layer contains two
+learnable parameters per channel (a scaling factorγand an
+offsetβ), the total number of parameters is2C.
+In practice, the number of parameters for each layer
+must be calculated according to the specific model architec-
+ture. They are then summed to obtain the total number of
+parameters of the CNN model, as shown in Eq. 11.
+Params total =X
+iParams convi+X
+jParams fcj+X
+kParams bnk
+(11)
+The inference time of the model on each task is de-
+fined asT inf[41]. For consistent evaluation, all architectures
+are tested with a single fixed-size input image of shape
+(3,720,1080), representing 3 color RGB channels, 720 pixels
+in height, and 1080 pixels in width, thus providing a unified
+input baseline for inference time measurement.
+3.2 Model Deployment
+GSTC has identified high-quality neural architectures,
+but their integration with deployment remains to be ad-
+dressed. This subsection focuses on static deployment op-
+timization. We construct models for system, deployment,
+and routing. Latency is decomposed using M/M/C queuing
+theory. By combining resource consumption and service
+quality, we formulate a multi-objective optimization prob-
+lem. This formulation links architecture with deployment
+and provides a basis for the subsequent JCQDA algorithm.
+3.2.1 System Model
+We model a homogeneous server cluster in a cloud
+data center, where all servers share identical hardware: the
+same number of CPU cores and the same amount of GPU
+memory. Communication latency between CPU cores on the
+same server is negligible, while inter-server latency depends
+mainly on request data size and network bandwidth. To
+capture these physical and logical properties, the server
+cluster is abstracted as an undirected graphG= (V, E),
+whereVis the set of servers andEis the set of communi-
+cation links. Each homogeneous server containsCCPUCPU
+cores andCGPUunits of GPU memory. Furthermore, we
+
+--- Page 6 ---
+6
+assume that each AI service instance is encapsulated in a
+container and exclusively occupies one CPU core. So cores
+are virtualized into container resources with a one-to-one
+mapping between CPU cores and AI service instances.
+3.2.2 Service Deployment Model
+In this paper, each user request forms a strict task
+chain of AI services, which may be deployed on one or
+multiple servers and executed sequentially. Moreover, dif-
+ferent requests can share services, which leads to service
+multiplexing. LetM={m 1, m2, . . . , m |M|}denote the set
+of all AI services in the system, andR={r 1, r2, . . . , r |R|}
+denotes the set of all user requests. Each requestr∈R
+can be represented as a tupler={M r, λr}, whereM r∈M
+expresses the set of services inr, andλ rindicates the arrival
+rate ofrunder a Poisson process.
+To capture the multi-version coexistence and replace-
+ability of online AI services, each logical servicemis as-
+sumed to have a version setK m. Different versions vary in
+service rate, service efficiency, and GPU memory consump-
+tion. For versionkof microservicem, the service rate of a
+single instance is denoted asµ m,k, which is given by Eq. 12.
+µm,k=1
+Tinf
+m,k(12)
+whereTinf
+m,krefers to the inference time of AI servicemwhen
+using neural architecture versionk.
+Service performance is recorded asq m,k, maintaining
+high correlation with GSTC scores. It is measured by task-
+specific metrics such as accuracy or recall. While GPU mem-
+ory consumption is denoted asCGPU
+m,k , which is correlated
+with model parameter count Params total.
+In subsequent modeling, we represent services as logi-
+cal microservices without further distinction. For microser-
+vicem, a single instance has service rateµ m, service effi-
+ciencyq m, and GPU memory consumptionCGPU
+m . During
+deployment, multiple instances of each service may run on
+different servers. Co-location of dependent service instances
+on the same server significantly reduces cross-server com-
+munication delay. Therefore, under resource constraints, an
+ideal strategy is to place all instances serving a request
+on one server. In addition, the M/M/C queuing model
+implies that for a fixed total number of instances, concen-
+trating them on fewer servers lowers overall queuing delay.
+Conversely, excessive distribution will increase it. Hence,
+deployment should also concentrate instances of the same
+service on a limited set of servers to reduce queuing delay.
+Define the variableNv
+mto represent the number of AI
+servicemdeployed on the serverv. The deployment process
+must satisfy the following constraints:
+X
+m∈MNv
+m≤CCPU,∀v∈V(13)
+X
+m∈MNv
+mCGPU
+m≤CGPU,∀v∈V(14)
+Eq. 13 and Eq. 14 respectively ensure that CPU and GPU
+resources of each server are not over-allocated.
+3.2.3 Request Routing Model
+In practice, user requests arrive as a continuous stream
+and are dispatched by a task scheduler to servers for pro-cessing. After assignment, the system sequentially invokes
+AI services in the order of the task chain until the final re-
+sponse is returned. To model the request–service mapping,
+a binary variablexr
+m∈ {0,1}is defined, wherexr
+m= 1if
+requestrinvolves servicem; otherwisexr
+m= 0. Based on
+the linear additivity of Poisson flow, the total arrival rate of
+servicemcan be expressed as:
+λm=X
+r∈Rxr
+mλr (15)
+When the upstream AI service completes processing,
+the system forwards the request to its downstream services
+according to predefined dependencies. To this end, we
+define the variablePv
+mas the probability that requests of
+microservicemare forwarded to serverv. To balance load,
+Pv
+mshould be dynamically calculated based on processing
+capability and current load of servervas:
+Pv
+m=Nv
+mP
+v∈VNvm, m∈M(16)
+in terms of Burke’s theorem and the linear additivity of
+Poisson flow, the arrival rate of servicemat servervcan
+be calculated as:
+λv
+m=λmPv
+m (17)
+3.2.4 System Latency Model
+On each server, multiple instances of an AI service
+run independently in parallel. For a given service type, all
+instances can be modeled as a single M/M/C queuing sys-
+tem, capturing its dynamic behavior under random arrivals.
+The total delay includes average service queuing delay and
+service time for inference. Hence, the total residence delay
+of servicemon a server can be expressed as:
+ts
+m=Wq
+m+1
+µm(18)
+whereµ mdenotes the service rate of servicem, andWq
+m
+represents its average queuing delay, which is derived from
+steady-state analysis of the M/M/C queuing system as:
+Wq
+m=Lq
+λvm(19)
+Lq=(λv
+m/µm)Nv
+m·ρv
+m
+Nvm!·(1−ρvm)2·P0 (20)
+ρv
+m=λv
+m
+Nvmµm(21)
+P0=
+Nv
+m−1X
+n=0(λv
+m/µm)n
+n!+(λv
+m/µm)Nv
+m
+Nvm!·1
+1−ρvm
+−1
+(22)
+whereL qdenotes the average queue length, whileρv
+m
+represents the service intensity of servicemon serverv. Set
+ρv
+m<1for stability. Otherwise the queue length will grow
+infinitely, leading to congestion. Additionally,P 0indicates
+the probability that the system is available.
+AI services in a task chain are executed in a strict
+sequence. If two adjacent services are deployed on the
+same server, the communication latency is negligible. If
+
+--- Page 7 ---
+7
+they are on different servers, the data transmission must
+be considered:
+ttran
+mi,mj=data(m i, mj)
+Bva,vb(23)
+wheredata(m i, mj)represents the data volume transmitted
+between servicem iandm j, whileB va,vbdenotes the link
+bandwidth between serverv aandv b. In summary, the end-
+to-end latency for requestrincludes both processing latency
+of all AI services and cross-server communication latency:
+Tr=|Mr|X
+i=1ts
+mi+|Mr|−1X
+i=1ttran
+mi,mi+1(24)
+Finally, the overall system response time can be charac-
+terized by the average end-to-end latency of all requests:
+TAvg=P
+r∈RλrTrP
+r∈Rλr(25)
+3.2.5 Resource Consumption Model
+AI services typically require both CPU and GPU re-
+sources during operation, but their computationally inten-
+sive workloads are mainly handled by GPU. Considering
+that GPU memory capacity differs more significantly across
+service versions and is often the key constraint in system
+deployment, this paper focuses on GPU resource consump-
+tion. The GPU consumption on server v is denoted as:
+CGPU
+v=X
+m∈MNv
+mCGPU
+m (26)
+The constraintCGPU
+v≤CGPUmust hold to prevent GPU
+memory overflow, which will cause deployment failure or
+runtime errors. At system level, the total resource consump-
+tion is the sum of GPU usage over all servers:
+Ctotal=X
+v∈VCGPU
+v (27)
+3.2.6 User-Perceived QoS Model
+User-Perceived Quality of Service (QoS) depends on
+both the algorithmic performance and system response
+latency. To evaluate QoS comprehensively, we construct a
+composite metric that integrates these two components.
+Each AI service is assessed by task-specific metricsq m,
+such as accuracy and recall for classification, BLEU and
+ROUGE for generation, and mAP for object detection, which
+quantify its functional capability. For requestr, its overall
+effectiveness is expressed as:
+Qperf
+r=1
+|Mr|X
+m∈M rqm (28)
+To establish a trade-off to balance effectiveness and
+latency, this study combines them into a composite QoS
+metric. For requestr, its QoSQ ris defined as:
+Qr=αQperf
+r−(1−α)Tr
+Tmax(29)
+whereα∈[0,1]weights effectiveness versus latency in
+QoS, andT maxis a normalization constant ensuring QoS
+within a reasonable range. At the system level, overall QoSis computed as a weighted average of QoS values across all
+requests:
+Qsys=P
+r∈RλrQrP
+r∈Rλr(30)
+3.2.7 Objective Function
+After constructing the system model, deployment
+model, request routing model, latency model, and the model
+for resource consumption and QoS, we formulate a multi-
+objective optimization problem. Under CPU and GPU re-
+source constraints, the goal is to minimize total resource
+consumption while maximizing the comprehensive QoS.
+Total resource consumption is defined in Eq. 27, while
+the first objective is to minimize it. The system-level QoS is
+defined in Eq. 30, while the second objective is to maximize
+it. In summary, the overall optimization problem is:
+minCtotal
+maxQsys (31)
+To reflect the trade-off between resource consumption
+and QoS while reducing computation, this paper adopts a
+weighted-sum method to convert the multi-objective opti-
+mization into a single-objective problem:
+maxβQsys−(1−β)Ctotal
+Cmax(32)
+whereβ∈[0,1]is a tuning parameter andCmaxis a
+normalization constant. By adjustingβ, the system can flex-
+ibly balance QoS and resource consumption across different
+application scenarios.
+4 ALGORITHMDESIGN
+Both static deployment and dynamic adjustment of
+AI services in cloud data centers are NP-hard problems.
+As the problem scale increases, the cost of exact solving
+becomes very high. It is difficult to meet real-time de-
+ployment requirements. Therefore, we design two efficient
+heuristic algorithms. The first is the JCQDA algorithm. It
+uses a service–server affinity mechanism to jointly optimize
+communication latency and queuing latency, and it reduces
+the system response latency. The second is the LAMRA
+algorithm. When request intensity fluctuates, it evaluates
+model performance and resource consumption together. It
+dynamically selects the optimal version, ensures the stability
+of service quality, and improves resource utilization.
+4.1 Joint Communication and Queue-Aware Deploy-
+ment Algorithm
+As AI service deployment is NP-hard, the time to
+find an exact optimum grows rapidly with problem size,
+making real-time and scalable deployment impractical. To
+address this, this study proposes the Joint Communica-
+tion and Queue-Aware Deployment Algorithm (JCQDA),
+which jointly optimizes communication and queuing delay
+while remaining computationally efficient. JCQDA offers
+two main advantages: (1) reducing system operational cost
+and (2) minimizing end-to-end request latency.
+Minimum Number of Instances for Each AI Service:
+Since an AI service may be invoked by multiple requests,
+and its instances may handle tasks from several requests
+
+--- Page 8 ---
+8
+concurrently, we first need to determine the minimum num-
+ber of instances for each AI service to ensure system stability
+under the current load. According to the service intensity
+constraint in Eq. 21, stability requiresρv
+m<1. Thus, the
+minimum number of instances required for servicemcan
+be expressed as:
+Nm=
+(1 +θ)λm
+µm
+(33)
+Eq. 33 introduces a relaxation factorθ≥0based on the
+original stability constraint to absorb burst traffic or random
+arrival fluctuations. By adjustingθ, the system can enhance
+robustness against dynamic load variations.
+Service-Server Affinity: AI service instances can be de-
+ployed on any server with sufficient available CPU cores
+and GPU memory. According to M/M/C queuing theory,
+deploying instances of the same service on one server can
+significantly reduce queuing delay for a fixed total instance
+count. Simultaneously, co-locating sequentially dependent
+services on the same server avoids cross-server transfer, thus
+highly reducing communication delay. However, a potential
+conflict exists between these two deployment strategies:
+concentrating instances of the same service on one server
+lowers queuing delay but consumes CPU and GPU re-
+sources, limiting the deployment of its dependent services
+on that server. To balance this trade-off, we introduce a ser-
+vice–server affinity metric that comprehensively evaluates
+the suitability and benefit of deploying the servicemon the
+serverv, computed as:
+Av
+m=αAvailv
+m+βPSv
+m (34)
+Among these,Availv
+mrepresents the number of in-
+stances of logical servicemthat can still be deployed on
+serverv,PSv
+mdenotes the number of existing instances on
+vfrom services that depend onm. The hyperparameters
+αandβrespectively weight the benefits from reduced
+queuing delay and communication delay.
+AI Service Deployment: After calculating the affinity
+between the current service and all servers, we sort the
+servers in descending order of affinity and iteratively place
+one instance on the highest-ranked server until the planned
+number of instances is reached.
+4.2 Load-Aware Model Replacement Algorithm
+In real systems, request intensity fluctuates over time.
+Traditional approaches rely on elastic scaling, like adding
+instances under high load. However, under tight resource
+budgets, scaling has little effect, failing to handle complex
+and variable patterns. To address this challenge, the Load-
+Aware Model Replacement Algorithm (LAMRA) is pro-
+posed, which adapts to load changes by switching between
+service versions under finite hardware resources. Hence,
+LAMRA enhances resource utilization and strengthens QoS
+guarantees. Function 2 shows the detailed steps as follows:
+Inference-Speed Threshold: When the change in request
+intensity exceeds a preset threshold, we calculate the min-
+imum inference speed required to meet the target QoS for
+each microservice. This value is derived from the current
+number of deployed instances and the real-time system
+load, serves as the baseline for subsequent version selection.Function 1Joint Communication and Queue-Aware Deployment
+Algorithm (JCQDA)
+Require:
+The set of all serversV, The set of all AI servicesM, The
+set of all user service requestsR.
+Ensure:
+The deployment resultZ.
+1:Initiate the remaining CPU cores on all servers
+AvailCPU
+v=CCPU, and the remaining GPU memory on
+all serversAvailGPU
+v=CGPU;
+2:form∈Mdo
+3:CalculateN maccording to Eq. 15 and Eq. 33;
+4:end for
+5:Sort all AI services inMin a descending order byN m;
+6:form∈Mdo
+7:forv∈Vdo
+8:CalculateAv
+maccording to Eq. 34;
+9:end for
+10:Sort all servers inVin a descending order byAv
+m;
+11:forv∈Vdo
+12:ifAvailCPU
+v−N m≥0then
+13:AvailCPU
+v=AvailCPU
+v−N m;
+14:AvailGPU
+v=AvailGPU
+v−N m·CGPU
+m;
+15:Xv
+m=N m;
+16:break;
+17:else
+18:AvailGPU
+v=AvailGPU
+v−AvailCPU
+v·CGPU
+m;
+19:Xv
+m=AvailCPU
+v;
+20:N m=N m−AvailCPU
+v;
+21:AvailCPU
+v= 0;
+22:end if
+23:end for
+24:end for
+25:returnZ;
+Candidate-Version Selection: Versions whose inference
+speed is below the threshold are first removed to exclude
+underperforming models from the candidate set. For the re-
+maining versions, the Pareto optimality criterion is applied
+to identify versions that are not dominated across service
+rate, service efficiency, and GPU memory consumption.
+Only these versions enter the candidate set, which narrows
+the search space while preserving multi-metric superiority.
+Candidate-Version Scoring: We quantitatively evaluate
+all candidates. For versionk, a comprehensive score is
+computed as a weighted sum of service rateµ m,k, GSTC
+scoreGSTC m,k, and GPU memory consumptioncGPU
+m,k:
+score m,k=αµ m,k+βGSTC m,k+γCGPU
+m,k (35)
+whereα,β, andγare weighting coefficients that indicate
+the relative importance of the three metrics in the overall
+score. This weighted evaluation jointly reflects the process-
+ing efficiency, quality level, and resource consumption of a
+service, providing a quantitative basis for version selection.
+Optimal-Version Replacement: After scoring, the ver-
+sion with the highest score then replaces the current de-
+ployed version. This dynamic replacement strategy enables
+continuous improvement of service performance and re-
+source utilization under fluctuating request intensity.
+
+--- Page 9 ---
+9
+Function 2Load-Aware Model Replacement Algorithm
+(LAMRA)
+Require:
+Set of all service requests after the arrival rate change
+Rchange .
+Ensure:
+The set of new microservice versionsM change obtained
+by the algorithm withR change .
+1:M change ={};
+2:form∈Mdo
+3:Avail Km={};
+4:Calculate the sum of the new request arrival ratesλ m
+for AI servicemaccording to Eq. 15;
+5:When the value in Eq. 21 is less than 1, calculate the
+minimum processing rateµmin
+mfor AI servicembased
+onλ mandN m;
+6:fork∈K mdo
+7:ifµ m,k≥µmin
+mthen
+8:Avail Km=Avail Km∪mk;
+9:end if
+10:end for
+11:Perform Pareto filtering on the versions in set
+Avail Kmto obtain the frontier version set
+Frontier Kmof the remaining models;
+12:form k∈Frontier Kmdo
+13:Calculate the score for versionkof microservicem
+according to Eq. 35;
+14:end for
+15:Select the version with the highest scorem bestto
+replace the original version;
+16:M change =M change∪m best;
+17:end for
+18:returnM change ;
+5 PROOF
+We rigorously demonstrate the superiority of the joint
+optimization of AI architecture design, deployment, and
+routing from two complementary perspectives: theoretical
+analyses of performance bounds (resource utilization, la-
+tency, and service quality) and Lagrange constrained op-
+timizations (constraint relaxation and duality gap). The for-
+mer proves our method’s superior theoretical performance
+limits, while the latter verifies it more closely approaches
+the theoretical optimum in practice, providing a solid theo-
+retical basis for subsequent experiments.
+5.1 Basic Definitions and Core Assumptions
+To ensure derivation rigor, we first clarify the key vari-
+ables, their mathematical expressions, and physical mean-
+ings and propose core assumptions based on experiments.
+5.1.1 Key Variables
+Correlation Coefficient: Letτ GSTC,P denote Kendall’s
+τbetween GSTC scores and actual architecture perfor-
+mance, and letτ FLOPs,P /τParams,P denote Kendall’sτbe-
+tween FLOPs/Params and actual architecture performance
+respectively. All coefficients range from [-1, 1], with higher
+values indicating stronger positive correlations.Resource Utilization: For a given serverv, we define
+the resource utilization of it as follows:
+η(v) =P
+m∈M Nv
+m
+CCPU
+· P
+m∈M Nv
+mCGPU
+m
+CGPU!
+(36)
+this metric captures joint CPU–GPU utilization, and is high
+only when both resources are efficiently used.
+End-to-End Latency:T ris decomposed into queuing-
+computing latencyts
+miand cross-server communication la-
+tencyttran
+mi,mi+1, as shown in Eq. 24.
+Service Quality:Q rcombines actual architecture
+performanceQperf
+r, and normalized end-to-end latency
+Tr/Tmax, weighted byαand1−αto balance performance
+and latency, as in Eq. 29.
+Feasible Solution Space: Our method searches a larger
+solution spaceΩ, jointly optimizing architecture selection,
+deployment decisionsNv
+m, and routingPmj,vbmi,va. In contrast,
+baselines search only a smaller spaceΩ 0, where the architec-
+ture is fixed without GSTC screening, and only deployment
+and routing are adjusted.
+Constraint:
+g1(v) =X
+m∈MNv
+m−CCPU≤0(37)
+g2(v) =X
+m∈MNv
+mCGPU
+m−CGPU≤0(38)
+g3(r) =T r−T max≤0(39)
+g1(v)is the CPU capacity constraint consistent with Eq. 13,
+g2(v)is the GPU capacity constraint consistent with Eq. 14,
+andg 3(r)is the latency constraint, whereT maxdenotes the
+maximum tolerable latency.
+Lagrange Multiplier: We introduce non-negative La-
+grange multipliersλ 1(v),λ 2(v)andλ 3(r), which are associ-
+ated with constraintsg 1(v),g 2(v)andg 3(r), respectively.
+These multipliers satisfy the Karush–Kuhn–Tucker (KKT)
+conditions: dual feasibilityλ 1(v), λ 2(v), λ 3(r)≥0, comple-
+mentary slacknessλ i·gi(·) = 0, and Lagrangian stationarity.
+5.1.2 Core Assumptions
+GSTC Correlation Advantage: As shown in Table 2, the
+correlation between GSTC scores and the true performance
+satisfiesτ GSTC,P > τ FLOPs,P andτ GSTC,P > τ Params,P .This
+indicates that GSTC characterizes architecture performance
+more effectively than FLOPs and Params.
+Correlation-Performance Mapping: A higherτmeans
+the selected architecture better matches the “high-
+performance and low-resource” goal of GSTC. In particular,
+asτincreases,CGPU
+m tends to decrease andµ m(the service
+rate of servicemdefined in Eq. 12) tends to increase.
+Slater Condition Satisfaction: The joint optimization
+problem admits strictly feasible solutions as Eq. 37, Eq.38
+and Eq.39. Hence, the Slater condition holds, which guar-
+antees the applicability of the strong duality theorem and
+yields zero duality gap for the convex formulation.
+5.2 Proof of Performance Bounds
+This subsection compares theoretical boundaries of
+resource utilization, latency, and service quality between
+
+--- Page 10 ---
+10
+joint optimization and baselines, proving the former admits
+strictly superior performance limits.
+Theorem 1. Joint optimization has a higher upper
+bound of resource utilization.
+Proof.First, we list some general constraints and variables.
+Define GPU 0as the average per-instance GPU memory
+consumption of fixed, less stable baseline architectures, and
+GPU GSTC as that of high-quality architectures selected by
+GSTC. Since GSTC correlates more strongly with true per-
+formance than FLOPs and Params, GPU GSTC <GPU 0. Let
+γ∈(0,1)denote the deployment redundancy coefficient,
+with more stable architectural resource demand correspond-
+ing toγcloser to 1. The redundancy coefficients of baseline
+and GSTC architectures areγ 0andγ GSTC , respectively. Un-
+der this setting, the GPU memory constraint on servervis:
+X
+m∈MNv
+m·GPU≤γ·CGPU(40)
+Second, baseline architectures exhibit poor resource
+stability, requiring a larger redundancy margin, that is,
+γ0< γ GSTC . Under the GPU memory constraintP
+m∈M Nv
+m·
+GPU 0≤γ 0·CGPU, the maximum number of deployable
+instances on servervof baseline architectures is defined as:
+X
+m∈MNv,max
+m,0≤γ0·CGPU
+GPU 0(41)
+substituting this bound into the expression ofη(v)as shown
+in Eq. 36 yields the following upper bound on the average
+resource utilization of the baseline algorithms:
+¯η0≤γ2
+0
+|V|X
+v∈VCGPU
+GPU 0·CCPU(42)
+Similarly, for GSTC architectures, under the GPU mem-
+ory constraintP
+m∈M Nv
+m·GPU GSTC≤γ GSTC·CGPU, the
+maximum number of deployable instances on servervof
+joint optimization is bounded by:
+X
+m∈MNv,max
+m,joint≤γGSTC·CGPU
+GPU GSTC(43)
+substituting this bound intoη(v)yields the upper bound on
+the average resource utilization of joint optimization:
+¯η≤γ2
+GSTC
+|V|X
+v∈VCGPU
+GPU GSTC·CCPU(44)
+Finally, sinceγ GSTC > γ 0and GPU GSTC <GPU 0, we
+can make a comparison between the upper bound of¯ηand
+¯η0. Let¯η∗= max Ω¯η, and let¯η∗
+0= max Ω0¯η0, so we prove
+¯η∗>¯η∗
+0. Therefore, joint optimization has a higher upper
+bound of resource utilization than baselines.
+Theorem 2. Joint optimization has a lower lower bound
+of latency.
+Proof.From Eq. 24, we decomposite the end-to-end latency
+for the requestrinto three parts, which can be expressed as:
+Tr=Tcomp
+r+Tque
+r+Tcomm
+r (45)
+whereTcomp
+r ,Tque
+r, andTcomm
+r denote computation, queuing,
+and communication latency, respectively.
+For computation, sinceτ GSTC,P > τ FLOPs,P and
+τGSTC,P > τ Params,P , GSTC architectures provide higherservice rates, that is,µ m,0< µ m,GSTC . As Eq. 18, we have
+computation latency:
+Tcomp
+r =X
+m∈M1
+µm(46)
+thereby leading toTcomp
+r,0> Tcomp
+r,joint .
+For queuing, we adopt the M/M/C model with ser-
+vice intensityρv
+m=λv
+m
+Nvmµmin Eq. 21, so smallerρv
+mim-
+plies smallerTque
+r. Sinceγ 0< γ GSTC and GPU GSTC <
+GPU 0, we haveP
+m∈M Nv,max
+m,0 <P
+m∈M Nv,max
+m,joint . Com-
+bined withµ m,0< µ m,GSTC , this yields toρv
+m,0> ρv
+m,joint ,
+and henceTque
+r,0> Tque
+r,joint .
+For communication,Tcomm
+r decreases as more depen-
+dent services are co-located on the same servers. Baselines
+fail to incorporate the “service–server affinity” design in
+Section 4.1, which results in more cross-server deployment
+of dependent services and thereforeTcomm
+r,0 > Tcomm
+r,joint .
+Summing the three components for each requestrin
+Eq. 45, we haveT r,joint < T r,0. Then average over all
+requestsr∈Rbyλ rin Eq. 25. In the solution space
+Ω/Ω 0, we find the minimum value ofT Avg. LetT min,joint =
+minΩTAvg,joint denote the minimum average latency of joint
+optimization, andT min,0 = min Ω0TAvg,0 denote that of base-
+lines. Accordingly,T min,joint < T min,0 , which proves the joint
+optimization achieves strictly lower latency than baselines.
+Theorem 3. Joint optimization has a higher upper
+bound of service quality.
+Proof.Combining Eq. 29 with Eq. 30, we define the average
+service quality as:
+Qsys=X
+r∈RλrαQperf
+r−(1−α)Tr
+TmaxP
+r∈Rλr(47)
+whereQperf
+rdenotes the overall effectiveness of requestr
+andT ris its end-to-end latency.
+As discussed in Section 6.1, the fixed baseline archi-
+tectures exhibit poor performance adaptability, so satisfy
+Qperf
+r,0< Qperf
+r,GSTC . Furthermore, Theorem 2 showsT r,0>
+Tr,joint . Taking the two inequalities into account, and using
+the definitionQ r=αQperf
+r−(1−α)Tr
+Tmaxin Eq. 29, we obtain
+the per-request inequalityQ r,0< Q r,joint .
+For allr∈R, taking the average over all requests yieldsP
+r∈RλrQr,jointP
+r∈Rλr>P
+r∈RλrQr,0P
+r∈Rλr, which meansQsys> Qsys
+0. In
+the solution spaceΩ/Ω 0, we find the maximum value of
+Qsys/Qsys
+0, respectively. LetQsys∗= max ΩQsysdenote the
+maximum average service quality of joint optimization, and
+Qsys∗
+0= max ΩQsys
+0denote that of baselines. ThenQsys∗>
+Qsys∗
+0. In summary, the joint optimization provides strictly
+higher service quality than the baseline algorithms.
+Corollary. Joint optimization has a higher unified ob-
+jective function value.
+Following the multi-objective optimization formulation
+in Eq. 32, we define the unified objective as:
+J=ω 1·¯η−ω 2·TAvg+ω3·Qsys(48)
+whereω 1+ω2+ω3= 1andω 1, ω2, ω3>0.
+
+--- Page 11 ---
+11
+From Theorems 1–3, we have¯η∗>¯η∗
+0,T min,joint <
+Tmin,0 , andQsys∗> Qsys∗
+0. The optimal unified objective is:
+J∗
+joint=ω 1¯η∗−ω2Tmin,joint +ω3Qsys∗
+> ω 1¯η∗
+0−ω2Tmin,0+ω3Qsys∗
+0=J∗
+0(49)
+5.3 Proof of Constrained Optimizations
+This subsection converts the optimization problem into
+a constrained extremum problem and analyzes its La-
+grangian dual. By analyzing constraint relaxation and du-
+ality gap, we verify that joint optimization attains perfor-
+mance closer to the theoretical optimum than the baselines.
+5.3.1 Construction of Lagrange Functions
+We maximize the unified objectiveJunder CPU con-
+straintsg 1(v), GPU constraintsg 2(v), and latency con-
+straintsg 3(r). By the KKT conditions, we introduce nonneg-
+ative Lagrange multipliersλ 1(v),λ 2(v), andλ 3(r)forg 1(v),
+g2(v), andg 3(r), respectively. The Lagrangian function of
+the joint optimization problem is:
+Ljoint =J joint−X
+v∈Vλ1(v)g 1(v)−X
+v∈Vλ2(v)g 2(v)−X
+r∈Rλ3(r)g 3(r)
+(50)
+For the baseline algorithms, we fix the architectures
+(CGPU
+m,0 > CGPU
+m,GSTC ,µm,0< µ m,GSTC ) and optimize only
+deployment and routing. Introducing baseline multipliers
+λ′
+1(v),λ′
+2(v), andλ′
+3(r)for the same constraintsg 1(v),
+g2(v), andg 3(r), the Lagrangian function for the baseline
+optimization problem becomes:
+L0=J 0−X
+v∈Vλ′
+1(v)g 1(v)−X
+v∈Vλ′
+2(v)g 2(v)−X
+r∈Rλ′
+3(r)g 3(r)(51)
+5.3.2 Comparison of KKT Optimal Conditions
+We compare the KKT stationarity conditions of the joint
+optimization and the baselines with respect to the decision
+variableNv
+m, taking partial derivatives ofL jointandL 0and
+setting them to zero.
+For joint optimization, we have a gradient condition as:
+∂L joint
+∂Nvm=ω 1·2P
+m∈M Nv
+m·CGPU
+m,GSTC
+|V| ·CCPU·CGPU−ω2·∂Tr,joint
+∂Nvm
++ω3·α·∂Qperf
+r,GSTC
+∂Nvm−λ1(v)−λ 2(v)·CGPU
+m,GSTC = 0
+(52)
+Under joint optimization, GSTC selects architectures
+with small GPU memory consumption, soCGPU
+m,GSTC is small
+and the penalty termλ 2(v)·CGPU
+m,GSTC is reduced. For a fixed
+GPU capacity, more instances can be deployed and queuing
+pressure remains moderate. WhenNv
+mgrows, the marginal
+latency reduction diminishes, so∂T r,joint/∂Nv
+mstays small.
+Meanwhile, GSTC offers higher performance adaptability,
+making it more sensitive to load. As a result, increasingNv
+m
+yields considerable performance gains, and∂Qperf
+r,GSTC /∂Nv
+m
+is relatively large. Overall, benefits are substantial and costs
+are minimal. To satisfy the stationarity condition in Eq.
+52, the multipliersλ 1(v)andλ 2(v)therefore remain small,
+indicating looser CPU and GPU constraints.For general optimization, the gradient condition is:
+∂L0
+∂Nvm=ω 1·2P
+m∈M Nv
+m·CGPU
+m,0
+|V| ·CCPU·CGPU−ω2·∂Tr,0
+∂Nvm
++ω3·α·∂Qperf
+r,0
+∂Nvm−λ′
+1(v)−λ′
+2(v)·CGPU
+m,0= 0(53)
+Here the fixed baseline architectures have larger GPU
+memory consumption per instance, soCGPU
+m,0 is large and the
+termλ′
+2(v)·CGPU
+m,0 has a stronger penalty. Resources in base-
+lines are constrained. With limited deployable instances, the
+system often runs under high load, and queuing latency
+is highly sensitive to the number of instances. In this case,
+increasingNv
+mwill bring significant latency reduction, and
+∂Tr,0/∂Nv
+mhas large magnitude. Furthermore, the lower
+performance adaptability leads to a smaller∂Qperf
+r,0/∂Nv
+m.
+In summary, the benefits are small and the costs are large.
+To balance the equality in Eq. 53, the multipliersλ′
+1(v)
+andλ′
+2(v)must exceed their counterparts in the joint op-
+timization, that is,λ′
+1(v)> λ 1(v)andλ′
+2(v)> λ 2(v). This
+indicates tighter CPU and GPU constraints and a smaller
+feasible region compared with joint optimization.
+5.3.3 Verification of Duality Gaps
+We show that joint optimization exhibits a smaller du-
+ality gap than the baselines. Consistent with the constraints
+defined in this paper, we construct the dual functions from
+the Lagrangians for joint optimization and baseline algo-
+rithms, respectively.
+djoint(λ) = max
+Nvm,PLjoint(Nv
+m, P, λ)(54)
+d0(λ′) = max
+Nv
+m,PL0(Nv
+m, P, λ′)(55)
+whereNv
+mdenotes deployment decisions, andPdenotes
+routing variables. We fix multipliersλandλ′, changing
+primitive variablesNv
+m, Pto maximizeL jointandL 0.
+Since the optimization problems here satisfy Slater’s
+condition, the strong duality theorem applies. Hence, the
+optimal primal value equals the optimal dual value when
+the duality gap approaches zero.
+For the proposed joint optimization, GSTC finds more
+adaptable architectures and the server configuration offers
+sufficient resource redundancy. As discussed earlier, this
+leads to abundant strictly feasible solutions far from the con-
+straint boundaries, and the associated Lagrange multipliers
+remain small. In this case, the Lagrangian relaxation is tight
+and the dual functiond joint(λ)closely matches the primal
+objective, making the duality gap negligible. Consequently,
+the actual performance of joint optimization is very close to
+the theoretical optimum.
+In contrast, baselines rely on fixed architectures with
+high GPU consumption and low service rate, which
+shrink the feasible region. Many solutions operate near
+the CPU/GPU and latency limits, producing large KKT
+multipliers and a looser Lagrangian relaxation. As a result,
+the dual functiond 0(λ′)provides a conservative upper
+bound and a larger duality gap. This implies that baseline
+performance deviates more from its theoretical upper bound
+than in the proposed joint optimization.
+
+--- Page 12 ---
+12
+(a) CIFAR10
+ (b) ImageNet16-120
+ (c) Object Classification
+ (d) Scene Classification
+(e) Semantic Segmentation
+ (f) Room Layout
+ (g) Surface Normal
+ (h) Jigsaw
+Fig. 3: Correlation plot between GSTC scores of sampled untrained architectures and post-training validation accuracy.
+5.4 Remarks
+Comprehensive derivation confirms three conclusions:
+1) Superior theoretical boundaries: Based on the high
+correlation of GSTC, joint optimization has higher
+upper bounds of resource utilization and service
+quality, and a lower lower bound of latency. Conse-
+quently, the theoretical value of its unified objective
+function strictly exceeds that of the baseline.
+2) Better practical performance: Lagrange multiplier
+verification shows joint optimization has looser con-
+straints and a narrower duality gap, making its
+actual performance closer to theoretical optima. In
+contrast, baselines suffer from tighter constraints
+and a larger duality gap, which limit their achiev-
+able performance.
+3) Fundamental source advantage: GSTC performs
+”low-resource, high-performance” screening at the
+architecture design stage, breaking the baseline’s
+vicious cycle of fixed architectures, resource waste,
+and increased latency, and creating a coordinative
+advantage across the full lifecycle.
+In summary, the mathematical analysis shows that joint
+optimization of AI architecture design, deployment, and
+routing achieves synergistic optima of resource usage, la-
+tency, and service quality in both theory and practice, with
+performance significantly exceeding algorithms that only
+optimize deployment and routing.
+6 PERFORMANCEEVALUATION
+In this chapter, we first design validation experiments
+on three classic datasets to assess the resulting correlation
+of proxy models. We compare our approach with general
+proxies based on FLOP and #Params, and classic proxies
+SNIP [26], GraSP [22], Fisher [42], Synflow [27], and GradTABLE 2: Correlation coefficients of zero-cost proxies and
+the two original proxies (#Params and FLOPs) (KT and SPR
+denote Kendall’sτand Spearman’sρrespectively).
+The best results are shown in bold.
+NAS-Bench-201 NAS-Bench-101
+Dataset CIFAR10 CIFAR100 Img16-120 CIFAR10
+Proxy Correlation KT SPR KT SPR KT SPR KT SPR
+Grad norm 0.46 0.63 0.47 0.63 0.43 0.58 -0.17 -0.25
+SNIP 0.46 0.63 0.46 0.63 0.43 0.58 -0.12 -0.17
+GraSP 0.37 0.54 0.36 0.51 0.40 0.56 0.20 0.29
+Fisher 0.40 0.55 0.41 0.55 0.37 0.50 -0.20 -0.28
+Synflow 0.54 0.73 0.57 0.76 0.56 0.75 0.23 0.35
+Zen-score 0.29 0.38 0.28 0.36 0.29 0.40 0.46 0.63
+FLOPs 0.54 0.73 0.51 0.71 0.49 0.67 0.31 0.44
+#Params 0.570.75 0.55 0.73 0.52 0.69 0.31 0.43
+GSTC (Ours) 0.57 0.77 0.56 0.75 0.54 0.74 0.50 0.70
+norm [23], as well as the recent Zen-score [43]. We then
+conduct a multi-dimensional comparison of our deployment
+algorithm against CDRA [44], CDS [45], MDSGA [46], and
+GRLS [47], under static deployment and dynamic load
+adaptation across small, medium, and large-scale network
+settings. In this way, we can comprehensively demonstrate
+the performance of our algorithm under varying conditions.
+6.1 Proxy Model Validation Results
+This subsection evaluates GSTC’s ability to character-
+ize architecture performance: its representational capability,
+effectiveness, and reliability. To this end, we compare it
+with classic and recent proxy models. Common methods
+based on FLOPs and #Params respectively use floating-
+point operation counts and parameter statistics to quantify
+performance. Among classic proxies, Grad norm [23], GraSP
+[22], and Fisher [42] all employ gradient or curvature in-
+formation: Grad norm calculates gradient norm, and GraSP
+further analyzes the effect of weight removal using Hessian-
+gradient products, while Fisher evaluates parameter impor-
+
+--- Page 13 ---
+13
+(a) Request arrival rate
+ (b) Request length
+ (c) Number of request types
+Fig. 4: Comparison of latency across different algorithms when deployment costs are equivalent.
+tance via Fisher information. In contrast, SNIP [26] assesses
+connection sensitivity, while Synflow [27] simultaneously
+performs pruning and evaluation based on synaptic flow
+conservation. Recent methods adopt alternative metrics:
+Zen-score [43] estimates network complexity through ap-
+proximate gradients. All comparisons are conducted on
+NAS-Bench-101 [38], NAS-Bench-201 [48], and the multi-
+scenario TransNAS-Bench-101 [41], with Kendall’sτand
+Spearman’sρas evaluation metrics.
+To assess the performance, generalizability, and robust-
+ness of GSTC, we first compare Kendall’sτand Spearman’s
+ρof multiple proxy models on NAS-Bench-101 and NAS-
+Bench-201 datasets in CIFAR-10 [49], CIFAR-100 [49], and
+ImageNet16-120 [37]. As shown in Table 2, GSTC achieves
+strong correlations across datasets and tasks. On NAS-
+Bench-201 (CIFAR-10), GSTC reachesρ= 0.77, higher
+than SynFlow (0.73) and #Params (0.75). On NAS-Bench-101
+(CIFAR-10), it achievesτ= 0.50andρ= 0.70, clearly above
+FLOPs (0.31, 0.44), avoiding the negative correlation seen
+in Grad norm. This advantage stems from its information-
+based encoding and a four-dimensional assessment system
+of “total path information, path variation, output node
+information, and output variation.” This design captures
+structural features and task adaptability, providing support
+for subsequent deployment optimization.
+To further visualize GSTC in multi-task scenarios, we
+plot scatter charts in Fig. 3. Figs. 3a–3h show the relationship
+between GSTC scores of randomly sampled untrained archi-
+tectures and their post-training validation accuracy in the
+NAS-Bench-101, NAS-Bench-201, and TransNAS-Bench-101
+search spaces across eight industrial AI service scenarios:
+CIFAR10 [36], ImageNet16-120 [50], Object Classification,
+Scene Classification, Semantic Segmentation, Room Layout,
+Surface Normal, and Jigsaw [41]. The horizontal axis in-
+dicates accuracy, while the vertical axis denotes the proxy
+score. Across all search-space/dataset combinations, GSTC
+scores for untrained architectures are positively correlated
+with post-training validation accuracy, with particularly
+strong trends on TransNAS-Bench-101 (τ= 0.549for Scene
+Classification andτ= 0.589for Surface Normal). Even
+in the large-scale ImageNet task in Fig. 3b, the correlation
+remains relatively high at 0.539. The results indicate that
+GSTC not only performs well on small datasets but also
+transfers to larger, more complex real-world datasets, con-
+firming the generality and effectiveness of the GSTC proxy
+score. It enables preliminary, training-free assessment of
+architecture performance and provides a key foundation forsubsequent AI service deployment optimization algorithms.
+6.2 Deployment Model Validation Results
+We evaluate the proposed JCQDA deployment algo-
+rithm and the LAMRA dynamic replacement algorithm
+against four baselines: CDRA, CDS, MDSGA, and GRLS,
+using average end-to-end latency, service accuracy, and
+GPU memory consumption as metrics. Among these, CDRA
+[44] deploys services by request priority, satisfying latency
+constraints by increasing instance counts. CDS [45] attempts
+to co-locate microservices from the same request chain
+on a single server to reduce cross-server communication.
+MDSGA [46] avoids local optima via improved encoding
+and a catastrophe mechanism, randomly initializing in-
+stance counts and iteratively adjusting them. GRLS [47]
+constructs an initial solution greedily and refines it by local
+search, setting instance counts based on request volume and
+processing rate.
+To ensure fair comparison in static deployment, all
+baselines use the same number of CPU cores as JCQDA,
+with a unified setting of arrival rate 400, request length 6,
+and 30 request types, and Figs. 4a–4c illustrate how latency
+varies with these variables.
+Under higher arrival rate, JCQDA achieves 0.85 average
+latency, versus 1.48 (CDRA), 3.14 (MDSGA), 0.98 (GRLS),
+and 2.76 (CDS). When the request length increases, JCQDA
+remains at 0.88 latency, while most baselines exceed 1.5.
+When the number of request types grows, JCQDA still
+maintains 0.87 latency, while CDRA, MDSGA, and CDS
+increase to 1.49, 3.23, and 2.70, respectively. This comes from
+the “service-server affinity” design and the ‘communication-
+queuing collaborative perception” mechanism, which re-
+duce both cross-server transmission and waiting time. As
+a result, it maintains stable end-to-end latency, achieving
+efficient resource scheduling in static deployments.
+In addition, we conduct dynamic scenario validation in
+small, medium, and large-scale networks respectively.
+6.2.1 Small-Scale Networks
+Under dynamic load in small-scale networks, LAMRA
+outperforms CDRA, MDSGA, GRLS, and CDS on average
+end-to-end latency, service accuracy, and GPU memory
+consumption. In Fig. 5a, it achieves 0.19 average latency,
+38% lower than all baselines, 62.7% lower than MDSGA
+and 38.7% lower than GRLS. In Fig. 5b, LAMRA attains
+0.932 average accuracy (2.76% higher than CDRA). In Fig.
+
+--- Page 14 ---
+14
+(a) Average end-to-end latency
+ (b) Average service accuracy
+ (c) GPU Memory consumption
+Fig. 5: Relationship between various metrics and time cycles for different algorithms in small-scale networks.
+(a) Average end-to-end latency
+ (b) Average service accuracy
+ (c) GPU Memory consumption
+Fig. 6: Relationship between various metrics and time cycles for different algorithms in medium-scale networks.
+(a) Average end-to-end latency
+ (b) Average service accuracy
+ (c) GPU Memory consumption
+Fig. 7: Relationship between various metrics and time cycles for different algorithms in large-scale networks.
+5c, LAMRA achieves 153.1 GB average GPU memory con-
+sumption (19.7% lower than CDRA).
+The gains are attributed to the end-to-end pipeline
+combining GSTC zero-cost evaluation and JCQDA static
+deployment, which covers “load awareness, model replace-
+ment, and deployment linkage.’ GSTC rapidly selects “high-
+accuracy, low-resource” architectures without full training.
+LAMRA monitors load fluctuations in real time and chooses
+architectures guided by GSTC to maintain accuracy while
+controlling GPU memory consumption. During model re-
+placement, JCQDA deployment parameters are simultane-
+ously updated to avoid latency issues caused by improper
+deployment. At the same time, it employs Pareto frontier
+selection to balance multiple metrics. Conversely, baselines
+mainly adjust instance counts or container placement and
+lack architecture-level optimization.
+6.2.2 Medium-Scale Networks
+In medium-scale networks, LAMRA remains ahead
+across the same three metrics: average end-to-end latency
+is 0.27 in Fig. 6a, which is 75.9%, 88.2%, 64.0%, and 84.5%
+lower than CDRA (1.12), MDSGA (2.28), GRLS (0.75), and
+CDS (1.74), respectively. In Fig. 6b, its average accuracy is0.911, 1.56% higher than CDRA (0.897). In Fig. 6c, its GPU
+memory is 566 GB, 22.4% lower than CDRA (729.3).
+The dynamic adjustment mechanism of LAMRA makes
+its advantages particularly evident in medium-scale net-
+works. On one hand, with servers and complex depen-
+dencies, JCQDA’s service–server affinity prioritizes placing
+dependent services on nodes with better links, sharply
+reducing cross-server latency. In contrast, the baselines lack
+such coordination, leading to a marked latency increase
+as the number of nodes grows. On the other hand, load
+fluctuations occur more frequently in medium-scale net-
+works. With the evaluation system built on the information-
+quantity quantization encoding mechanism, GSTC can pre-
+cisely match architectures to current load, avoiding accuracy
+loss or resource waste from poor architectural adaptation.
+6.2.3 Large-Scale Networks
+In large-scale networks, LAMRA continues to lead on
+latency, accuracy, and GPU memory consumption. In Fig.
+7a, LAMRA achieves an average end-to-end latency of
+0.37, reducing latency by 88.5%, 94.7%, 79.8%, and 93.6%
+compared to CDRA (3.21), MDSGA (7.03), GRLS (1.83), and
+CDS (5.78), respectively. For accuracy in Fig. 7b, LAMRA
+
+--- Page 15 ---
+15
+reaches 0.921, a 2.45% improvement over CDRA at 0.899.
+It maintains stable and high efficiency even under condi-
+tions of increased server counts and more complex service
+dependencies. For GPU memory consumption in Fig. 7c,
+LAMRA uses 1383.7 GB on average, a 14.8% reduction from
+1624.3 GB for CDRA, effectively controlling resource usage
+in large-scale networks.
+LAMRA demonstrates strong performance in large-
+scale networks because its closed-loop “static deployment,
+dynamic adjustment” mechanism aligns deeply with the
+setting’s needs. Particularly, when complex load fluctua-
+tions occur, LAMRA jointly replaces architectures and up-
+dates deployment parameters, avoiding system-level la-
+tency, while GSTC supports real-time replacement. How-
+ever, baselines are largely limited to adjusting instance
+counts, and the gap widens as scale increases, further val-
+idating the reliability of this collaborative framework in
+complex environments.
+6.2.4 Resource Efficiency Across Networks
+To assess the resource efficiency of LAMRA, we fix
+CDRA, MDSGA, GRLS, and CDS to the same end-to-end
+latency as LAMRA, comparing GPU memory usage across
+network scales as shown in Fig. 8. The experiment shows
+that LAMRA delivers consistent GPU savings at all scales,
+over 55% in small-scale networks (even reaching 82.5%
+versus MDSGA), 49.3%–75.4% in medium-scale networks,
+and 44.9%–72.9% in large-scale networks.
+The GPU memory efficiency of LAMRA arises from the
+collaborative optimization of architecture screening, model
+selection, and deployment constraints via GSTC and JC-
+QDA. GSTC embeds resource awareness at the design stage,
+identifying “performance-resource balanced” architectures,
+eliminating GPU redundancy at the source. LAMRA then
+employs Pareto frontier selection and weighted scoring to
+favor models with lower GPU memory under latency con-
+straints. JCQDA deployment rules precisely assess server
+GPU capacity, preventing waste from overflow. In con-
+trast, baselines mainly adjust instance counts or placement
+and therefore remain GPU-inefficient even when meet-
+ing latency requirements. End-to-end collaboration allows
+LAMRA to keep response speed while using GPU mem-
+ory efficiently, further verifying the practicality of our full-
+lifecycle collaborative optimization across network scales.
+7 CONCLUSIONS
+This paper has addressed the key challenges in AI
+service lifecycle management, including the separation be-
+tween design and deployment and insufficient dynamic
+adaptation. It has constructed the end-to-end collaborative
+framework “GSTC-JCQDA-LAMRA”, which links neural
+architecture design with dynamic deployment for the first
+time. GSTC introduces an innovative information-quantity
+quantization encoding mechanism for zero-cost evalua-
+tion, efficiently capturing the relationship between net-
+work structural features and performance. In multi-dataset
+and multi-task settings, its correlation metrics outperform
+mainstream proxies like FLOPs and Synflow. It reduces
+evaluation overhead while providing deployment-suitable
+Fig. 8: Algorithm GPU memory consumption across net-
+work scales.
+architectural foundations. On this basis, JCQDA models la-
+tency with an M/M/C queuing model and a service-server
+affinity to balance communication and queuing delays.
+LAMRA performs load-aware model replacement using the
+GSTC pre-evaluated library with Pareto frontier selection
+and dynamic deployment adjustment. Together, they com-
+plete full-lifecycle optimization. Theoretical mathematical
+analyses have shown that the framework achieves a higher
+upper bound of resource utilization and service quality,
+a lower lower bound on latency, looser constraints, and
+a smaller duality gap. Its practical performance is closer
+to the theoretical optimum. In summary, this framework
+has achieved a multi-objective balance among performance,
+resource utilization, and service quality, providing a new
+perspective for AI systems. Future work will further extend
+it to heterogeneous hardware and multimodal AI service
+scenarios, and improve cross-scenario adaptability.
+REFERENCES
+[1] Y. Hu, Q. Li, Y. Chai, D. Wu, L. Lu, N. Shi, Y. Teng, and Y. Zhang,
+“Ai service deployment and resource allocation optimization
+based on human-like networking architecture,”IEEE Internet of
+Things Journal, vol. 11, no. 14, pp. 24 795–24 813, 2024.
+[2] H. Zhou, C. Hu, D. Yuan, Y. Yuan, D. Wu, X. Liu, Z. Han, and
+J. Zhang, “Generative ai as a service in 6g edge-cloud: Generation
+task offloading by in-context learning,”IEEE Wireless Communica-
+tions Letters, 2024.
+[3] O. F. Bustinza, L. M. Molina, F. Vendrell-Herrero, and M. Opazo-
+Basaez, “Ai-enabled smart manufacturing boosts ecosystem value
+capture: The importance of servitization pathways within digital-
+intensive industries,”International Journal of Production Economics,
+vol. 277, p. 109411, 2024.
+[4] J. Xu, Q. Sun, Q.-L. Han, and Y. Tang, “When embodied ai meets
+industry 5.0: Human-centered smart manufacturing,”IEEE/CAA
+Journal of Automatica Sinica, vol. 12, no. 3, pp. 485–501, 2025.
+[5] L. J. Fahrner, E. Chen, E. Topol, and P . Rajpurkar, “The generative
+era of medical ai,”Cell, vol. 188, no. 14, pp. 3648–3660, 2025.
+[6] M. Reis, F. Reis, and W. Kunde, “Influence of believed ai involve-
+ment on the perception of digital medical advice,”Nature Medicine,
+vol. 30, no. 11, pp. 3098–3100, 2024.
+[7] S. Chen, Y. Liao, F. Wang, G. Wang, L. Wang, Y. Wang, and X. Zhu,
+“Toward the robustness of autonomous vehicles in the ai era,”The
+Innovation, vol. 6, no. 3, 2025.
+[8] D. Rossi and L. Zhang, “Landing ai on networks: An equipment
+vendor viewpoint on autonomous driving networks,”IEEE Trans-
+actions on Network and Service Management, vol. 19, no. 3, pp. 3670–
+3684, 2022.
+
+--- Page 16 ---
+16
+[9] C. Wu, Q. Peng, Y. Xia, Y. Jin, and Z. Hu, “Towards cost-effective
+and robust ai microservice deployment in edge computing envi-
+ronments,”Future Generation Computer Systems, vol. 141, pp. 129–
+142, 2023.
+[10] S. Zeb, M. A. Rathore, S. A. Hassan, S. Raza, K. Dev, and
+G. Fortino, “Toward ai-enabled nextg networks with edge
+intelligence-assisted microservice orchestration,”IEEE Wireless
+Communications, vol. 30, no. 3, pp. 148–156, 2023.
+[11] Y. Hu, H. Wang, L. Wang, M. Hu, K. Peng, and B. Veeravalli, “Joint
+deployment and request routing for microservice call graphs in
+data centers,”IEEE Transactions on Parallel and Distributed Systems,
+vol. 34, no. 11, pp. 2994–3011, 2023.
+[12] M. Hu, Z. Guo, H. Wen, Z. Wang, B. Xu, J. Xu, and K. Peng, “Col-
+laborative deployment and routing of industrial microservices in
+smart factories,”IEEE Transactions on Industrial Informatics, 2024.
+[13] K. T. Chitty-Venkata and A. K. Somani, “Neural architecture search
+survey: A hardware perspective,”ACM Computing Surveys, vol. 55,
+no. 4, pp. 1–36, 2022.
+[14] K. Peng, L. Wang, J. He, C. Cai, and M. Hu, “Joint optimization
+of service deployment and request routing for microservices in
+mobile edge computing,”IEEE Transactions on Services Computing,
+vol. 17, no. 3, pp. 1016–1028, 2024.
+[15] P . Lai, Y. Chen, S. Lin, T. Liao, Y. Hu, M. Hu, X. Zhang, Y. Xie, and
+J. Qin, “Intelligent autoscaling of microservice and request routing
+for dynamic service requests,”IEEE Internet of Things Journal, 2025.
+[16] H. T. T. Nguyen, L. P . T. Nguyen, and H. Cao, “Xedgeai: A human-
+centered industrial inspection framework with data-centric ex-
+plainable edge ai approach,”Information Fusion, vol. 116, p. 102782,
+2025.
+[17] K. Riou, K. Dong, K. Subrin, and P . Le Callet, “Reinforcement
+learning based tactile sensing for active point cloud acquisition,
+recognition and localization,”IEEE Journal of Selected Topics in
+Signal Processing, 2024.
+[18] W. Chen, L. Bruzzone, B. Dang, Y. Gao, Y. Deng, J.-G. Yu, L. Yuan,
+and Y. Li, “Rest: Holistic learning for end-to-end semantic segmen-
+tation of whole-scene remote sensing imagery,”IEEE Transactions
+on Pattern Analysis and Machine Intelligence, 2025.
+[19] X. Wang, Y. Zhao, C. Qiu, F. Gao, Z. Zhao, H. Yao, and X. Li,
+“Energy-friendly federated neural architecture search for indus-
+trial cyber-physical systems,”IEEE Journal on Selected Areas in
+Communications, 2025.
+[20] Z. Zhong, X. Liu, J. Jiang, D. Zhao, and S. Wang, “Dual-level
+cross-modality neural architecture search for guided image super-
+resolution,”IEEE Transactions on Pattern Analysis and Machine
+Intelligence, 2025.
+[21] Y. Liu, Y. Sun, B. Xue, M. Zhang, G. G. Yen, and K. C. Tan, “A sur-
+vey on evolutionary neural architecture search,”IEEE transactions
+on neural networks and learning systems, vol. 34, no. 2, pp. 550–570,
+2021.
+[22] C. Wang, G. Zhang, and R. Grosse, “Picking winning tick-
+ets before training by preserving gradient flow,”arXiv preprint
+arXiv:2002.07376, 2020.
+[23] M. S. Abdelfattah, A. Mehrotra, Ł. Dudziak, and N. D.
+Lane, “Zero-cost proxies for lightweight nas,”arXiv preprint
+arXiv:2101.08134, 2021.
+[24] J. Mellor, J. Turner, A. Storkey, and E. J. Crowley, “Neural architec-
+ture search without training,” inInternational conference on machine
+learning. PMLR, 2021, pp. 7588–7598.
+[25] X. Ning, C. Tang, W. Li, Z. Zhou, S. Liang, H. Yang, and Y. Wang,
+“Evaluating efficient performance estimators of neural architec-
+tures,”Advances in Neural Information Processing Systems, vol. 34,
+pp. 12 265–12 277, 2021.
+[26] N. Lee, T. Ajanthan, and P . H. Torr, “Snip: Single-shot net-
+work pruning based on connection sensitivity,”arXiv preprint
+arXiv:1810.02340, 2018.
+[27] H. Tanaka, D. Kunin, D. L. Yamins, and S. Ganguli, “Pruning neu-
+ral networks without any data by iteratively conserving synaptic
+flow,”Advances in neural information processing systems, vol. 33, pp.
+6377–6389, 2020.
+[28] Y. Chai, K. Gao, G. Zhang, L. Lu, Q. Li, and Y. Zhang, “Joint task
+offloading, resource allocation and model placement for ai as a
+service in 6g network,”IEEE Transactions on Services Computing,
+2024.
+[29] H. Lu, M. Du, X. He, K. Qian, J. Chen, Y. Sun, and K. Wang, “An
+adaptive neural architecture search design for collaborative edge-
+cloud computing,”IEEE Network, vol. 35, no. 5, pp. 83–89, 2021.[30] B. Lyu, H. Yuan, L. Lu, and Y. Zhang, “Resource-constrained
+neural architecture search on edge devices,”IEEE Transactions on
+Network Science and Engineering, vol. 9, no. 1, pp. 134–142, 2021.
+[31] Z. Niu, M. Roveri, and G. Casale, “Chainnet: A customized graph
+neural network model for loss-aware edge ai service deployment,”
+in2024 54th Annual IEEE/IFIP International Conference on Depend-
+able Systems and Networks (DSN). IEEE, 2024, pp. 238–251.
+[32] H. Sedghani, F. Filippini, and D. Ardagna, “Space4ai-d: A design-
+time tool for ai applications resource selection in computing
+continua,”IEEE Transactions on Services Computing, 2024.
+[33] H. Sami and A. Mourad, “Dynamic on-demand fog formation
+offering on-the-fly iot service deployment,”IEEE Transactions on
+Network and Service Management, vol. 17, no. 2, pp. 1026–1039, 2020.
+[34] M. Tortonesi and L. Foschini, “Business-driven service placement
+for highly dynamic and distributed cloud systems,”IEEE Transac-
+tions on Cloud Computing, vol. 6, no. 4, pp. 977–990, 2016.
+[35] X. Tian, H. Meng, Y. Shen, J. Zhang, Y. Chen, and Y. Li, “Dynamic
+microservice deployment and offloading for things–edge–cloud
+computing,”IEEE Internet of Things Journal, vol. 11, no. 11, pp.
+19 537–19 548, 2024.
+[36] H. Sfaxi, I. Lahyani, S. Yangui, and M. Torjmen, “Latency-aware
+and proactive service placement for edge computing,”IEEE Trans-
+actions on Network and Service Management, vol. 21, no. 4, pp. 4243–
+4254, 2024.
+[37] M. Ji, H. Zhao, L. Jiao, S. Zhang, X. Li, Z. Qian, and B. Ye, “Edge
+ai inference as a service via dynamic resources from repeated
+auctions,”IEEE Transactions on Mobile Computing, 2025.
+[38] C. Ying, A. Klein, E. Christiansen, E. Real, K. Murphy, and F. Hut-
+ter, “Nas-bench-101: Towards reproducible neural architecture
+search,” inInternational conference on machine learning. PMLR,
+2019, pp. 7105–7114.
+[39] K. He, X. Zhang, S. Ren, and J. Sun, “Deep residual learning for
+image recognition,” inProceedings of the IEEE conference on computer
+vision and pattern recognition, 2016, pp. 770–778.
+[40] Z. Liu, H. Mao, C.-Y. Wu, C. Feichtenhofer, T. Darrell, and S. Xie,
+“A convnet for the 2020s,” inProceedings of the IEEE/CVF conference
+on computer vision and pattern recognition, 2022, pp. 11 976–11 986.
+[41] Y. Duan, X. Chen, H. Xu, Z. Chen, X. Liang, T. Zhang, and Z. Li,
+“Transnas-bench-101: Improving transferability and generalizabil-
+ity of cross-task neural architecture search,” inProceedings of the
+IEEE/CVF Conference on Computer Vision and Pattern Recognition,
+2021, pp. 5251–5260.
+[42] L. Liu, S. Zhang, Z. Kuang, A. Zhou, J.-H. Xue, X. Wang, Y. Chen,
+W. Yang, Q. Liao, and W. Zhang, “Group fisher pruning for prac-
+tical network compression,” inInternational Conference on Machine
+Learning. PMLR, 2021, pp. 7021–7032.
+[43] M. Lin, P . Wang, Z. Sun, H. Chen, X. Sun, Q. Qian, H. Li, and
+R. Jin, “Zen-nas: A zero-shot nas for high-performance image
+recognition,” inProceedings of the IEEE/CVF international conference
+on computer vision, 2021, pp. 347–356.
+[44] M. Hu, Z. Guo, H. Wen, Z. Wang, B. Xu, J. Xu, and K. Peng, “Col-
+laborative deployment and routing of industrial microservices in
+smart factories,”IEEE Transactions on Industrial Informatics, 2024.
+[45] Y. Liu, B. Yang, Y. Wu, C. Chen, and X. Guan, “How to share:
+Balancing layer and chain sharing in industrial microservice de-
+ployment,”IEEE Transactions on Services Computing, vol. 16, no. 4,
+pp. 2685–2698, 2022.
+[46] Y. Gao, X. Liu, G. Chen, S. Li, and L. Sun, “Mdsga: A limited
+resources deployment strategy of microservice-based application
+based on genetic algorithm,” in2024 5th International Conference
+on Computer Engineering and Application (ICCEA). IEEE, 2024, pp.
+746–751.
+[47] X. He, H. Xu, X. Xu, Y. Chen, and Z. Wang, “An efficient algorithm
+for microservice placement in cloud-edge collaborative computing
+environment,”IEEE Transactions on Services Computing, vol. 17,
+no. 5, pp. 1983–1997, 2024.
+[48] X. Dong and Y. Yang, “Nas-bench-201: Extending the scope
+of reproducible neural architecture search,”arXiv preprint
+arXiv:2001.00326, 2020.
+[49] A. Krizhevsky, G. Hintonet al., “Learning multiple layers of
+features from tiny images,” 2009.
+[50] J. Deng, W. Dong, R. Socher, L.-J. Li, K. Li, and L. Fei-Fei, “Im-
+agenet: A large-scale hierarchical image database,” in2009 IEEE
+conference on computer vision and pattern recognition. Ieee, 2009, pp.
+248–255.
+

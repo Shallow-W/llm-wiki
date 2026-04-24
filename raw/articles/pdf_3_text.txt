@@ -1,0 +1,1611 @@
+=== 贪心分配异构资源，将服务实例部署在资源利用率最低的节点；路由时始终选择当前位置最近的节点转发请求，追求局部最优资源分配与路由效率。.pdf ===
+总页数: 14
+
+--- Page 1 ---
+3830 IEEE TRANSACTIONS ON SERVICES COMPUTING, VOL. 17, NO. 6, NOVEMBER/DECEMBER 2024
+Joint Task Ofﬂoading, Resource Allocation and
+Model Placement for AI as a Service
+in 6G Network
+Yuhao Chai , Kaice Gao , Guohan Zhang, Lu Lu , Member, IEEE ,Q i nL i , and Yong Zhang
+Abstract —In the future, 6G network is expected to achieve
+deep integration of communication and computation, where
+computation-centric services will be ubiquitous in the network.
+There are differences in data size, computing power types
+(CPU/GPU), model complexity, and Quality of Service (QoS) re-
+quirements among various CPU computing services and artiﬁcial
+intelligence (AI) services. By providing AI as a Service (AIaaS)
+in 6G network, the deployment of AI models and the scheduling of
+task and computing resources can be accelerated. The fundamental
+challenge lies in the effective amalgamation of the long-term strat-
+egy of the model placement problem and the short-term strategy
+of the task scheduling problem to attain dynamic scheduling and
+management of tasks and heterogeneous computing resources. A
+two-timescale optimization method for joint task ofﬂoading, com-
+puting resource allocation and model placement is proposed in
+this article. We present an edge-network-cloud framework that
+conﬁgures AIaaS functional units, taking into account the hetero-
+geneous computing requirements and QoS demands of different
+services. A long-term problem to minimize latency and energy
+consumption is formulated. To work out the coupled optimization
+parameters, the problem is decomposed into short-term deter-
+ministic sub-problems using Lyapunov optimization. We propose
+low-complexity algorithms for joint task ofﬂoading strategy based
+on deferred acceptance algorithm, computing resource allocation
+strategy based on convex optimization, and model placement strat-
+egy based on multi-armed bandits. Experimental results demon-
+strate that our approach outperforms reinforcement learning and
+other popular optimization algorithms in terms of complexity and
+effectiveness.
+Index Terms —6G network, resource allocation, AI as a service
+(AIaaS), Lyapunov optimization, deferred acceptance algorithm,
+multi-armed bandit.
+Received 19 January 2024; revised 10 August 2024; accepted 14 August
+2024. Date of publication 28 August 2024; date of current version 30 De-
+cember 2024. This work was supported by the Beijing University of Posts and
+Telecommunications-China Mobile Research Institute Joint Innovation Center.
+(Corresponding author: Yong Zhang.)
+Yuhao Chai and Kaice Gao are with the School of Electronic Engineering,
+Beijing University of Posts and Telecommunications, Beijing 100876, China
+(e-mail: chaiyh@bupt.edu.cn; gaokaice@bupt.edu.cn).
+Guohan Zhang is with the School of Science and Key Laboratory of Mathe-
+matics and Information Networks, Beijing University of Posts and Telecommu-
+nications, Beijing 100876, China (e-mail: zhanggh@bupt.edu.cn).
+Lu Lu and Qin Li are with the Department of Basic Network Technology
+Research, China Mobile Research Institute, Beijing 100876, China (e-mail:
+lulu@chinamobile.com; liqinyjy@chinamobile.com).
+Yong Zhang is with the School of Electronic Engineering and Bei-
+jing Key Laboratory of Work Safety Intelligent Monitoring, Beijing Uni-
+versity of Posts and Telecommunications, Beijing 100876, China (e-mail:
+yongzhang@bupt.edu.cn).
+This article has supplementary downloadable material available at
+https://doi.org/10.1109/TSC.2024.3451170, provided by the authors.
+Digital Object Identiﬁer 10.1109/TSC.2024.3451170I. I NTRODUCTION
+NETWORK intelligence is one of the visions for future 6G
+networks. Through the deep integration of communication
+and computation, 6G networks will support massive computing
+and artiﬁcial intelligence (AI) services, providing enhanced
+communication and connectivity capabilities. The computing
+resource of 6G networks will extend from “edge-cloud” to
+“edge-network-cloud” framework, using ubiquitous computing
+resource in the network to offer stable and efﬁcient AI services to
+users. Therefore, 6G networks will ﬂexibly allocate computing
+resources based on connection, computing power, model and
+data requirements, thus improving network energy efﬁciency.
+By utilizing distributed heterogeneous computing resources,
+6G has the potential to provide low-latency services, alleviate
+communication and computing burdens on clouds, and meet the
+Quality of Service (QoS) requirements of various communica-
+tion and computing services [1]. 6G aims to connect diverse
+communication, computation, data, and AI model resources
+between the edge, network and cloud, enabling on-demand
+resource scheduling. International Telecommunication Union
+(ITU) proposed that the 6G network needs to handle intelli-
+gent services such as International Mobile Telecommunications-
+2030 (IMT-2030) assisted automated driving, AI assisted ex-
+treme Multiple-Input Multiple-Output (E-MIMO), ofﬂoading
+of heavy computation operations across devices and networks,
+creation of and prediction with digital twins, and others [2].
+Combined with the concept of edge intelligence, the evolution
+of telecom infrastructures towards 6G will consider highly dis-
+tributed AI, moving the intelligence from the central cloud to
+edge computing resources [3],[4]. This requires 6G network to
+efﬁciently manage dedicated computing resources and models
+for different types of services, enabling uniﬁed and efﬁcient
+resource management.
+Providing AI as a Service (AIaaS) in 6G network enables
+users to get latency-guaranteed AI services without developing
+their own AI systems [5]. In order to meet the varying Quality
+of AI Service (QoAIS) requirements of users, new evaluation
+system needs to be considered on the basis of existing QoS
+system. Therefore, the provision of AIaaS in 6G network needs
+comprehensively consider the following aspects of the services:
+Latency: Latency is a critical factor that inﬂuences service
+quality for both computing tasks and AI tasks. Latency typically
+consists of three components: communication latency, queuing
+latency, and computing latency. Communication latency is
+1939-1374 © 2024 IEEE. Personal use is permitted, but republication/redistribution requires IEEE permission.
+See https://www.ieee.org/publications/rights/index.html for more information.
+Authorized licensed use limited to: Huazhong University of Science and Technology. Downloaded on March 26,2026 at 09:09:06 UTC from IEEE Xplore.  Restrictions apply. 
+
+--- Page 2 ---
+CHAI et al.: JOINT TASK OFFLOADING, RESOURCE ALLOCATION AND MODEL PLACEMENT FOR AI AS A SERVICE IN 6G NETWORK 3831
+inﬂuenced by the amount of data and the communication
+quality. Queuing latency is affected by the length of task queues
+in computing nodes. Computing latency is inﬂuenced by factors
+such as task workload, model parameters, and remaining
+computing power in the nodes. Designing appropriate task
+scheduling algorithms can greatly improve the users’ experience
+for latency-sensitive services.
+Energy Consumption: Data transmission and computation in
+AI tasks result in signiﬁcant energy consumption. Due to the
+limited computing power of each server, a trade-off must be
+considered between energy consumption and latency to ensure
+both improved energy efﬁciency and meeting the users’ latency
+requirements [6]. Task ofﬂoading decisions and computing re-
+source allocation are the primary research directions for opti-
+mizing energy consumption.
+Heterogeneous Computing Demands: Different types of tasks
+require different types and scales of computing resources, such
+as CPUs, GPUs, TPUs, etc., to support their computing needs.
+Large-scale training and inference tasks often require GPU
+clusters rather than a single GPU for computation. CPU-GPU
+heterogeneous computing is also employed to enhance the
+computing and latency performance of AI models [7]. Con-
+sequently, the coupling of heterogeneous computing resource
+demands complicates the allocation problem. Computing nodes
+need serve multiple tasks simultaneously and deploy multiple
+containers to reduce communication costs or balance workload,
+presenting new challenges for dynamic resource management
+and task ofﬂoading [8]. Thus intelligent orchestration solutions
+is helpful to support the constantly growing requirements of
+intelligent applications [9],[10].
+Model Requirements: Artiﬁcial intelligence tasks usually ne-
+cessitate the delegation of duties to servers that possess ample
+computing resources to carry out the tasks through particular
+models [11]. With the emergence of techniques such as pruning
+and early-exit, multiple variants of models may complete the
+same AI task, with varying parameter sizes and architectures
+that affect inference accuracy and computing time. Currently,
+most existing AI services lack a balance between efﬁciency and
+performance during deployment [12]. Supporting AI tasks in
+6G network requires considering the deployment of multiple
+models, so as to provide customized QoS for users. On one
+hand, it is necessary to ensure that tasks with different QoS
+requirements are ofﬂoaded to nearby nodes with appropriate
+models to guarantee overall latency. On the other hand, it is
+also essential to ensure that nodes have sufﬁcient computing
+hardware and facilities to support the deployment of models
+with different complexities.
+According to the different types of computing power used, we
+can divide 6G services into CPU based computing services and
+GPU based AI services, hereinafter referred to as computing
+tasks and AI tasks. In summary, to realize 6G network that
+supports both existing computing tasks and AI tasks, dynamic
+task ofﬂoading, computing resource allocation, and model place-
+ment strategies must be designed, as shown in Fig. 1, short-
+time strategies and long-time strategies mutual inﬂuence on
+each other’s subsequent decisions. AI models are deployed by
+transferring containerized instances from cloud nodes or model
+Fig. 1. Strategy decision at different timescales.
+repositories to computing nodes that are equipped with CPUs
+or GPUs. Tasks are ofﬂoaded from edge nodes to computing
+node, with certain tasks necessitating speciﬁc models and com-
+puting resource for accurate calculations. The task ofﬂoading
+(including node selection and model selection) and computing
+resource allocation need to be considered in every time slot as a
+short timescale problem, while model placement is decided with
+several time slots interval, as a long timescale problem. In this
+paper, we focus on the AIaaS architecture for the aforementioned
+multi-service 6G network, which comprehensively ensures the
+service quality of computing and AI tasks from various dimen-
+sions such as communication, computation, data, and AI model
+resources [13]. The above strategies can be formulated as a
+two-timescale mixed-integer nonlinear programming (MINLP)
+problem, aiming to minimize latency and energy consumption
+while meeting users’ QoS requirements. Speciﬁcally, the con-
+tributions of this paper are as follows:
+1) The functional units of AIaaS in 6G network is constructed,
+establishing the communication, queuing, and computing mod-
+els for joint task ofﬂoading, computing resource allocation, and
+model placement in the two-timescale within the edge-network-
+cloud architecture. To address the heterogeneity of computing
+resources in the 6G network, we consider different types and
+scales of computing power in computing nodes, as well as
+different models and QoAIS features.
+2) The Lyapunov optimization is employed to decompose the
+long-term system stability problem into short-term deterministic
+sub-problems for minimizing latency and energy consumption.
+A task ofﬂoading mechanism based on deferred acceptance (DA)
+algorithm is proposed, achieving optimal assignment of different
+types of services among computing nodes. To ensure differenti-
+ated QoS requirements, a dynamic workload allocation strategy
+and a frequency strategy among heterogeneous computing units
+on computing nodes based on convex optimization theory are
+proposed.
+3) To address the diverse QoAIS and model selection require-
+ments for AI tasks, a joint model placement and model selection
+strategy is proposed based on a long-short-term mechanism. In
+the absence of prior knowledge of future task information, the
+multi-armed bandit (MAB) mechanism is used to periodically
+evaluate the model placement strategy on computing nodes, im-
+proving the system’s communication and computation efﬁciency
+by re-deploying models.
+Authorized licensed use limited to: Huazhong University of Science and Technology. Downloaded on March 26,2026 at 09:09:06 UTC from IEEE Xplore.  Restrictions apply. 
+
+--- Page 3 ---
+3832 IEEE TRANSACTIONS ON SERVICES COMPUTING, VOL. 17, NO. 6, NOVEMBER/DECEMBER 2024
+The rest of the paper is summarized as follows. In Section II,
+we introduce related work. Section IIIis system model and
+problem formulation. Section IVis the process of problem
+solving. Section Vis the simulation results to evaluate our
+deferred acceptance-multi-armed bandits (DA-MAB) strategy.
+Finally, we summarize our work in Section VI.
+II. R ELATED WORK
+A. Task Ofﬂoading and Resource Allocation
+Task ofﬂoading and resource allocation have been extensively
+studied in scenarios such as edge computing, fog computing,
+and cloud computing. Edge intelligence is an emerging comput-
+ing and communication paradigm that enables AI functionality
+at the network edge [14]. To alleviate the computing burden
+on the end and cloud sides, computing tasks are ofﬂoaded to
+edge nodes, cloud nodes, or data centers for computation [15].
+Communication and computing resources, such as transmit
+power, channel and computing resource, are optimized based
+on different scenarios. Convex optimization, game theory, and
+Alternating Direction Method of Multipliers (ADMM) methods
+have been applied to optimize continuous resource allocation
+problems. Matching theory, integer optimization, particle swarm
+optimization (PSO), and other methods have been applied to op-
+timize discrete task ofﬂoading problems. Besides, reinforcement
+learning (RL), including MAB theory, deep Q-network (DQN),
+Proximal Policy Optimization (PPO), multi-agent learning, etc.,
+is playing a growing and important role in resource allocation
+problems for the edge [16].
+In the ﬁeld of ﬁne-grained computing power management
+and accelerated computation of AI models, multi-GPU and
+CPU-GPU cooperation have emerged as new research trends. A
+clustered multi-core platform was proposed to handle the energy
+consumption model during intra-task processing [17]. Zeng et
+al. deployed edge learning in an architecture that utilizes parallel
+computing using both CPU and GPU, dynamically allocate
+bandwidth, divide CPU-GPU workloads, and perform speed
+scaling at each device [18]. A similar problem was addressed
+in[19], where the Lagrangian dual method was employed to
+obtain optimal processor frequency and dataset size allocations.
+The ﬁne-grained task deployment problem in multi-CPU-GPU
+cores was tackled using a cooperative dual-population evolu-
+tionary algorithm, maximizing average QoS [20]. Fine-grained
+resource management and heterogeneous collaborative comput-
+ing contribute to further reducing task execution time and energy
+consumption.
+B. Model Placement
+Due to the heavy communication and energy costs associ-
+ated with frequent model re-deployment from cloud nodes or
+model repositories, the model placement problem is typically
+a long timescale problem compared to task ofﬂoading. The
+model placement problem shares commonalities between model
+training optimization and model inference optimization. The
+optimization objective is typically to reduce overall latencyand energy consumption and is sometimes combined with dis-
+tributed computing techniques. Even if there are complex de-
+pendencies between these training or inference tasks, they can
+still be modeled as directed acyclic graphs and transformed into
+chain-like or independent temporal tasks [21].
+On the edge side, model placement is often jointly optimized
+with model partitioning. For example, MAB is used to intelli-
+gently determine the semantic and layer-wise splitting strategies
+of edge-end models [22]. The concept of edge AIaaS is proposed
+to improve the energy and latency performance of AI services
+through management of data quality and model complexity [5].
+Additionally, placement of the edge servers is also helpful for
+the time and energy optimization in edge computing [23].
+C. Two-Timescale Resource Allocation
+The two-timescale optimization problem involves multiple
+network management in two time dimensions. It often re-
+quires effective problem decomposition and the design of dif-
+ferent algorithms to optimize each sub-problem. Wei et al.
+[24] proposed a two-timescale optimization algorithm for re-
+source placement and task dispatching in edge-clouds. Similar
+problems in related scenarios were addressed in [25], where
+a low-complexity optimization scheme combining Lyapunov
+optimization, ADMM, and matching theory was used. In Fog
+Radio Access Networks, small-scale computing resource allo-
+cation problems were optimized using coalition game theory,
+while large-scale service caching problems were addressed us-
+ing multi-agent RL [26]. The long-term stochastic optimization
+problem in non-orthogonal multiple access edge computing was
+decomposed into three sub-problems: resource block allocation
+on a long timescale, task partitioning and computing resource
+allocation on a short timescale. These sub-problems were solved
+using swap matching and relaxed convex optimization. The
+long-term collaborative inference problem in cloud-edge-end
+was transformed into a deterministic problem for each time
+slot using Lyapunov optimization. By combining deep rein-
+forcement learning (DRL) and low-complexity algorithms, the
+training complexity of the DRL was reduced [27].
+III. S YSTEM MODEL AND PROBLEM FORMULATION
+A. System Model
+In this study, a three-tier edge-network-cloud 6G network
+architecture is considered to support both computing and AI
+services in an AIaaS framework. As shown in Fig. 2, tasks
+are aggregated at edge nodes and transmitted to computing
+nodes or cloud nodes for processing. Different types of services
+have distinct QoS requirements. For instance, communication
+protocol processing and computing analysis heavily rely on the
+CPU computing capabilities. Training tasks demand more GPU
+computing power, while inference tasks require low latency and
+inference accuracy. To enhance the efﬁciency of AI services, we
+assume that some computing nodes support GPU-CPU acceler-
+ation for training and inference tasks.
+To achieve uniﬁed orchestration and management of tasks,
+it is important to ﬁrst segment the user’s tasks and monitor the
+Authorized licensed use limited to: Huazhong University of Science and Technology. Downloaded on March 26,2026 at 09:09:06 UTC from IEEE Xplore.  Restrictions apply. 
+
+--- Page 4 ---
+CHAI et al.: JOINT TASK OFFLOADING, RESOURCE ALLOCATION AND MODEL PLACEMENT FOR AI AS A SERVICE IN 6G NETWORK 3833
+Fig. 2. System architecture of the network.
+Fig. 3. AIaaS framework in 6G network.
+QoS. The overall user task may consist of multiple sub-tasks,
+and by dividing the task into independent sub-tasks with dif-
+ferent QoS and computing power requirements, it facilitates the
+development of ﬁne-grained orchestration strategies. By setting
+up managers in the network to collect information about the
+network and nodes, and dynamically replace models and ofﬂoad
+tasks, users ofﬂoad computing services on nearby nodes using
+appropriate models while ensuring QoS requirements, which
+helps prevent wastage of computing resources and overload
+situations on nodes.
+To accommodate the diverse requirements of these services,
+conﬁgurable functional units are introduced, as shown in Fig. 3.
+The notations and symbols are given in Table I. These units
+include:
+Service Split Manager: The service split manager is respon-
+sible for dividing tasks with dependencies or distributed charac-
+teristics into a series of single-destination node task sequences
+with temporal relationships. We divide the task according to
+the segmentation strategy in [21]. Additionally, the service split
+manager is responsible for categorizing the split tasks. All tasks
+can be divided into a set I={1,2,...,I}, where task iarrives
+in time slots T={0,1,2,...,T}, the duration of each time slot
+isTslot,Ci(t)represents the data of task iat time slot t,∀i∈I.
+Service Quality Manager: The service quality manager is
+responsible for receiving information from service split manager
+and managing the QoS requirements of services. Speciﬁcally,
+γC
+i(t)andγG
+i(t)determine the number of CPU and GPU coresTABLE I
+NOTATIONS AND SYMBOLS
+needed to execute task i. The maximum allowable delay for
+taskiisDi(t). Additionally, qmin
+i is an optional parameter for
+AI inference services, representing the accuracy requirement of
+taski.
+Model Complexity Manager: The model complexity manager
+is responsible for managing the model repository and parameters
+of AI models. The model repository includes models applicable
+to different types of AI services, as well as different versions
+of the same model. The set of AI models is denoted as K=
+{0,1,2,...,K}, wherek=0represents no model is needed for
+task computing. The QoAIS for AI model kinclude accuracy ak
+and model complexity ratio bk. Accuracy measures the inference
+quality of AI inference services, while the model complexity
+ratio is the ratio of the processing density of model kto the
+processing density L(in cycles/bit) of standard computing tasks.
+The remaining parameters related to QoS will be introduced in
+the following managers.
+Authorized licensed use limited to: Huazhong University of Science and Technology. Downloaded on March 26,2026 at 09:09:06 UTC from IEEE Xplore.  Restrictions apply. 
+
+--- Page 5 ---
+3834 IEEE TRANSACTIONS ON SERVICES COMPUTING, VOL. 17, NO. 6, NOVEMBER/DECEMBER 2024
+B. Decision Manager
+Decision manager consists of the task ofﬂoading manager and
+the model placement manager, responsible for periodically up-
+dating model placements on each computing node and devising
+node selection and resource allocation strategies for tasks in each
+time slot.
+Task Ofﬂoading Manager: The task ofﬂoading manager regu-
+larly interacts with the service quality manager to obtain QoS re-
+quirements and communicates with computing nodes to acquire
+node computing capabilities and communication conditions.
+The task ofﬂoading manager receives node information related
+to a set of computing nodes J={1,2,...,J}, where node jhas
+CPU core count QC,max
+j , maximum CPU operating frequency
+fC,max
+j , GPU core count QG,max
+j , maximum GPU operating
+frequency fG,max
+j , maximum number of deployed models αmax
+j,
+set of deployable models Kjat nodej, the current set of models
+{αj,k(t)}deployed on node j, task queue set {Zi,j(t)}for task
+iat nodej, CPU computing energy coefﬁcient εC
+jat nodej, and
+GPU computing energy coefﬁcient εG
+jat nodej. Here,αmax
+j
+andKjare determined by the computing, memory and storage
+capacity of node j, where nodes with larger computing capacity
+can deploy a greater variety and number of candidate models.1
+Communication information includes network topology, the set
+of link transmission rate {Ri,j(t)}, and the set of hops {di,j}.
+At the beginning of each time slot, the task ofﬂoading manager
+determines the task ofﬂoading strategy and resource alloca-
+tion strategy. The decision variables are as follows: At time t,
+βi,j,k(t)=1 denotes that task iuses model kon nodejfor
+computation. Speciﬁcally, βi,j(t)=/summationtext
+kβi,j,k(t)=1 indicates
+that task iis ofﬂoaded to node j. The decision variables also
+include the amount of task workload allocated to the CPU on
+nodej,WC
+i,j(t); the amount of task workload allocated to the
+GPU on node j,WG
+i,j(t); the optimal operating frequency of
+the CPU for task ion nodej,fC
+i,j(t); and the optimal operating
+frequency of the GPU, fG
+i,j(t).
+Model Placement Manager: The model placement manager
+regularly communicates with computing nodes and the model
+complexity manager to coordinate model placement strategies.
+The model placement manager obtains the indicator vi,kfrom
+the model complexity manager. If vi,k=1, it indicates that
+taskican be computed by model k. The models deployed on
+nodes can be reused for different tasks in the form of contain-
+ers[28]. Based on historical information received from the task
+ofﬂoading manager, at the beginning of each T0time slots,
+the model placement manager determines the set of deployed
+models{αj,k(t)}on each node j, whereαj,k(t)=1 indicates
+that model kis deployed on node jat timetand remains
+unchanged for the next T0time slots.
+1If the deployed models have signiﬁcantly different parameter sizes, the
+domain of αj,k(t)can be extended to non-negative real numbers in constraint
+(1), or set other parameters and constraints to better characterize the hardware
+requirements of the models. The supposed DA and MAB strategy introduced
+below supports the above extension.For the decision managers, the constraints can be expressed
+as follows:
+/summationdisplay
+kαj,k(t)≤αmax
+j,∀j∈J, (1)
+Equation (1)indicates that the number of AI model deployed
+by computing node jdoes not exceed αmax
+j. Based on the
+requirements of the task and limitations of the node computing
+power, we have constraints
+/summationdisplay
+iβi,j(t)γC
+i(t)≤QC,max
+j,∀j∈J, (2)
+/summationdisplay
+iβi,j(t)γG
+i(t)≤QG,max
+j,∀j∈J, (3)
+Equation (2)and(3)indicate that the number of CPU and GPU
+cores used by all tasks at computing node jat the same time
+does not exceed the node resource limit. Each task can only be
+ofﬂoaded to one computing node for computation within the
+same time slot. Therefore, we have constraints
+/summationdisplay
+jβi,j(t)≤1,∀i∈I. (4)
+The workload segmentation of each task on the CPU and GPU
+cores should meet the conditions (5)–(7), wherebi,k=vi,k∗bk
+WC
+i,j(t)+WG
+i,j(t)=/summationdisplay
+kβi,j,k(t)bi,kLCi(t),∀i∈I,∀j∈J,
+(5)
+0≤WC
+i,j(t),∀i∈I,∀j∈J, (6)
+0≤WG
+i,j(t),∀i∈I,∀j∈J, (7)
+wherebi,kLCi(t)is the workload of task iusing model k, and
+the unit of Lis cycle/bit. (5)indicates the allocation relationship
+between the workload of task ion the CPU and GPU, while (6)
+and(7)specify that the amount of workload is non-negative.
+According to the different CPU/GPU types of computing
+nodes, the optimal operating frequency should not exceed its
+frequency upper limit
+fC
+i,j(t)≤fC,max
+j,∀i∈I,∀j∈J, (8)
+fG
+i,j(t)≤fG,max
+j,∀i∈I,∀j∈J. (9)
+AI inference services should meet condition (10) to meet the
+minimum inference accuracy requirements of the services. qmin
+i
+for other services can be set to 0.
+/summationdisplay
+j/summationdisplay
+kβi,j,k(t)ak≥qmin
+i,∀i∈I. (10)
+C. Delay and Energy Consumption Model
+After task ofﬂoading manager makes the task ofﬂoading de-
+cision, all tasks are transmitted to the target computing nodes
+following the shortest path. The total latency of a task consists of
+transmission latency, queuing latency and computation latency.
+The total energy consumption of a task consists of transmission
+energy consumption and computation energy consumption. At
+Authorized licensed use limited to: Huazhong University of Science and Technology. Downloaded on March 26,2026 at 09:09:06 UTC from IEEE Xplore.  Restrictions apply. 
+
+--- Page 6 ---
+CHAI et al.: JOINT TASK OFFLOADING, RESOURCE ALLOCATION AND MODEL PLACEMENT FOR AI AS A SERVICE IN 6G NETWORK 3835
+timet, the transmission latency for task ican be calculated as
+follows:
+DT
+i(t)=/summationdisplay
+jβi,j(t)di,jCi(t)
+Ri,j(t). (11)
+The transmission energy consumption is
+ET
+i(t)=/summationdisplay
+jβi,j(t)εd
+idi,jCi(t)
+Ri,j(t), (12)
+whereεd
+iis the transmission energy consumption coefﬁcient.
+The computation latency is determined by the later comple-
+tion time between CPU and GPU workload
+DCom
+i(t)=/summationdisplay
+jmax/braceleftBigg
+WC
+i,j(t)
+γC
+i(t)fC
+i,j(t),WG
+i,j(t)
+γG
+i(t)fG
+i,j(t)/bracerightBigg
+.(13)
+The computation energy consumption is
+ECom
+i(t)=/summationdisplay
+j/parenleftBig
+εC
+jWC
+i,j(t)/parenleftbig
+fC
+i,j(t)/parenrightbig2+εG
+jWG
+i,j(t)/parenleftbig
+fG
+i,j(t)/parenrightbig2/parenrightBig
+,
+(14)
+whereεC
+jis the computing energy consumption coefﬁcient for
+the CPU of node j,εG
+jis the computing energy consumption
+coefﬁcient for the GPU of node j.
+D. Data Queue Model
+The data ofﬂoaded by task ito a computing node jcan be
+viewed as a data queue over time. If the amount of data from the
+task exceeds the computing capacity of the node, it will result in
+queue buildup and increase the queuing latency for tasks. The
+task queue for task iat computing node jat timetisZi,j(t).
+Based on the data amount of the tasks and the resource allocation
+strategy, the queues update as
+Zi,j(t+1)=max {Zi,j(t)−xi,j(t),0}+yi,j(t),(15)
+xi,j(t)=/summationdisplay
+kvi,kβi,j,k(t)αj,k(t)Tslot
+·/bracketleftbig
+γC
+i(t)fC
+i,j(t)+γG
+i(t)fG
+i,j(t)/bracketrightbig
+, (16)
+yi,j(t)=/summationdisplay
+kβi,j,k(t)bi,kLCi(t), (17)
+wherexi,j(t)is the maximum amount of data computing of task
+iat computing node jduring[t,t+1) .yi,j(t)is taskirequired
+computing power for using model kcalculating at node jat time
+slott+1. The long-term stability conditions of Zi,j(t)are
+lim
+t→∞1
+tt−1/summationdisplay
+τ=0E[Zi,j(τ)] = 0. (18)
+According to Little’s Law, the average latency is a function of
+queue length and arrival rate. We deﬁne the delay violation prob-
+ability as the probability that the average queue delay exceeds
+the delay requirement DQ
+i, and we aim to impose constraints on
+the delay violation probability. Thus, we decompose the delay
+requirement Di(t)into three components: the queue delay upper
+limitDQ
+i, the time-varying transmission delay DT
+i(t), and thecomputing delay DCom
+i(t).W eu s eDQ
+ias the maximum value
+of the queue delay and optimize the transmission delay DT
+i(t)
+and computing delay DCom
+i(t)through resource allocation.
+Consequently, the delay requirement can be formulated as
+DQ∗
+i(t)=
+lim
+t→∞1
+tt−1/summationtext
+τ=0yi,j(τ)
+/braceleftbigg
+lim
+t→∞1
+tt−1/summationtext
+τ=0xi,j(τ)/bracerightbigg/braceleftbigg
+lim
+t→∞1
+tt−1/summationtext
+τ=0(xi,j(τ)−yi,j(τ))/bracerightbigg≤DQ
+i,
+(19)
+DT
+i(t)+DCom
+i(t)+DQ
+i≤Di(t). (20)
+E. Problem Formulation
+To maximize the efﬁciency of the network, we need
+to perform multivariate optimization at two different time
+scales: long-term model placement strategy, short-term task
+ofﬂoading and computing resource allocation strategy. The
+overall objective of the optimization is to minimize la-
+tency and energy consumption while ensuring computing re-
+source constraints. Let f1(t)=μ
+T∗/summationtext
+i(DT
+i(t)+DCom
+i(t))+
+(1−μ)
+E∗/summationtext
+i(ET
+i(t)+ECom
+i(t)), then the optimization objective
+is
+P1: m i n F1= lim
+T→∞1
+TT0TT0/summationdisplay
+t=0f1(t)
+s.t. (1)–(10) and(19)–(20), (21)
+whereT∗andE∗are normalization coefﬁcients for delay and
+energy consumption, μis a adaptive parameters, T0is the
+time interval for executing model placement. There are some
+challenges in solving problem P1. First, the prior knowledge of
+data arrivals is unknown. Second, it involves resource allocation
+at different timescales, as shown in Fig. 1, where node selection,
+model selection (combined as task ofﬂoading), and computing
+resource allocation need to be jointly optimized at each task
+arrival interval, while model placement needs to be optimized
+at each long time slot T0. Third, P1 is a MINLP that is NP-hard
+due to the coupling between long-term constraints and short-
+term optimization objectives. Hence, it is more complex than
+traditional MINLP.
+IV . P ROBLEM SOLVING
+In this section, the problem is decomposed by using Lyapunov
+optimization ﬁrst. Then obtain the optimal analytical solutions
+for workload and frequency by using convex optimization and
+solve the node and model selection problem (task ofﬂoading
+problem) using the improved DA algorithm. Subsequently, a
+model placement strategy based on the Multi-Armed Bandit-
+Upper Conﬁdence Bounds (MAB-UCB) algorithm is proposed
+and integrate the three algorithms to form the overall DA-MAB
+strategy.
+Authorized licensed use limited to: Huazhong University of Science and Technology. Downloaded on March 26,2026 at 09:09:06 UTC from IEEE Xplore.  Restrictions apply. 
+
+--- Page 7 ---
+3836 IEEE TRANSACTIONS ON SERVICES COMPUTING, VOL. 17, NO. 6, NOVEMBER/DECEMBER 2024
+A. Problem Transformation Based on Lyapunov Optimization
+To solve the long-term problem mentioned above, Lyapunov
+optimization is introduced to transform the long-term opti-
+mization problem into a series of short-term optimization sub-
+problems, which are further decomposed at two-timescale. Let
+Z(t)={Z1,1(t),Z1,2(t),...,Z I,J(t)}, the Lyapunov function
+can be written as
+Ly(t)=V1
+2⎧
+⎨
+⎩/summationdisplay
+i/summationdisplay
+jZ2
+i,j(t)⎫
+⎬
+⎭, (22)
+whereV1is the control parameter of the virtual queue. Lyapunov
+drift depends on the state of the data queue, as given by the
+following equation:
+ΔT(Z(t)) =E{Ly(t+T)−Ly(t)|Z(t)}. (23)
+Based on inequality ([a−b]++c)2≤a2+b2+c2+2a(c−
+b), for each Zi,j(t),w eh a v e
+Ly(t+1)−Ly(t)=V1
+2/summationdisplay
+i/summationdisplay
+j/bracketleftbig
+Z2
+i,j(t+1)−Z2
+i,j(t)/bracketrightbig
+=V1
+2/summationdisplay
+i/summationdisplay
+j/braceleftbig
+([Zi,j(t)−xi,j(t)]++yi,j(t))2−Z2
+i,j(t)/bracerightbig
+≤V1
+2/summationdisplay
+i/summationdisplay
+j/braceleftbig
+x2
+i,j(t)+y2
+i,j(t)+2Zi,j(t)[yi,j(t)−xi,j(t)]/bracerightbig
+.
+(24)
+Let the result on the right side of the above inequality as
+Lynew(t). By using the law of telescoping sums in t∈
+[TT0,(T+1)T0)to get
+Ly((T+1)T0)−Ly(TT0)≤(T+1)T0−1/summationdisplay
+t=TT0Lynew(t).(25)
+Therefore, we get
+ΔT0(Z(t)) =E{Ly(t+T0)−Ly(t)|Z(t)}
+≤E⎧
+⎨
+⎩(T+1)T0−1/summationdisplay
+t=TT0Lynew(t)/vextendsingle/vextendsingle/vextendsingle/vextendsingle/vextendsingle/vextendsingleZ(t)⎫
+⎬
+⎭≤V1
+2BT0
++V1E⎧
+⎨
+⎩(T+1)T0−1/summationdisplay
+t=TT0/summationdisplay
+i/summationdisplay
+jZi,j(t)[yi,j(t)−xi,j(t)]/vextendsingle/vextendsingle/vextendsingle/vextendsingle/vextendsingle/vextendsingleZ(t)⎫
+⎬
+⎭,
+(26)
+whereB=I·J·(x2
+max+y2
+max)is a constant. Let
+xC
+i,j(t)=(/summationtext
+kvi,kαj,k(TT0)βi,j,k(t))γC
+i(t)fC
+i,j(t)Tslot,
+xG
+i,j(t)=(/summationtext
+kvi,kαj,k(TT0)βi,j,k(t))γG
+i(t)fG
+i,j(t)Tslot,b y
+using Lyapunov Drift-Plus-Penalty (DPP) method [29],t h e
+objective function F1in problem P1 is considered a penaltyfunction. Then, the DPP function is represented as
+E⎧
+⎨
+⎩ΔT0(Z(t))+(T+1)T0−1/summationdisplay
+t=TT0V2f1(t)/vextendsingle/vextendsingle/vextendsingle/vextendsingle/vextendsingle/vextendsingleZ(t)⎫
+⎬
+⎭≤V1
+2BT0
++V1E⎧
+⎨
+⎩(T+1)T0−1/summationdisplay
+t=TT0/summationdisplay
+i/summationdisplay
+jZi,j(t)(yi,j(t)−xi,j(t))/vextendsingle/vextendsingle/vextendsingle/vextendsingle/vextendsingle/vextendsingleZ(t)⎫
+⎬
+⎭
++V2E⎧
+⎨
+⎩(T+1)T0−1/summationdisplay
+t=TT0f1(t)/vextendsingle/vextendsingle/vextendsingle/vextendsingle/vextendsingle/vextendsingleZ(t)⎫
+⎬
+⎭. (27)
+In the above equation, Bis a constant. According to Lyapunov
+optimization, problem P1 can be transformed into minimize the
+problem on the right side of the equation in each T0time slot
+and include constraints C1-C10. Therefore, the long-term opti-
+mization problem is transformed into a short-term optimization
+problem as P2.
+P2: m i n F2/parenleftbig
+αj,k,βi,j,k,WC
+i,j,WG
+i,j,fC
+i,j,fG
+i,j/parenrightbig
+=(T+1)T0−1/summationdisplay
+t=TT0/summationdisplay
+i/summationdisplay
+j(Xi,j(t)+Yi,j(t)+Gi,j(t)
++Hi,j(t))
+s.t. (1)–(10) and(20) (28)
+⎧
+⎪⎪⎨
+⎪⎪⎩Xi,j(t)=V1Zi,j(t)yi,j(t)+V2μ
+T∗DT
+i(t)+V2(1−μ)
+E∗ET
+i(t),
+Yi,j(t)=V2μ
+T∗DCom
+i(t)+V2(1−μ)
+E∗ECom
+i(t),
+Gi,j(t)=−V1Zi,j(t)xC
+i,j(t),
+Hi,j(t)=−V1Zi,j(t)xG
+i,j(t),∀i∈I,∀j∈J,
+(29)
+whereXi,j(t)only relates to variables βi,j,k(t).Gi,j(t)relates
+toαj,k(TT0),βi,j,k(t)andfC
+i,j(t).Hi,j(t)relates to αj,k(TT0),
+βi,j,k(t)andfG
+i,j(t).Yi,j(t)relates to all variables. Thus when
+αj,k(TT0)is decided, problem P2 can be decomposed into four
+sub-problems
+P3.1: m i n F3.1=/summationdisplay
+i/summationdisplay
+jXi,j(βi,j,k)
+s.t. (2)–(4),(10) and(20) (30)
+P3.2: m i n F3.2
+=/summationdisplay
+i/summationdisplay
+jYi,j/parenleftbig
+βi,j,k,WC
+i,j,WG
+i,j,fC
+i,j,fG
+i,j/parenrightbig
+s.t. (2)–(3)and(5)–(9) (31)
+P3.3: m i n F3.3=/summationdisplay
+i/summationdisplay
+jGi,j/parenleftbig
+αj,k,βi,j,k,fC
+i,j/parenrightbig
+s.t. (1),(8)and(9) (32)
+P3.4: m i n F3.4=/summationdisplay
+i/summationdisplay
+jHi,j/parenleftbig
+αj,k,βi,j,k,fG
+i,j/parenrightbig
+s.t. (1),(8)and(9) (33)
+Authorized licensed use limited to: Huazhong University of Science and Technology. Downloaded on March 26,2026 at 09:09:06 UTC from IEEE Xplore.  Restrictions apply. 
+
+--- Page 8 ---
+CHAI et al.: JOINT TASK OFFLOADING, RESOURCE ALLOCATION AND MODEL PLACEMENT FOR AI AS A SERVICE IN 6G NETWORK 3837
+Fig. 4. The overall algorithm process.
+P3.1 and P3.2 are single time slot problems aimed at max-
+imizing the objective function within each time slot. When
+αj,k(TT0)is determined, P3.3 and P3.4 also degrade into sin-
+gle time slot problems. The overall problem will be solved
+using the proposed DA-MAB algorithm, as illustrated in
+Fig. 4. Whenαj,k(TT0)andβi,j,k(t)are ﬁxed, the values of
+WC
+i,j(t),WG
+i,j(t),fC
+i,j(t),fG
+i,j(t)will be determined through the
+construction of Lagrangian equations and convex optimization.
+Then when αj,k(TT0)is ﬁxed,βi,j,k(t)will be determined using
+the DA algorithm, while the decision variables αj,k(TT0)will
+be determined using the MAB-UCB algorithm.
+B. Optimal Workload Allocation Strategy
+First, we get the optimal solution of WC
+i,j(t)andWG
+i,j(t).
+Lemma 1: In order to minimize latency and energy consump-
+tion, the relationship between workload and working frequency
+should be as follows:
+WC
+i,j(t)
+γC
+i(t)fC
+i,j(t)=WG
+i,j(t)
+γG
+i(t)fG
+i,j(t),∀i∈I,j∈J. (34)
+The proof is provided in Appendix A, available online.
+Lemma 2: To minimize latency and energy consumption, the
+workload should satisfy the following relationship:
+∂Yi,j
+∂WC
+i,j(t)=∂Yi,j
+∂WG
+i,j(t),∀i∈I,j∈J. (35)
+The proof is provided in Appendix B, available online.
+Based on Lemmas 1and2, the optimal workload allocation
+can be obtained as follows:
+⎧
+⎪⎪⎨
+⎪⎪⎩WC∗
+i,j(t)=/summationtext
+kβi,j,k(t)bi,kLCi(t)√
+εG
+jγC
+i(t)
+√
+εC
+jγG
+i(t)+√
+εG
+jγC
+i(t),
+WG∗
+i,j(t)=/summationtext
+kβi,j,k(t)bi,kLCi(t)√
+εC
+jγG
+i(t)
+√
+εC
+jγG
+i(t)+√
+εG
+jγC
+i(t).(36)
+C. The Optimal Working Frequency Allocation Strategy
+Next, we will discuss the optimal allocation of working fre-
+quencyfC
+i,j(t)andfG
+i,j(t)in P3.2 + P3.3 + P3.4 according to
+Zi,j(t).L e tWC
+i(t)=/summationtext
+jWC
+i,j(t),WG
+i(t)=/summationtext
+jWG
+i,j(t).
+Fig. 5. The overall DA-MAB algorithm.
+WhenZi,j(t)=0 ,F3.2+F3.3+F3.4=V2μ
+T∗DCom
+i(t)+
+V2(1−μ)εC
+j(WC
+i(t))3
+E∗(γC
+i(t)DCom
+i(t))2+V2(1−μ)εG
+j(WG
+i(t))3
+E∗(γG
+i(t)DCom
+i(t))2.L e t∂Yi,j
+∂DCom
+i(t)=0 to
+get
+DCom∗
+i(t)=3/radicalbig
+2Ai(t), (37)
+whereAi(t)=(1−μ)T∗
+E∗μ(εC
+i(WC
+i(t))3
+(γC
+i(t))2+εG
+i(WG
+i(t))3
+(γG
+i(t))2).
+WhenZi,j(t)/negationslash=0, we can get F3.2+F3.3+F3.4=/summationtext
+i/summationtext
+jYi,j(fC
+i,j(t),fG
+i,j(t))−/summationtext
+i/summationtext
+jGi,j(fC
+i,j(t))−/summationtext
+i/summationtext
+jHi,j(fG
+i,j(t)).
+Lemma 3: F3.2+F3.3+F3.4only have one set of
+{fC
+i,j(t),fG
+i,j(t)},∀i∈I,j∈J,in deﬁning domains fC
+i,j(t)∈
+(0,+∞),fG
+i,j(t)∈(0,+∞)to take the minimum value of the
+function.
+The proof is provided in Appendix C, available online.
+B a s e do nL e m m a s 1and 2, the optimal computing time
+DCom∗
+i(t)can be obtained by Cardano formula as follows:
+DCom∗
+i(t)=3/radicaltp/radicalvertex/radicalvertex/radicalbtAi(t)+/radicalBigg
+(Ai(t))2+/parenleftbiggBi(t)
+3/parenrightbigg3
++3/radicaltp/radicalvertex/radicalvertex/radicalbtAi(t)−/radicalBigg
+(Ai(t))2+/parenleftbiggBi(t)
+3/parenrightbigg3
+,(38)
+whereBi(t)=V1Zi,j(t)T∗
+V2μ(/summationtext
+kvi,kαj,k(TT0)βi,j,k(t))·/summationtext
+k
+βi,j,k(t)bi,kLCi(t).
+According to Lemma 1, it can be concluded that the optional
+frequency fC∗
+i,j(t)andfG∗
+i,j(t)are both as
+⎧
+⎪⎨
+⎪⎩fC∗
+i,j(t)=m i n/braceleftBigWC
+i,j(t)
+γC
+i(t)DCom∗
+i(t),fC,max
+j/bracerightBig
+fG∗
+i,j(t)=m i n/braceleftBigWG
+i,j(t)
+γG
+i(t)DCom∗
+i(t),fG,max
+j/bracerightBig. (39)
+D. The Optimal Task Ofﬂoading Strategy
+For the task ofﬂoading problem βi,j,k(t)at the short timescale,
+we utilize the many-to-one matching theory, as illustrated in
+Fig.5, to solve the problem in polynomial time. Matching theory
+provides an efﬁcient and low-complexity approach to solve
+integer problems and has been widely used in various wireless
+communication systems.
+Authorized licensed use limited to: Huazhong University of Science and Technology. Downloaded on March 26,2026 at 09:09:06 UTC from IEEE Xplore.  Restrictions apply. 
+
+--- Page 9 ---
+3838 IEEE TRANSACTIONS ON SERVICES COMPUTING, VOL. 17, NO. 6, NOVEMBER/DECEMBER 2024
+According to the deﬁnition of matching theory, matching is
+an assignment between two sets of players, namely the set of
+tasks and the set of computing nodes. Considering the structure
+of problem P2, we consider an extended many-to-one matching
+model, where each computing node jowns different models and
+computing resource, can be assigned to multiple tasks, while
+each task ican only be assigned to one model kon a computing
+node. The form of the considered many-to-one matching is
+deﬁned as follows:
+Deﬁnition 1: The considered many-to-one matching game
+consists of two sets of participants, namely IandJ×K .T h e
+result of the many-to-one matching pairs is a function ηfrom all
+elements of Ito an element of J×K that satisﬁes:
+/braceleftbigg
+βi,j,k(t)=1,i f(j,k)=η(i),
+βi,j,k(t)=0, otherwise.(40)
+So P2 can be equivalent to a weighted many-to-one matching
+problem. For simplicity, the variable tis removed from the
+following equation. The weight between task iand node (j,k)
+is given by P2 and the optimal workload allocation and working
+frequency allocation strategies
+wi,j,k=V2μ
+T∗/parenleftbiggdi,jCi
+Ri,j+DCom∗
+i/parenrightbigg
++V1Zi,j/parenleftbig
+bi,kLCi−αj,kTslot/bracketleftbig
+γC
+ifC
+i,j+γG
+ifG
+i,j/bracketrightbig/parenrightbig
++V2(1−μ)
+E∗/parenleftbiggεd
+idi,jCi
+Ri,j+εC
+jWC
+i,j/parenleftbig
+fC
+i,j/parenrightbig2+εG
+jWG
+i,j/parenleftbig
+fG
+i,j/parenrightbig2/parenrightbigg
+.
+(41)
+Tasks can select computing nodes based on weights arranged in
+ascending order. Since different tasks require different numbers
+of CPU and GPU cores, the traditional exchange matching
+algorithm can only guarantee stability when tasks have the same
+resource requirements. To address this, we extend the one-sided
+matching to a two-sided matching. For each task and node, they
+establish preference lists for each other and use the Gale-Shapley
+(GS) algorithm, also known as the DA algorithm, to ensure stable
+matching. The preference list for task iisψi={wi,j,k(t)},
+∀j∈J,k∈Kand(j,k)satisfy (20). The preference list for
+nodejand model kisψj,k={wi,j,k(t)},∀i∈Iandisatisfy
+(20). The process of DA matching is as follows:
+1) Application: Each task applies to its top-ranked computing
+node in the preference list ψi. Each task can only apply to a
+computing node that has never rejected it before.
+2) Selection: Each computing node with capacities QC,max
+j
+andQG,max
+j receives a set of applicants φj. Due to shared
+computing capacity among models on one node, the preference
+listsψj,kof all models kdeployed in the node are merged into
+a node preference list ψj. Based on the ψj, each node accepts a
+certain number of tasks in ascending order, rejects the remaining
+tasks by setting their wi,j,k(t)inφjtowmax
+i,j,k(t), wherewmax
+i,j,k(t)
+is a pre-deﬁned penalty threshold larger than all wvalues. If the
+total demand of the applicants is less than QC,max
+j andQG,max
+j ,
+all tasks are accepted.
+3) Deferred Acceptance: Rejected tasks continue to apply to
+computing nodes until they are accepted by a computing nodeAlgorithm 1: Short Timescale Task Ofﬂoading and Model
+Chosen by DA Algorithm.
+1: Calculate wi,j,k(t)for alli∈I,j∈Jandk∈K.
+2:repeat
+3:fori∈Ido
+4: Build ψi.
+5:end for
+6:for(j,k)∈J×K do
+7: Sort φjby the weights of ψi.
+8: repeat
+9: Set η(i)=(j,k)and delete η(i)fromφj.
+10: untilφj=∅orQC,max
+j is exceeded orQG,max
+j is
+exceeded.
+11: Set wi,j,k(t)=wmax
+i,j,k(t)forη(i)inφj.
+12: end for
+13: until All tasks are accepted or rejected by all nodes.
+Output: Transferηto the task ofﬂoading indicator as (39).
+or rejected by all computing nodes in their preference list. Then,
+each computing node accepts new applicants according to the
+rules in step 2).
+4) Task Delivery: Determine all tasks accepted by computing
+nodejand perform routing for the tasks.
+Algorithm 1provides a detailed description of the steps to
+solve task ofﬂoading problem using DA matching. The com-
+plexity of this algorithm depends on the larger value between the
+number of tasks and the number of computing nodes. Consider-
+ing that the number of tasks is usually larger than the number of
+computing nodes in the considered network, the complexity of
+Algorithm 1is on the order of O(I2), increasing quadratically
+with the number of tasks.
+Given the model placement strategy, all optimization prob-
+lems in the single time slot have been resolved.
+E. The Optimal Model Placement Strategy
+A ss h o w ni nF i g . 5, the placement strategy for the computing
+node models at the long timescale can be reduced to a special
+case of the MAB problem. In the standard MAB problem, it’s
+assumed there are Karms bandit. The decision-maker has V
+opportunities to pull the arms, and generates rewards Xvin
+turnv. The decision-maker does not possess explicit knowledge
+about the quality of each arm kbut relies on past observations
+to select a potentially good arm that maximizes the cumulative
+rewardX(t).
+In our research, after addressing all the problems at the short
+timescale, our objective can be transformed into solving P4 as
+P4:m i n F4=(T+1)T0−1/summationdisplay
+t=TT0/summationdisplay
+i/summationdisplay
+j(Gi,j(αj,k(TT0))
++Hi,j(αj,k(TT0))
+s.t. (1) (42)
+Due to the lack of knowledge about the arrival of tasks within the
+time interval [TT0,(T+1)T0)at timeTT0, the model selection
+Authorized licensed use limited to: Huazhong University of Science and Technology. Downloaded on March 26,2026 at 09:09:06 UTC from IEEE Xplore.  Restrictions apply. 
+
+--- Page 10 ---
+CHAI et al.: JOINT TASK OFFLOADING, RESOURCE ALLOCATION AND MODEL PLACEMENT FOR AI AS A SERVICE IN 6G NETWORK 3839
+strategyαj,kcan only be adjusted based on historical informa-
+tion within a limited complexity space to maximize long-term
+rewards.
+First, each node jis considered to have |Kj|arms, where
+|Kj|represents the total number of model types deployable on
+nodej. In each round, αmax
+j arms need to be pulled for each
+nodej, which means selecting αmax
+jdifferent models from the
+set of model types Kj. (If the domain of αj,k(t)is extended,
+it means that each arm has a weight αj,k(t), and need to select
+models that meet (1)instead of selecting αmax
+jdifferent models)
+Second, each pull may result in a change in task selections for the
+current round, making it a dynamic MAB process. Therefore, we
+improve the basic Upper Conﬁdence Bounds (UCB) algorithm
+by updating the conﬁdence bounds of the mean reward at each
+time slot and selecting the top αmax
+j arms with low weights as
+the current stage’s model placement strategy at the beginning of
+each large time slot.
+Assuming that at each slot t∈[TT0,(T+1)T0),Vattempts
+are made to randomly change the combination of node models.
+Let−
+Rj,k(t)=/summationtext(T+1)T0−1
+t=TT0−w(t)
+vj,k(t)−w∗(t)denote the cumulative
+regret for arm (j,k)at timet, where−w(t)represents the average
+weight value obtained by selecting arm (j,k)in the attempts
+at timet,hj,k(t)is the cumulative number of attempts to
+select(j,k)during the time interval [TT0,t], andw∗(t)is the
+predeﬁned optimal benchmark utility.
+According to the UCB algorithm, the upper boundary of
+the conﬁdence interval is set to/radicalBig
+2log(V∗(t−TT0))
+hj,k(t)+1, whereV∗
+(t−TT0)represents the total number of selections at time t.
+Therefore, the cumulative regret for arm (j,k)at timetis given
+by−
+Rj,k(t)−/radicalBig
+2log(V∗(t−TT0))
+hj,k(t)+1. It can be observed that when
+the number of selections hj,k(t)for arm(j,k)is small, the
+upper boundary of the conﬁdence interval is relatively large,
+resulting in a lower regret and increasing the probability of
+selecting that arm for exploration. The probability of exploration
+is a normalized probability function of cumulative regret. As the
+number of selections increases, the uncertainty decreases, and
+the cumulative regret is gradually dominated by−
+Rj,k(t).A tt h i s
+point, arms with lower cumulative regret will emerge as winners.
+Based on this, we obtain
+arm(j)=argmink/bracketleftBigg
+−
+Rj,k(t)−/radicalBigg
+2log(V∗(t−TT0))
+hj,k(t)+1/bracketrightBigg
+.
+(43)
+At(t+1)T0, select the smallest αmax
+j regret arms for each node,
+which is the next long timescale (t+1)T0+1Model placement
+strategy. The speciﬁc algorithm is as follows:
+It can be seen that the complexity of the MAB algorithm is
+not only related to the number of attempts V, but also to the
+complexity of the DA algorithm used in step 4 of Algorithm 2.
+Therefore, in the DA algorithm in step 4, we only perform the
+ﬁrst time matching in Algorithm 1and estimate the total weight
+to minimize algorithm complexity. So, the complexity of each
+execution of the MAB algorithm is O(VT0). At each time slot,
+the DA algorithm and the MAB algorithm are both executed,
+Fig. 6. The network topology for simulations.
+Algorithm 2: Long Time Scale Model Placement Schedul-
+ing by Improved MAB-UCB.
+1:fort∈[TT0,(T+1)T0]do
+2: forv=1:Vdo
+3: Select arms as−
+Rj,k(t)−/radicalBig
+2log(V∗(t−TT0))
+hj,k(t)+1.
+4: Calculate weight by DA algorithm.
+5: Update−
+Rj,k(t)=/summationtext(T+1)T0−1
+t=TT0−w(t)
+hj,k(t)+1−w∗(t).
+6: end for
+7:end for
+8:ift=(T+1)T0then
+9: forj=1:Jdo
+10: Select αmax
+jarms as
+arm(j)=argmink/bracketleftbigg−
+Rj,k(t)−/radicalBig
+2log(V∗(t−TT0))
+hj,k(t)+1/bracketrightbigg
+.
+11: end for
+12: end if
+and a placement plan is made using the MAB algorithm in ﬁxed
+interval time slots. The total complexity of executing DA-MAB
+at timet∈[TT0,(T+1)T0]does not exceed O(I2T0+VT0).
+V. S IMULATION RESULTS AND DISCUSSIONS
+A. Experimental Settings
+In this section, we evaluate the performance of the DA-MAB
+algorithm. In the basic scenario, we compare the DA-MAB
+algorithm with other algorithms in the Atlanta network topology
+with 15 computing nodes, as shown in Fig. 6(a), where the
+numbers represent the number of models can be deployed for
+each node. In the experiments, a total of 210 tasks are assigned
+to 35 users, with task allocation performed every 100 seconds.
+We assumed that users’ tasks followed a periodicity of 600
+seconds. For the short time slot analysis, we employed three
+comparative algorithms: Greedy algorithm, particle swarm op-
+timization (PSO) algorithm, and Proximal Policy Optimization
+(PPO) algorithm. Additionally, as shown in Fig. 6(b),w eu s e
+the ta2 network consisting of 65 computing nodes and 560 users
+to validate the algorithm’s performance on a larger topology,
+referred to as DA-MAB (ta2). The distribution probabilities of
+tasks and models on this topology are set to be the same as the
+Authorized licensed use limited to: Huazhong University of Science and Technology. Downloaded on March 26,2026 at 09:09:06 UTC from IEEE Xplore.  Restrictions apply. 
+
+--- Page 11 ---
+3840 IEEE TRANSACTIONS ON SERVICES COMPUTING, VOL. 17, NO. 6, NOVEMBER/DECEMBER 2024
+TABLE II
+EXPERIMENTAL PARAMETERS
+Fig. 7. Overall performance over time.
+Atlanta network topology. For the long timescale, commonly
+used approaches in the communication ﬁeld involve obtaining
+prior knowledge through prediction methods and combining
+it with other techniques for comparison. Therefore, we chose
+the best-performing PPO algorithm among the aforementioned
+benchmark algorithms and compared it with our MAB algo-
+rithm under the assumption of prior knowledge. The detailed
+experimental settings are shown in Table II.
+B. Overall Performance
+First, we compared the performance of the algorithms within
+each time slot, as shown in Fig. 7. The objective has been
+equivalent to minimizing the overall weight. It can be observed
+that our DA-MAB algorithm outperforms the three benchmark
+algorithms overall, with smaller ﬂuctuations in weight over
+time. The DA-MAB algorithm with dynamic model placement
+enabled will be more stable over time, the performance of PSO
+and PPO and Greedy algorithms is relatively less stable. In
+the larger ta2 topology, due to stronger node connectivity, the
+average weight is reduced and more stable compared with the
+Atlanta network.
+C. Analysis of Data Size
+Subsequently, we investigated the impact of data size on algo-
+rithm performance and optimization results. As shown in Fig. 8,
+when the data size is increased threefold, DA-MAB, DA-MAB
+(ta2) and Greedy algorithms exhibit steady growth, while the
+PSO and PPO algorithms experience signiﬁcant increases. This
+is because as the data volume increases, the PSO and PPO
+algorithms may encounter penalties due to exceeding the node
+capacity limit, which is inherent to their exploratory choice. The
+Fig. 8. Single time slot performance with data size varying.
+Fig. 9. The probability density distribution of the average task completion.
+Fig. 10. Performance over time with transmission rate varying.
+DA-MAB (ta2) exhibits the slowest growth rate, enabling it can
+support larger data transmission.
+Furthermore, the probability density distribution of the av-
+erage task completion time for the DA-MAB algorithm under
+different data sizes is shown in Fig. 9.F i g . 9(a) and(b)represent
+the probability density distribution at time t=0 andt=1,
+respectively, where the total data size at t=1 is greater than
+that att=0. It can be observed that as the data size increases,
+the average task completion time increases, including both trans-
+mission time and computation time, and shows a more dispersed
+distribution.
+D. Analysis of Transmission Rate
+Fig. 10presents the variation of weight for different algo-
+rithms under different transmission rates. The PSO algorithm’s
+performance is weaker than the other three algorithms and is not
+shown in the ﬁgure. Fig. 10(a) illustrates the average weight of
+rasks for the Greedy algorithm with single time slot optimization
+across six time slots under different transmission rates. The
+algorithm performs relatively stable when the transmission rate
+is high but shows poor performance when the transmission rate
+is low. This is because at low transmission rates, tasks are more
+Authorized licensed use limited to: Huazhong University of Science and Technology. Downloaded on March 26,2026 at 09:09:06 UTC from IEEE Xplore.  Restrictions apply. 
+
+--- Page 12 ---
+CHAI et al.: JOINT TASK OFFLOADING, RESOURCE ALLOCATION AND MODEL PLACEMENT FOR AI AS A SERVICE IN 6G NETWORK 3841
+Fig. 11. The probability density distribution of CPU and GPU frequencies with energy coefﬁcient varying.
+sensitive to the selection of computing nodes in order to ensure
+task completion latency. Therefore, the gap between the local
+optimal solution obtained by the greedy strategy and the global
+optimal solution becomes larger. Fig. 10(b) shows the average
+weight of tasks for the PPO algorithm with single time slot opti-
+mization. The PPO algorithm exhibits stable performance under
+various transmission rates, outperforming the Greedy algorithm
+but slightly inferior to the DA-MAB algorithm. Fig. 10(c)
+and (d)includes the multi time slot optimization MAB-UCB
+algorithm, where the MAB algorithm is executed at t=3.I t
+can be observed that after t=3, the performance of DA-MAB
+is signiﬁcantly better than the other benchmark algorithms both
+in small and large network, and the algorithm’s performance
+remains stable under different transmission rates.
+E. Analysis of Computing Frequency
+Fig. 11illustrates the impact of the energy coefﬁcient on
+the optimal selection of CPU and GPU operating frequencies.
+By changing the energy coefﬁcient of the CPU, the probability
+density distribution of the CPU and GPU operating frequencies
+on the same computing node will change. When the CPU energy
+coefﬁcient decreases, the range of optimal operating frequencies
+expands, and tasks tend to use higher-frequency CPUs and
+lower-frequency GPUs. However, the relationship between the
+two is not linear. When the CPU energy coefﬁcient is lower than
+that of the GPU, the strategy that optimizes energy consumption
+and latency comprehensively results in a higher average CPU
+operating frequency than the average GPU operating frequency.
+Additionally, the results when changing the GPU energy coefﬁ-
+cient are similar to Fig. 11and are not repeated here.
+Fig. 12illustrates the impact of the frequency upper limit on
+weight, time and energy. Due to different topological connectiv-
+ity, the time for comparison only includes computation time. In
+both network topologies, the weight initially increases and then
+decreases with the frequency upper limit increasing, while the
+average computing time gradually decreases and the average en-
+ergy consumption gradually increases, ultimately stabilizing. It
+implies that in networks with lower computing power, users take
+Fig. 12. Performance over time with frequency upper limit.
+Fig. 13. Performance over time with short communication interval.
+longer to complete tasks but consume less energy. In networks
+with sufﬁcient computing power, users experience stable average
+energy consumption while achieving shorter computation times.
+F . Analysis of Communication Interval
+Then, Figs. 13and 14illustrate the impact of shortening
+the communication interval on the system. The comparison
+among the three algorithms when T =20s is shown in Fig. 13.
+Similarly, we enabled the MAB algorithm at t=3, dynamically
+optimizing the model placement strategy on computing nodes
+and obtaining better and more stable results in subsequent time
+slots. Comparing with Fig. 7, it can be observed that when the
+communication interval is shorter, both the average completion
+Authorized licensed use limited to: Huazhong University of Science and Technology. Downloaded on March 26,2026 at 09:09:06 UTC from IEEE Xplore.  Restrictions apply. 
+
+--- Page 13 ---
+3842 IEEE TRANSACTIONS ON SERVICES COMPUTING, VOL. 17, NO. 6, NOVEMBER/DECEMBER 2024
+Fig. 14. Average queue length between short and standard communication
+interval.
+Fig. 15. Performance of MAB algorithm compared with multi time slots PPO.
+time and energy consumption of the system are higher than the
+standard interval. Fig. 14shows the variation of average queue
+length for tasks over time under two communication interval
+conditions. The average queue length for tasks is higher when the
+communication interval is shorter. Due to the utilization of Lya-
+punov optimization, which converts the queue stability condition
+into the optimization objective, the difference in queue length at
+most time slots is not signiﬁcant under different communication
+interval conditions.
+G. Analysis of MAB Algorithm
+Finally, we discussed the applicability of the MAB algorithm
+in large-scale model placement strategies. We chose the multi
+time slots PPO algorithm as the benchmark algorithm, which
+optimizes model placement based on known information about
+task workloads at multiple time slots. In Fig. 15(a) –(d),t h e
+impact of different numbers of attempts in the MAB algorithm
+and its comparison with the multi time slots PPO algorithm is
+shown on the effectiveness of each time slot. Fig. 15(a) shows
+the average weight of tasks in the three time slots after the
+model placement strategy is updated. It can be seen that the
+average weight decreases as the number of attempts increases.
+When trying 30 times in each time slot, the average weight
+is already close to that of the PPO algorithm. Fig. 15(b) –(d)
+compare the optimized weights for the three time slots and theiraverages. Due to prior global optimization, PPO has more evenly
+distributed weights in each time slot. However, since the MAB
+algorithm lacks prior knowledge, its performance in a single
+time slot may be inferior or superior to the PPO algorithm.
+Combining with Fig. 15(e) , as the number of attempts per round
+increases, the probability of being penalized for exceeding node
+capacity gradually decreases for the MAB algorithm, and there
+are almost no cases of exceeding node capacity when trying
+30 times per round. From this, we can conclude that the MAB
+algorithm, as the number of attempts increases, reduces weight
+by selecting stable strategies based on accumulated experience
+and may achieve better strategies than the prior PPO algorithm
+within a single time slot.
+In addition, it should be noted that although the MAB al-
+gorithm provides a distributed model placement strategy, the
+employed DA algorithm is implemented in a centralized man-
+ager to achieve low-complexity strategy updates. We are going
+to improve task ofﬂoading strategy to achieve a fully distributed,
+low-complexity, and efﬁcient solution in the future work.
+VI. C ONCLUSION
+In this paper, we construct an AIaaS-based computing power
+network resource allocation framework, which enables dynamic
+model placement, computing power allocation and task ofﬂoad-
+ing strategies. The long-term problem of minimizing overall
+network latency and energy consumption is transformed into
+short-term problems by Lyapunov optimization. We employ an
+improved deferred-acceptance algorithm, convex optimization,
+and a multi-armed bandits algorithm to achieve low-complexity
+online optimization. Finally, extensive experiments are con-
+ducted to evaluate the performance of the proposed algorithms
+compared to existing approaches. In the future work, we con-
+sider developing the testbed for the proposed framework and
+validating the algorithm in the real world.
+REFERENCES
+[1] X. Tang et al., “Computing power network: The architecture of conver-
+gence of computing and networking towards 6G requirement,” China
+Commun. , vol. 18, no. 2, pp. 175–185, 2021.
+[2] Recommendation I, “Framework and overall objectives of the future
+development of IMT for 2030 and beyond,” Int. Telecommun. Union (ITU)
+Recommend. (ITU-R) , 2023.
+[3] E. Peltonen et al., “6G white paper on edge intelligence,” 2020, arXiv:
+2004.14850 .
+[4] D. Xu et al., “Edge intelligence: Empowering intelligence to the edge of
+network,” in Proc. IEEE , vol. 109, no. 11, pp. 1778–1837, Nov. 2021.
+[5] W. Zhang, S. Zeadally, W. Li, H. Zhang, J. Hou, and V . C. M. Leung,
+“Edge AI as a service: Conﬁgurable model deployment and delay-energy
+optimization with result quality constraints,” IEEE Trans. Cloud Comput. ,
+vol. 11, no. 2, pp. 1954–1969, Second Quarter, 2023.
+[6] M. Latva-Aho and K. Leppänen, “Key drivers and research challenges
+for 6G ubiquitous wireless intelligence,” Univ. Oulu, While Paper, Oulu,
+Finland, 2019. [Online]. Available: http://urn.ﬁ/urn:isbn:9789526223544
+[7] H. Geng, D. Zeng, and Y . Li, “Performance efﬁcient layer-aware DNN
+inference task scheduling in GPU cluster,” in Proc. IEEE Glob. Commun.
+Conf. , 2022, pp. 2242–2247.
+[8] T. X. Tran and D. Pompili, “Joint task ofﬂoading and resource allocation
+for multi-server mobile-edge computing networks,” IEEE Trans. Veh.
+Technol. , vol. 68, no. 1, pp. 856–868, Jan. 2019.
+[9] B. Costa et al., “Orchestration in fog computing: A comprehensive survey,”
+ACM Comput. Surv. , vol. 55, no. 2, pp. 1–34, 2022.
+Authorized licensed use limited to: Huazhong University of Science and Technology. Downloaded on March 26,2026 at 09:09:06 UTC from IEEE Xplore.  Restrictions apply. 
+
+--- Page 14 ---
+CHAI et al.: JOINT TASK OFFLOADING, RESOURCE ALLOCATION AND MODEL PLACEMENT FOR AI AS A SERVICE IN 6G NETWORK 3843
+[10] H. Kokkonen, S. Pirttikangas, and L. Lovén, “EISim: A platform for sim-
+ulating intelligent edge orchestration solutions,” 2023, arXiv:2311.01224 .
+[11] H. Kokkonen et al., “Autonomy and intelligence in the computing con-
+tinuum: Challenges, enablers, and future directions for orchestration,”
+2022, arXiv:2205.01423 .
+[12] J. Li et al., “AIQoSer: Building the efﬁcient inference-QoS for AI ser-
+vices,” in Proc. IEEE/ACM 30th Int. Symp. Qual. Service , 2022, pp. 1–10.
+[13] B. Da and M. Carugi, “Representative use cases and key network require-
+ments for network 2030,” Tech. Rep. ITU-T FG-NET2030, 2020.
+[14] E. Peltonen et al., “The many faces of edge intelligence,” IEEE Access ,
+vol. 10, pp. 104769–104782, 2022.
+[15] M. Chen and Y . Hao, “Task ofﬂoading for mobile edge computing in
+software deﬁned ultra-dense network,” IEEE J. Sel. Areas Commun. ,
+vol. 36, no. 3, pp. 587–597, Mar. 2018.
+[16] S. Deng, H. Zhao, W. Fang, J. Yin, S. Dustdar, and A. Y . Zomaya, “Edge
+intelligence: The conﬂuence of edge computing and artiﬁcial intelligence,”
+IEEE Internet Things J. , vol. 7, no. 8, pp. 7457–7469, Aug. 2020.
+[17] A. Bhuiyan, D. Liu, A. Khan, A. Saifullah, N. Guan, and Z. Guo, “Energy-
+efﬁcient parallel real-time scheduling on clustered multi-core,” IEEE
+Trans. Parallel Distrib. Syst. , vol. 31, no. 9, pp. 2097–2111, Sep. 2020.
+[18] Q. Zeng, Y . Du, K. Huang, and K. K. Leung, “Energy-efﬁcient resource
+management for federated edge learning with CPU-GPU heterogeneous
+computing,” IEEE Trans. Wireless Commun. , vol. 20, no. 12, pp. 7947–
+7962, Dec. 2021.
+[19] J. Feng, W. Zhang, Q. Pei, J. Wu, and X. Lin, “Heterogeneous computation
+and resource allocation for wireless powered federated edge learning
+systems,” IEEE Trans. Commun. , vol. 70, no. 5, pp. 3220–3233, May 2022.
+[20] K. Cao, Y . Cui, L. Li, J. Zhou, and S. Hu, “CPU-GPU cooperative QoS
+optimization of personalized digital healthcare using machine learning
+and swarm intelligence,” IEEE/ACM Trans. Comput. Biol. Bioinf. , vol. 21,
+no. 4, pp. 521–533, Jul./Aug. 2024.
+[21] Z. Zhang, Q. Li, L. Lu, D. Guo, and Y . Zhang, “Joint optimization of
+the partition and scheduling of DNN tasks in computing and network
+convergence,” IEEE Netw. Lett. , vol. 5, no. 2, pp. 130–134, Jun. 2023.
+[22] S. Tuli, G. Casale, and N. R. Jennings, “SplitPlace: AI augmented splitting
+and placement of large-scale neural networks in mobile edge environ-
+ments,” IEEE Trans. Mobile Comput. , vol. 22, no. 9, pp. 5539–5554,
+Sep. 2023.
+[23] T. Lähderanta et al., “Edge computing server placement with capacitated
+location allocation,” J. Parallel Distrib. Comput. , vol. 153, pp. 130–149,
+2021.
+[24] X. Wei, A. B. M. M. Rahman, D. Cheng, and Y . Wang, “Joint optimiza-
+tion across timescales: Resource placement and task dispatching in edge
+clouds,” IEEE Trans. Cloud Comput. , vol. 11, no. 1, pp. 730–744, First
+Quarter, 2023.
+[25] Y . He et al., “Two-timescale resource allocation for automated networks
+in IIoT,” IEEE Trans. Wireless Commun. , vol. 21, no. 10, pp. 7881–7896,
+Oct. 2022.
+[26] Y . Sun, S. Chen, Z. Wang, and S. Mao, “A joint learning and game-theoretic
+approach to multi-dimensional resource management in fog radio access
+networks,” IEEE Trans. Veh. Technol. , vol. 72, no. 2, pp. 2550–2563,
+Feb. 2023.
+[27] W. Fan et al., “DNN deployment, task ofﬂoading, and resource allocation
+for joint task inference in IIoT,” IEEE Trans. Ind. Informat. , vol. 19, no. 2,
+pp. 1634–1646, Feb. 2023.
+[28] M. V olk et al., “Facing big data system architecture deployments: Towards
+an automated approach using container technologies for rapid prototyp-
+ing,” in Proc. 55th Hawaii Int. Conf. Syst. Sci. , 2022, pp. 6125–6134.
+[29] M. J. Neely, “Stochastic network optimization with application to commu-
+nication and queueing systems,” Synth. Lectures Commun. Netw. ,v o l .3 ,
+no. 1, pp. 1–211, 2010.
+Yuhao Chai received the BE degree from the Beijing
+University of Posts and Telecommunications, Bei-
+jing, China, where he is currently working toward the
+PhD degree with the School of Electronic Engineer-
+ing. His research interests include 6G network, game
+theory, machine learning and network intelligence.
+Kaice Gao received the BE degree from the Beijing
+University of Posts and Telecommunications, Bei-
+jing, China, where he is currently working toward the
+MS degree with the School of Electronic Engineering.
+His research interests include computing power net-
+work, distributed training and reinforcement learning.
+Guohan Zhang received the PhD degree in manage-
+ment mathematics from the University of Birming-
+ham, United Kingdom, in 2017. He is currently an
+assistant professor with the Department of Mathe-
+matics, the School of Science, BUPT, Beijing China
+and Key Laboratory of Mathematics and Information
+Networks (Beijing University of Posts and Telecom-
+munications), Ministry of Education, China. His re-
+search interests include mathematical optimization,
+image processing and machine learning.
+Lu Lu (Member, IEEE) received the master’s degree
+from the Beijing University of Posts and Telecommu-
+nications, Beijing, China, in 2005. She is the deputy
+director with the Department of Basic Network Tech-
+nology, China Mobile Research Institute, Beijing, the
+leader of Core Network Group of CCSA TC5, and the
+vice-chairman of ITU-T SG13. Her main research
+direction covers 5G/6G architecture and computing
+power network.
+Qin Li received the master’s degree from Chongqing
+University, Chongqing, China, in 2002. She is a se-
+nior researcher with China Mobile Research Institute,
+Beijing, China, and has engaged in technical and
+application research on core network and content
+network for more than 20 years. Her research interests
+cover 5G/6G architecture, network intelligence and
+digital twin network.
+Yong Zhang received the PhD degree from the Bei-
+jing University of Posts and Telecommunications
+(BUPT), Beijing, China, in 2007. He is a professor
+with the School of Electronic Engineering, BUPT.
+He is currently the director of Fab.X Artiﬁcial Intelli-
+gence Research Center, BUPT. He is the deputy head
+of the mobile internet service and platform working
+group, China communications standards association.
+He has authored or coauthored more than 80 papers
+and holds 30 granted China patents. His research
+interests include artiﬁcial intelligence, wireless com-
+munication, and Internet of Things.
+Authorized licensed use limited to: Huazhong University of Science and Technology. Downloaded on March 26,2026 at 09:09:06 UTC from IEEE Xplore.  Restrictions apply. 
+
