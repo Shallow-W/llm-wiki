@@ -200,6 +200,7 @@
   },
   "active": "5663dd7ccb1f944d",
   "lastOpenFiles": [
+    "docs/plans/iterations/experiment-framework-v4-final.md",
     "docs/plans/iterations/experiment-framework-v3.md",
     "docs/plans/iterations/experiment-framework-v2.md",
     "docs/plans/iterations/experiment-framework-v1.md",
@@ -234,7 +235,6 @@
     "wiki/concepts/边缘计算.md",
     "wiki/concepts/任务卸载.md",
     "wiki/overview/微服务部署与路由优化概览.md",
-    "wiki/concepts/混合整数非线性规划-MINLP.md",
-    "wiki/concepts/Jackson-排队网络.md"
+    "wiki/concepts/混合整数非线性规划-MINLP.md"
   ]
 }
