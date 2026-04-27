@@ -200,6 +200,10 @@
   },
   "active": "5663dd7ccb1f944d",
   "lastOpenFiles": [
+    "docs/plans/iterations/experiment-framework-v3.md",
+    "docs/plans/iterations/experiment-framework-v2.md",
+    "docs/plans/iterations/experiment-framework-v1.md",
+    "docs/plans/iterations",
     "docs/plans/edge-deployment-routing-experiment-v2.md",
     "docs/plans/edge-deployment-routing-experiment.md",
     "docs/plans",
@@ -218,7 +222,6 @@
     "wiki/entities/中国人民大学.md",
     "CLAUDE.md",
     "log/2026/04-21.md.tmp.932.1776768654476",
-    "wiki/index.md.tmp.932.1776768644920",
     "wiki/concepts/工具依赖图.md",
     "wiki/concepts/Agent-RL.md",
     "wiki/concepts/POMDP.md",
@@ -232,9 +235,6 @@
     "wiki/concepts/任务卸载.md",
     "wiki/overview/微服务部署与路由优化概览.md",
     "wiki/concepts/混合整数非线性规划-MINLP.md",
-    "wiki/concepts/Jackson-排队网络.md",
-    "wiki/concepts/Lyapunov-优化.md",
-    "wiki/concepts/AI-as-a-Service-AIaaS.md",
-    "wiki/concepts/M-M-C-排队模型.md"
+    "wiki/concepts/Jackson-排队网络.md"
   ]
 }
