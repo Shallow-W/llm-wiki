@@ -1,0 +1,24 @@
+{
+  "id": "conv-1778039860327-cmwooc6lv",
+  "providerId": "claude",
+  "title": "Analyze GitHub agent projects and create wiki n...",
+  "titleGenerationStatus": "success",
+  "createdAt": 1778039860327,
+  "updatedAt": 1778040219708,
+  "lastResponseAt": 1778040219708,
+  "sessionId": "510a6bb6-5c5c-4ef8-87e3-0b9c01b68e57",
+  "providerState": {
+    "providerSessionId": "510a6bb6-5c5c-4ef8-87e3-0b9c01b68e57"
+  },
+  "currentNote": "CLAUDE.md",
+  "usage": {
+    "model": "opus",
+    "inputTokens": 92708,
+    "cacheCreationInputTokens": 0,
+    "cacheReadInputTokens": 0,
+    "contextWindow": 200000,
+    "contextTokens": 92708,
+    "percentage": 46,
+    "contextWindowIsAuthoritative": true
+  }
+}

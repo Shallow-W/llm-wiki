@@ -12,12 +12,14 @@
             "id": "eb0a9c0f7018fa6c",
             "type": "leaf",
             "state": {
-              "type": "pdf",
+              "type": "markdown",
               "state": {
-                "file": "raw/papers/RZ-NAS.pdf"
+                "file": "CLAUDE.md",
+                "mode": "source",
+                "source": false
               },
-              "icon": "lucide-file-text",
-              "title": "RZ-NAS"
+              "icon": "lucide-file",
+              "title": "CLAUDE"
             }
           }
         ]
@@ -94,7 +96,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 200
+    "width": 231.5
   },
   "right": {
     "id": "cea95d1d64530bca",
@@ -200,19 +202,44 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "5663dd7ccb1f944d",
+  "active": "00c3d91ba69b55ce",
   "lastOpenFiles": [
-    "实验/edge-deployment-routing/results/test_random_20260427_161121_summary.json",
-    "实验/edge-deployment-routing/tests/unit/__pycache__/test_dto.cpython-312-pytest-9.0.0.pyc",
-    "实验/edge-deployment-routing/src/simulator/__pycache__/__init__.cpython-312.pyc",
-    "实验/edge-deployment-routing/src/simulator/__pycache__/analytical_simulator.cpython-312.pyc",
-    "实验/edge-deployment-routing/src/policies/__pycache__/__init__.cpython-312.pyc",
-    "实验/edge-deployment-routing/src/policies/__pycache__/random_policy.cpython-312.pyc",
-    "实验/edge-deployment-routing/src/experiments/__pycache__/__init__.cpython-312.pyc",
-    "实验/edge-deployment-routing/src/experiments/__pycache__/runner.cpython-312.pyc",
-    "实验/edge-deployment-routing/src/experiments/__pycache__/metrics.cpython-312.pyc",
-    "实验/edge-deployment-routing/src/core/__pycache__/__init__.cpython-312.pyc",
-    "实验/edge-deployment-routing/src/core/__pycache__/interfaces.cpython-312.pyc",
+    "log/2026/05-06.md",
+    "log/2026/05-06.md.tmp.47292.1778040192811",
+    "wiki/index.md.tmp.47292.1778040182900",
+    "wiki/index.md.tmp.47292.1778040177656",
+    "wiki/index.md.tmp.47292.1778040165307",
+    "wiki/index.md.tmp.47292.1778040149025",
+    "wiki/entities/swarm-ide.md",
+    "wiki/entities/swarm-ide.md.tmp.47292.1778040135365",
+    "wiki/sources/swarm-ide.md",
+    "asset/img/swarm-ide/runtime-screenshot.png",
+    "asset/img/swarm-ide/image-1.png",
+    "asset/img/swarm-ide/qrcode.png",
+    "asset/img/swarm-ide/demo-cover.jpg",
+    "asset/img/swarm-ide",
+    "raw/papers/启发式部署算法，先将服务按实例数量降序排序，再部署到与其他节点平均距离最短的节点；路由阶段采用 Dijkstra 算法确定路径，适用于服务部署与路由的两阶段优化。.pdf",
+    "asset/img",
+    "asset",
+    "CLAUDE.md",
+    "raw/github_rep/swarm-ide/whitepaper-site/public/window.svg",
+    "raw/github_rep/swarm-ide/whitepaper-site/public/wechat-qr.png",
+    "raw/github_rep/swarm-ide/whitepaper-site/public/vercel.svg",
+    "raw/github_rep/swarm-ide/whitepaper-site/public/hero.jpg",
+    "raw/github_rep/swarm-ide/whitepaper-site/public/next.svg",
+    "raw/github_rep/swarm-ide/whitepaper-site/public/file.svg",
+    "raw/github_rep/swarm-ide/whitepaper-site/README.md",
+    "raw/github_rep/swarm-ide/spells/tree-executor.md",
+    "raw/github_rep/swarm-ide/spells/router-experts.md",
+    "raw/github_rep/swarm-ide/spells/README.md",
+    "raw/github_rep/swarm-ide/spells/map-reduce.md",
+    "raw/github_rep/swarm-ide/specs/implementation-plan/tech_stack.md",
+    "raw/github_rep/swarm-ide/specs/implementation-plan/prd.md",
+    "raw/github_rep/swarm-ide/promo-video/README.md",
+    "raw/github_rep/swarm-ide/backend/skills/topology/SKILL.md",
+    "raw/github_rep/swarm-ide/backend/README.md",
+    "raw/github_rep/swarm-ide/README_EN.md",
+    "raw/github_rep/swarm-ide/README.md",
     "实验/edge-deployment-routing/docs/WORKFLOW.md",
     "实验/edge-deployment-routing/docs/GUIDE.md",
     "实验/edge-deployment-routing/docs/DATA_STRUCTURES.md",
@@ -222,21 +249,6 @@
     "experiments/edge-deployment-routing/docs/DATA_STRUCTURES.md",
     "experiments/edge-deployment-routing/docs/GUIDE.md",
     "experiments/edge-deployment-routing/docs/WORKFLOW.md",
-    "experiments/edge-deployment-routing/docs/ARCHITECTURE.md",
-    "docs/plans/iterations/experiment-framework-v4-final.md",
-    "docs/plans/iterations/experiment-framework-v3.md",
-    "docs/plans/iterations/experiment-framework-v2.md",
-    "docs/plans/iterations/experiment-framework-v1.md",
-    "docs/plans/edge-deployment-routing-experiment-v2.md",
-    "docs/plans/edge-deployment-routing-experiment.md",
-    "wiki/entities/字节跳动-Seed.md",
-    "字节跳动 Seed.md",
-    "wiki/index.md",
-    "wiki/sources/gstc-zero-cost-proxy-nas.md",
-    "wiki/sources/agent-world.md",
-    "wiki/entities/中国人民大学.md",
-    "CLAUDE.md",
-    "wiki/concepts/工具依赖图.md",
-    "wiki/concepts/Agent-RL.md"
+    "experiments/edge-deployment-routing/docs/ARCHITECTURE.md"
   ]
 }

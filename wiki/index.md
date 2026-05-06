@@ -1,6 +1,6 @@
 # 知识库索引
 
-最后更新：2026-04-21
+最后更新：2026-05-06
 
 这是整个知识库的内容导向目录。每次摄入后 LLM 都会更新它。回答查询时以此为入口。
 
@@ -12,8 +12,9 @@
 
 ---
 
-## 来源（4）
+## 来源（5）
 
+- [[swarm-ide|Swarm-IDE: 自组织的 Agent 蜂群]] — 去中心化多 Agent 协作平台，create+send 极简原语，动态嵌套 + 实时 Graph 可视化 + MCP 技能系统 | 2026-01-02 | #Agent #多Agent #开源 #MCP
 - [[agent-world|Agent-World: Scaling Real-World Environment Synthesis for Evolving General Agent Intelligence]] — 1978 环境 + 19822 工具的自我进化 Agent 训练平台，8B/14B 超越闭源模型 | 2026-04 | #Agent #RL #MCP
 - [[gstc-zero-cost-proxy-nas|Zero-Cost Proxy NAS-Driven Collaborative Deployment Optimization]] — GSTC 零成本代理 + JCQDA 部署 + LAMRA 动态替换，AI 服务全生命周期优化 | 2026-04-21 | #NAS #微服务
 - [[joint-deployment-request-routing-microservice-tpds|Joint Deployment and Request Routing for Microservice Call Graphs]] — GMDA-RMPR 两阶段启发式，联合优化微服务部署与路由 | 2023-11 | #微服务 #排队网络
@@ -21,8 +22,9 @@
 
 ---
 
-## 实体（10）
+## 实体（11）
 
+- [[Swarm-IDE]] — 开源去中心化多 Agent 协作平台，create+send 极简原语，支持动态嵌套与实时 Graph 可视化
 - [[Guanting Dong]] — 中国人民大学博士生，Agent RL / 工具使用训练方向
 - [[Zhicheng Dou]] — 中国人民大学教授，Agent 系统方向
 - [[中国人民大学]] — 高瓴人工智能学院
@@ -73,4 +75,4 @@
 
 ## 最近活动
 
-查看 [[log/2026/04-21|今日日志]] 了解完整时间线。
+查看 [[log/2026/05-06|今日日志]] 了解完整时间线。

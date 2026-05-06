@@ -1,0 +1,24 @@
+{
+  "id": "conv-1778039539789-vxexnmgw2",
+  "providerId": "claude",
+  "title": "Update workflow to define image asset folder co...",
+  "titleGenerationStatus": "success",
+  "createdAt": 1778039539791,
+  "updatedAt": 1778039725512,
+  "lastResponseAt": 1778039725512,
+  "sessionId": "4d4a2ee0-09c9-4f27-bd81-cf3104cc831b",
+  "providerState": {
+    "providerSessionId": "4d4a2ee0-09c9-4f27-bd81-cf3104cc831b"
+  },
+  "currentNote": "CLAUDE.md",
+  "usage": {
+    "model": "opus",
+    "inputTokens": 6613,
+    "cacheCreationInputTokens": 0,
+    "cacheReadInputTokens": 69003,
+    "contextWindow": 200000,
+    "contextTokens": 75616,
+    "percentage": 38,
+    "contextWindowIsAuthoritative": true
+  }
+}
