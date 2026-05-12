@@ -12,14 +12,12 @@
             "id": "eb0a9c0f7018fa6c",
             "type": "leaf",
             "state": {
-              "type": "markdown",
+              "type": "pdf",
               "state": {
-                "file": "wiki/sources/joint-task-offloading-resource-allocation-model-placement-6g.md",
-                "mode": "source",
-                "source": false
+                "file": "raw/papers/启发式部署算法，先将服务按实例数量降序排序，再部署到与其他节点平均距离最短的节点；路由阶段采用 Dijkstra 算法确定路径，适用于服务部署与路由的两阶段优化。.pdf"
               },
-              "icon": "lucide-file",
-              "title": "joint-task-offloading-resource-allocation-model-placement-6g"
+              "icon": "lucide-file-text",
+              "title": "启发式部署算法，先将服务按实例数量降序排序，再部署到与其他节点平均距离最短的节点；路由阶段采用 Dijkstra 算法确定路径，适用于服务部署与路由的两阶段优化。"
             }
           }
         ]
@@ -202,10 +200,10 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "eb0a9c0f7018fa6c",
+  "active": "5663dd7ccb1f944d",
   "lastOpenFiles": [
-    "AI as a Service (AIaaS).md",
     "wiki/sources/joint-task-offloading-resource-allocation-model-placement-6g.md",
+    "AI as a Service (AIaaS).md",
     "Lyapunov 优化.md",
     "多臂老虎机 (MAB).md",
     "混合整数非线性规划 (MINLP).md",

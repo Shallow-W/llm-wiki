@@ -1,0 +1,7 @@
+{
+  "tool_name": "Bash",
+  "tool_input_preview": "{\"command\":\"python -c \\\"\\nimport fitz\\ndoc = fitz.open(r'D:\\\\Item\\\\repo\\\\llm-wiki\\\\raw\\\\papers\\\\贪心分配异构资源，将服务实例部署在资源利用率最低的节点；路由时始终选择当前位置最近的节点转发请求，追求局部最优资源分配与路由效率。.pdf')\\nprint(f'Pages: {doc.page_count}...",
+  "error": "Exit code 1\nTraceback (most recent call last):\r\n  File \"<string>\", line 7, in <module>\r\nUnicodeEncodeError: 'gbk' codec can't encode character '\\ufb02' in position 100: illegal multibyte sequence\r\nPages: 14\r\n--- Page 1 ---",
+  "timestamp": "2026-05-12T13:10:51.328Z",
+  "retry_count": 2
+}

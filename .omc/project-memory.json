@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "lastScanned": 1778039542307,
+  "lastScanned": 1778591397399,
   "projectRoot": "D:\\Item\\repo\\llm-wiki",
   "techStack": {
     "languages": [],
@@ -32,32 +32,39 @@
   },
   "customNotes": [],
   "directoryMap": {
+    "asset": {
+      "path": "asset",
+      "purpose": null,
+      "fileCount": 0,
+      "lastAccessed": 1778591397380,
+      "keyFiles": []
+    },
     "llm_talk": {
       "path": "llm_talk",
       "purpose": null,
       "fileCount": 0,
-      "lastAccessed": 1778039542281,
+      "lastAccessed": 1778591397381,
       "keyFiles": []
     },
     "log": {
       "path": "log",
       "purpose": null,
       "fileCount": 0,
-      "lastAccessed": 1778039542282,
+      "lastAccessed": 1778591397381,
       "keyFiles": []
     },
     "raw": {
       "path": "raw",
       "purpose": null,
       "fileCount": 0,
-      "lastAccessed": 1778039542283,
+      "lastAccessed": 1778591397381,
       "keyFiles": []
     },
     "wiki": {
       "path": "wiki",
       "purpose": null,
       "fileCount": 1,
-      "lastAccessed": 1778039542283,
+      "lastAccessed": 1778591397382,
       "keyFiles": [
         "index.md"
       ]
@@ -65,195 +72,15 @@
   },
   "hotPaths": [
     {
-      "path": "CLAUDE.md",
-      "accessCount": 7,
-      "lastAccessed": 1778039696305,
-      "type": "file"
-    },
-    {
-      "path": "wiki\\index.md",
-      "accessCount": 6,
-      "lastAccessed": 1778040183286,
-      "type": "file"
-    },
-    {
-      "path": "raw\\github_rep\\swarm-ide\\README_EN.md",
+      "path": "C:\\Users\\01\\.claude\\projects\\D--Item-repo-llm-wiki\\510a6bb6-5c5c-4ef8-87e3-0b9c01b68e57\\tool-results\\boclaag5w.txt",
       "accessCount": 1,
-      "lastAccessed": 1778039891931,
+      "lastAccessed": 1778591479624,
       "type": "file"
     },
     {
-      "path": "raw\\github_rep\\swarm-ide\\README.md",
+      "path": "C:\\Users\\01\\.claude\\projects\\D--Item-repo-llm-wiki\\510a6bb6-5c5c-4ef8-87e3-0b9c01b68e57\\tool-results\\bcti6lrlz.txt",
       "accessCount": 1,
-      "lastAccessed": 1778039892002,
-      "type": "file"
-    },
-    {
-      "path": "raw\\github_rep\\swarm-ide\\backend\\app\\api\\agents\\route.ts",
-      "accessCount": 1,
-      "lastAccessed": 1778039905257,
-      "type": "file"
-    },
-    {
-      "path": "raw\\github_rep\\swarm-ide\\backend\\app\\api\\ui-stream\\route.ts",
-      "accessCount": 1,
-      "lastAccessed": 1778039905745,
-      "type": "file"
-    },
-    {
-      "path": "raw\\github_rep\\swarm-ide\\spells\\map-reduce.md",
-      "accessCount": 1,
-      "lastAccessed": 1778039905874,
-      "type": "file"
-    },
-    {
-      "path": "raw\\github_rep\\swarm-ide\\spells\\router-experts.md",
-      "accessCount": 1,
-      "lastAccessed": 1778039906129,
-      "type": "file"
-    },
-    {
-      "path": "raw\\github_rep\\swarm-ide\\backend\\app\\api\\agents\\[agentId]\\route.ts",
-      "accessCount": 1,
-      "lastAccessed": 1778039906239,
-      "type": "file"
-    },
-    {
-      "path": "raw\\github_rep\\swarm-ide\\backend\\app\\api\\groups\\route.ts",
-      "accessCount": 1,
-      "lastAccessed": 1778039906294,
-      "type": "file"
-    },
-    {
-      "path": "raw\\github_rep\\swarm-ide\\backend\\app\\api\\agent-graph\\route.ts",
-      "accessCount": 1,
-      "lastAccessed": 1778039906443,
-      "type": "file"
-    },
-    {
-      "path": "raw\\github_rep\\swarm-ide\\spells\\tree-executor.md",
-      "accessCount": 1,
-      "lastAccessed": 1778039906691,
-      "type": "file"
-    },
-    {
-      "path": "raw\\github_rep\\swarm-ide\\spells\\README.md",
-      "accessCount": 1,
-      "lastAccessed": 1778039906857,
-      "type": "file"
-    },
-    {
-      "path": "raw\\github_rep\\swarm-ide\\backend\\.env.example",
-      "accessCount": 1,
-      "lastAccessed": 1778039919523,
-      "type": "file"
-    },
-    {
-      "path": "raw\\github_rep\\swarm-ide\\backend\\app\\api\\groups\\[groupId]\\messages\\route.ts",
-      "accessCount": 1,
-      "lastAccessed": 1778039919738,
-      "type": "file"
-    },
-    {
-      "path": "raw\\github_rep\\swarm-ide\\package.json",
-      "accessCount": 1,
-      "lastAccessed": 1778039919879,
-      "type": "file"
-    },
-    {
-      "path": "raw\\github_rep\\swarm-ide\\backend\\app\\api\\glm\\stream\\route.ts",
-      "accessCount": 1,
-      "lastAccessed": 1778039919943,
-      "type": "file"
-    },
-    {
-      "path": "raw\\github_rep\\swarm-ide\\specs\\implementation-plan\\prd.md",
-      "accessCount": 1,
-      "lastAccessed": 1778039928216,
-      "type": "file"
-    },
-    {
-      "path": "raw\\github_rep\\swarm-ide\\specs\\implementation-plan\\tech_stack.md",
-      "accessCount": 1,
-      "lastAccessed": 1778039928281,
-      "type": "file"
-    },
-    {
-      "path": "raw\\github_rep\\swarm-ide\\backend\\src\\runtime\\skill-loader.ts",
-      "accessCount": 1,
-      "lastAccessed": 1778039943777,
-      "type": "file"
-    },
-    {
-      "path": "raw\\github_rep\\swarm-ide\\backend\\src\\lib\\glm-stream.ts",
-      "accessCount": 1,
-      "lastAccessed": 1778039943947,
-      "type": "file"
-    },
-    {
-      "path": "raw\\github_rep\\swarm-ide\\backend\\src\\lib\\storage.ts",
-      "accessCount": 1,
-      "lastAccessed": 1778039944040,
-      "type": "file"
-    },
-    {
-      "path": "raw\\github_rep\\swarm-ide\\backend\\src\\runtime\\mcp.ts",
-      "accessCount": 1,
-      "lastAccessed": 1778039944121,
-      "type": "file"
-    },
-    {
-      "path": "raw\\github_rep\\swarm-ide\\backend\\src\\runtime\\ui-bus.ts",
-      "accessCount": 1,
-      "lastAccessed": 1778039944208,
-      "type": "file"
-    },
-    {
-      "path": "raw\\github_rep\\swarm-ide\\backend\\src\\runtime\\agent-runtime.ts",
-      "accessCount": 1,
-      "lastAccessed": 1778039944269,
-      "type": "file"
-    },
-    {
-      "path": "raw\\github_rep\\swarm-ide\\assets\\image.jpg",
-      "accessCount": 1,
-      "lastAccessed": 1778039986188,
-      "type": "file"
-    },
-    {
-      "path": "raw\\github_rep\\swarm-ide\\image-1.png",
-      "accessCount": 1,
-      "lastAccessed": 1778039986285,
-      "type": "file"
-    },
-    {
-      "path": "raw\\github_rep\\swarm-ide\\backend\\src\\db\\schema.ts",
-      "accessCount": 1,
-      "lastAccessed": 1778039998282,
-      "type": "file"
-    },
-    {
-      "path": "raw\\github_rep\\swarm-ide\\backend\\src\\runtime\\event-bus.ts",
-      "accessCount": 1,
-      "lastAccessed": 1778039998364,
-      "type": "file"
-    },
-    {
-      "path": "wiki\\sources\\swarm-ide.md",
-      "accessCount": 1,
-      "lastAccessed": 1778040094129,
-      "type": "file"
-    },
-    {
-      "path": "wiki\\entities\\swarm-ide.md",
-      "accessCount": 1,
-      "lastAccessed": 1778040135723,
-      "type": "file"
-    },
-    {
-      "path": "log\\2026\\05-06.md",
-      "accessCount": 1,
-      "lastAccessed": 1778040193106,
+      "lastAccessed": 1778591479797,
       "type": "file"
     }
   ],
