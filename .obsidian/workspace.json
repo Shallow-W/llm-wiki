@@ -200,8 +200,12 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "eb0a9c0f7018fa6c",
+  "active": "00c3d91ba69b55ce",
   "lastOpenFiles": [
+    "log/2026/05-14.md",
+    "log/2026/05-14.md.tmp.29552.1778729409790",
+    "wiki/index.md.tmp.29552.1778729364602",
+    "wiki/concepts/Language-Server-Protocol-LSP.md",
     "raw/papers/启发式部署算法，先将服务按实例数量降序排序，再部署到与其他节点平均距离最短的节点；路由阶段采用 Dijkstra 算法确定路径，适用于服务部署与路由的两阶段优化。.pdf",
     "wiki/sources/joint-task-offloading-resource-allocation-model-placement-6g.md",
     "AI as a Service (AIaaS).md",
@@ -225,8 +229,6 @@
     "asset/img/swarm-ide/qrcode.png",
     "asset/img/swarm-ide/demo-cover.jpg",
     "asset/img/swarm-ide",
-    "asset/img",
-    "asset",
     "raw/github_rep/swarm-ide/whitepaper-site/public/window.svg",
     "raw/github_rep/swarm-ide/whitepaper-site/public/wechat-qr.png",
     "raw/github_rep/swarm-ide/whitepaper-site/public/vercel.svg",
@@ -245,7 +247,6 @@
     "raw/github_rep/swarm-ide/backend/README.md",
     "raw/github_rep/swarm-ide/README_EN.md",
     "raw/github_rep/swarm-ide/README.md",
-    "实验/edge-deployment-routing/docs/WORKFLOW.md",
-    "实验/edge-deployment-routing/docs/GUIDE.md"
+    "实验/edge-deployment-routing/docs/WORKFLOW.md"
   ]
 }

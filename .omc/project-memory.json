@@ -72,6 +72,24 @@
   },
   "hotPaths": [
     {
+      "path": "wiki\\index.md",
+      "accessCount": 5,
+      "lastAccessed": 1778729433642,
+      "type": "file"
+    },
+    {
+      "path": "wiki\\concepts\\Language-Server-Protocol-LSP.md",
+      "accessCount": 2,
+      "lastAccessed": 1778729433553,
+      "type": "file"
+    },
+    {
+      "path": "log\\2026\\05-14.md",
+      "accessCount": 2,
+      "lastAccessed": 1778729433731,
+      "type": "file"
+    },
+    {
       "path": "C:\\Users\\01\\.claude\\projects\\D--Item-repo-llm-wiki\\510a6bb6-5c5c-4ef8-87e3-0b9c01b68e57\\tool-results\\boclaag5w.txt",
       "accessCount": 1,
       "lastAccessed": 1778591479624,
