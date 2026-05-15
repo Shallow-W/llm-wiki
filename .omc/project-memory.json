@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "lastScanned": 1778591397399,
+  "lastScanned": 1778829934958,
   "projectRoot": "D:\\Item\\repo\\llm-wiki",
   "techStack": {
     "languages": [],
@@ -36,35 +36,35 @@
       "path": "asset",
       "purpose": null,
       "fileCount": 0,
-      "lastAccessed": 1778591397380,
+      "lastAccessed": 1778829934936,
       "keyFiles": []
     },
     "llm_talk": {
       "path": "llm_talk",
       "purpose": null,
       "fileCount": 0,
-      "lastAccessed": 1778591397381,
+      "lastAccessed": 1778829934936,
       "keyFiles": []
     },
     "log": {
       "path": "log",
       "purpose": null,
       "fileCount": 0,
-      "lastAccessed": 1778591397381,
+      "lastAccessed": 1778829934936,
       "keyFiles": []
     },
     "raw": {
       "path": "raw",
       "purpose": null,
       "fileCount": 0,
-      "lastAccessed": 1778591397381,
+      "lastAccessed": 1778829934938,
       "keyFiles": []
     },
     "wiki": {
       "path": "wiki",
       "purpose": null,
       "fileCount": 1,
-      "lastAccessed": 1778591397382,
+      "lastAccessed": 1778829934938,
       "keyFiles": [
         "index.md"
       ]
@@ -73,8 +73,14 @@
   "hotPaths": [
     {
       "path": "wiki\\index.md",
-      "accessCount": 47,
-      "lastAccessed": 1778815949707,
+      "accessCount": 60,
+      "lastAccessed": 1778830441681,
+      "type": "file"
+    },
+    {
+      "path": "log\\2026\\05-06.md",
+      "accessCount": 14,
+      "lastAccessed": 1778830413425,
       "type": "file"
     },
     {
@@ -84,15 +90,21 @@
       "type": "file"
     },
     {
-      "path": "log\\2026\\05-06.md",
-      "accessCount": 12,
-      "lastAccessed": 1778815761272,
-      "type": "file"
-    },
-    {
       "path": "wiki\\concepts\\δ-mem-在线关联记忆.md",
       "accessCount": 11,
       "lastAccessed": 1778828491644,
+      "type": "file"
+    },
+    {
+      "path": "log\\2026\\05-15.md",
+      "accessCount": 5,
+      "lastAccessed": 1778829972187,
+      "type": "file"
+    },
+    {
+      "path": "wiki\\concepts\\GRPO.md",
+      "accessCount": 4,
+      "lastAccessed": 1778829313846,
       "type": "file"
     },
     {
@@ -102,9 +114,9 @@
       "type": "file"
     },
     {
-      "path": "log\\2026\\05-15.md",
+      "path": "wiki\\concepts\\LoRA.md",
       "accessCount": 3,
-      "lastAccessed": 1778815983116,
+      "lastAccessed": 1778829291446,
       "type": "file"
     },
     {
@@ -120,9 +132,9 @@
       "type": "file"
     },
     {
-      "path": "wiki\\concepts\\LoRA.md",
+      "path": "wiki\\concepts\\POMDP.md",
       "accessCount": 2,
-      "lastAccessed": 1778828491888,
+      "lastAccessed": 1778829269078,
       "type": "file"
     },
     {
@@ -357,18 +369,6 @@
       "path": "wiki\\entities\\Google-Research.md",
       "accessCount": 1,
       "lastAccessed": 1778815546990,
-      "type": "file"
-    },
-    {
-      "path": "wiki\\concepts\\GRPO.md",
-      "accessCount": 1,
-      "lastAccessed": 1778828491437,
-      "type": "file"
-    },
-    {
-      "path": "wiki\\concepts\\POMDP.md",
-      "accessCount": 1,
-      "lastAccessed": 1778828492000,
       "type": "file"
     }
   ],

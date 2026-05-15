@@ -12,12 +12,14 @@
             "id": "eb0a9c0f7018fa6c",
             "type": "leaf",
             "state": {
-              "type": "pdf",
+              "type": "markdown",
               "state": {
-                "file": "raw/papers/δ-mem-EfficientOnlineMemoryforLarge.pdf"
+                "file": "wiki/sources/delta-mem-efficient-online-memory.md",
+                "mode": "source",
+                "source": false
               },
-              "icon": "lucide-file-text",
-              "title": "δ-mem-EfficientOnlineMemoryforLarge"
+              "icon": "lucide-file",
+              "title": "delta-mem-efficient-online-memory"
             }
           },
           {
@@ -34,8 +36,7 @@
               "title": "lora-low-rank-adaptation"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       },
       {
         "id": "c559ce8f3c4378b6",
@@ -109,7 +110,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 288.5
+    "width": 270.5
   },
   "right": {
     "id": "cea95d1d64530bca",
@@ -215,44 +216,44 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "5663dd7ccb1f944d",
+  "active": "eb0a9c0f7018fa6c",
   "lastOpenFiles": [
-    "raw/papers/evolver-from-trajectories-to-principles.pdf",
-    "wiki/sources/delta-mem-efficient-online-memory.md.tmp.29552.1778817956570",
-    "wiki/sources/delta-mem-efficient-online-memory.md",
-    "log/2026/05-15.md.tmp.29552.1778815982661",
-    "wiki/index.md.tmp.29552.1778815949295",
-    "wiki/index.md.tmp.29552.1778815947760",
-    "wiki/index.md.tmp.29552.1778815946845",
-    "wiki/concepts/δ-mem-在线关联记忆.md.tmp.29552.1778815835724",
-    "wiki/sources/delta-mem-efficient-online-memory.md.tmp.29552.1778815822530",
-    "wiki/index.md.tmp.29552.1778815791692",
-    "wiki/index.md.tmp.29552.1778815783976",
-    "wiki/index.md.tmp.29552.1778815704020",
-    "wiki/entities/Google-Research.md",
-    "wiki/entities/Vahab-Mirrokni.md",
-    "wiki/entities/Peilin-Zhong.md",
-    "wiki/entities/Ali-Behrouz.md",
-    "wiki/concepts/Titans.md",
-    "wiki/entities/Prateek-Chhikara.md",
-    "wiki/entities/Deshraj-Yadav.md",
-    "wiki/entities/Mem0.md",
-    "wiki/concepts/LOCOMO.md",
-    "wiki/concepts/文本记忆.md",
-    "wiki/concepts/图记忆.md",
-    "wiki/entities/Jeff-Huber.md",
-    "wiki/entities/Anton-Troynikov.md",
-    "wiki/entities/Kelly-Hong.md",
-    "wiki/entities/Chroma.md",
-    "wiki/sources/titans-learning-to-memorize-at-test-time.md",
-    "wiki/concepts/LoRA.md",
-    "wiki/concepts/能力-可靠性分解-aptitude-reliability.md",
-    "wiki/concepts/指令分片-instruction-sharding.md",
-    "wiki/concepts/对话迷失现象-lost-in-conversation.md",
-    "wiki/concepts/Context-Rot.md",
-    "wiki/sources/context-rot-how-increasing-input-tokens-impacts-llm.md",
-    "wiki/sources/mem0-building-production-ready-ai-agents.md",
-    "wiki/sources/lora-low-rank-adaptation.md",
+    "log/2026/05-06.md.tmp.29552.1778830413087",
+    "wiki/index.md.tmp.29552.1778830288810",
+    "wiki/index.md.tmp.29552.1778830277585",
+    "wiki/index.md.tmp.29552.1778830260612",
+    "wiki/index.md.tmp.29552.1778830244681",
+    "wiki/index.md.tmp.29552.1778830226335",
+    "wiki/entities/UNC-Chapel-Hill.md.tmp.29552.1778830011480",
+    "wiki/entities/Huaxiu-Yao.md.tmp.29552.1778829984918",
+    "wiki/entities/Huaxiu-Yao.md.tmp.29552.1778829983958",
+    "wiki/entities/Mengdi-Wang.md",
+    "wiki/entities/Xiaolong-Jin.md",
+    "wiki/entities/Xiaolong-Jin.md.tmp.29552.1778829980712",
+    "wiki/entities/Xuyang-Chen.md",
+    "wiki/entities/Peng-Xia.md.tmp.29552.1778829944376",
+    "wiki/entities/Stanford-University.md",
+    "wiki/entities/Salesforce-Research.md",
+    "wiki/entities/Gen-Verse.md",
+    "wiki/entities/Ling-Yang.md",
+    "wiki/entities/Yinjie-Wang.md",
+    "wiki/concepts/工具集成推理-TIR.md",
+    "wiki/concepts/零数据自举.md",
+    "wiki/concepts/协同进化课程学习.md",
+    "wiki/concepts/ADPO-Ambiguity-Dynamic-Policy-Optimization.md",
+    "wiki/concepts/Next-State-Signal.md",
+    "wiki/concepts/Log-Probability-Difference-Clip.md",
+    "wiki/concepts/Overlap-Guided-Hint-Selection.md",
+    "wiki/concepts/混合RL-Hybrid-RL.md",
+    "wiki/entities/AutoResearchClaw.md",
+    "wiki/entities/OpenClaw.md",
+    "wiki/entities/Zeyu-Zheng.md",
+    "wiki/entities/Cihang-Xie.md",
+    "wiki/entities/UC-Berkeley.md",
+    "wiki/entities/Carnegie-Mellon-University.md",
+    "wiki/entities/UC-Santa-Cruz.md",
+    "wiki/entities/UNC-Chapel-Hill.md",
+    "wiki/entities/Huaxiu-Yao.md",
     "asset/img/swarm-ide/runtime-screenshot.png",
     "asset/img/swarm-ide/image-1.png",
     "asset/img/swarm-ide/qrcode.png",

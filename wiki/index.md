@@ -1,6 +1,6 @@
 # 知识库索引
 
-最后更新：2026-05-15
+最后更新：2026-05-06
 
 这是整个知识库的内容导向目录。每次摄入后 LLM 都会更新它。回答查询时以此为入口。
 
@@ -12,8 +12,12 @@
 
 ---
 
-## 来源（11）
+## 来源（15）
 
+- [[openclaw-rl-turning-daily-usage-into-training-signals|OpenClaw-RL: 把日常使用变成训练信号]] — next-state 信号实时转化在线训练，混合 RL（evaluative + directive）+ overlap-guided hint selection，零中断推理，统一个人/通用 Agent RL 训练 | 2026-03 | #AgentRL #在线学习 #混合RL
+- [[agent0-bootstrapping-from-zero-data|Agent0: 从零数据自举起来]] — 双 Agent 协同进化 + 工具集成推理，零人工数据自举，ADPO 模糊感知优化，Qwen3-8B 数学+18% 通用+24% | 2025-11 | #Agent #自演化 #零数据 #协同进化
+- [[metaclaw-continuous-evolution-in-production|MetaClaw: 在生产环境里持续进化不停机]] — 技能驱动快速适配（梯度无关）+ 机会主义策略优化（RL+Cloud LoRA），无停机持续元学习，Kimi-K2.5 准确率 21.4%→40.6% | 2026-03 | #元学习 #持续学习 #生产部署 #技能库
+- [[evolver-from-trajectories-to-principles|EvolveR: 从轨迹到原则的闭环]] — 经验驱动的 Agent 策略自演化框架，轨迹提取原则 → 自蒸馏训练 → 新轨迹循环 | 2025-10 | #Agent #自演化 #自蒸馏 #经验学习
 - [[mem0-building-production-ready-ai-agents|Mem0: Building Production-ready AI Agents with Scalable Long-term Memory]] — 文本记忆+图记忆双架构，LOCOMO 全面领先，p95 延迟比全上下文低 91%，token 成本节省 90%+ | 2025-04 | #LLM记忆 #Agent记忆 #图记忆 #生产部署
 - [[titans-learning-to-memorize-at-test-time|Titans: Learning to Memorize at Test Time]] — 神经长期记忆 + 测试时学习 + Titans 架构家族（MAC/MAG/MAL），全面超越 Transformer 和线性循环模型 | 2024 | #LLM记忆 #测试时学习 #序列模型
 - [[context-rot-how-increasing-input-tokens-impacts-llm|Context Rot: How Increasing Input Tokens Impacts LLM Performance]] — Chroma 技术报告，18 个主流 LLM 的系统评估，揭示仅增加输入长度就会导致性能非均匀退化的"上下文腐烂"现象 | 2025-07-14 | #长上下文 #LLM评估 #上下文退化
@@ -28,8 +32,31 @@
 
 ---
 
-## 实体（28）
+## 实体（51）
 
+- [[Peng Xia]] — UNC-Chapel Hill，Agent0/MetaClaw 共同一作，自演化 Agent 研究方向
+- [[Huaxiu Yao]] — UNC-Chapel Hill 教授，Agent0/MetaClaw 通讯作者，AIMing Lab
+- [[Cihang Xie]] — UC Santa Cruz 教授，MetaClaw 共同作者
+- [[Zeyu Zheng]] — UC Berkeley，MetaClaw 共同作者
+- [[Yinjie Wang]] — Gen-Verse，OpenClaw-RL 共同一作
+- [[Xuyang Chen]] — Gen-Verse，OpenClaw-RL 共同一作
+- [[Xiaolong Jin]] — Gen-Verse，OpenClaw-RL 共同一作
+- [[Ling Yang]] — Gen-Verse，OpenClaw-RL 通讯作者
+- [[Mengdi Wang]] — OpenClaw-RL 通讯作者，RL 理论与优化
+- [[UNC-Chapel-Hill]] — 美国顶尖研究型大学，Agent0/MetaClaw 第一作者机构
+- [[UC-Santa-Cruz]] — 加州大学圣克鲁兹分校，MetaClaw 合作机构
+- [[Carnegie-Mellon-University]] — 卡内基梅隆大学，MetaClaw 合作机构
+- [[UC-Berkeley]] — 加州大学伯克利分校，MetaClaw 合作机构
+- [[Gen-Verse]] — AI 研究团队，OpenClaw-RL 第一署名机构
+- [[Salesforce-Research]] — Salesforce AI 研究部门，Agent0 合作机构
+- [[Stanford-University]] — 斯坦福大学，Agent0 合作机构
+- [[OpenClaw]] — 开源 Agent 平台，OpenClaw-RL/MetaClaw 基础设施
+- [[AutoResearchClaw]] — MetaClaw 论文中的自动化研究 Agent
+- [[Rong Wu]] — 浙江大学 & 上海人工智能实验室，EvolveR 共同一作
+- [[Xiaoman Wang]] — 华东师范大学，EvolveR 共同一作
+- [[Botian Shi]] — 上海人工智能实验室，EvolveR 通讯作者
+- [[上海人工智能实验室]] — 中国 AI 研究，EvolveR 主要研究机构
+- [[浙江大学]] — EvolveR 第一作者机构
 - [[Mem0]] — AI Agent 记忆基础设施公司（后更名为 Letta），Mem0/Mem0g 记忆架构提出者
 - [[Deshraj Yadav]] — Mem0/Letta 联合创始人、CEO，Mem0 论文通讯作者
 - [[Prateek Chhikara]] — Mem0/Letta 研究员，Mem0 论文共同一作
@@ -61,8 +88,20 @@
 
 ---
 
-## 概念（28）
+## 概念（40）
 
+- [[混合RL-Hybrid-RL|混合 RL]] — 统一评估性信号（过程奖励模型）+ 指导性信号（hints）的 RL 训练目标，OpenClaw-RL 核心
+- [[Overlap-Guided-Hint-Selection]] — 基于覆盖率贪心选择互补 hints，避免冗余训练信号
+- [[Log-Probability-Difference-Clip]] — 对数概率差值裁剪，稳定 teacher-student RL 训练
+- [[Next-State-Signal]] — 用户回复、工具输出、终端/GUI 状态变化等 Agent 交互后的自然反馈信号
+- [[ADPO-Ambiguity-Dynamic-Policy-Optimization|ADPO]] — 模糊性动态策略优化，处理多解问题的 RL 目标，Agent0 核心
+- [[协同进化课程学习]] — 课程 Agent 与执行 Agent 从同一基座协同进化，互相提供训练压力
+- [[零数据自举]] — 无需任何人工标注数据，完全从 LLM 自身生成训练信号启动学习
+- [[工具集成推理-TIR]] — Agent 推理过程中调用外部工具增强推理能力
+- [[持续元学习]] — 将 MAML 内外循环映射到技能适配/策略优化的在线元学习范式
+- [[技能代际版本化]] — 支撑-查询分离的数据治理机制，按代际管理技能库
+- [[经验驱动自演化]] — Agent 从交互轨迹中提取可复用原则并自我改进的范式
+- [[自蒸馏（Agent策略自蒸馏）]] — Agent 用自身生成的策略原则作为训练数据的蒸馏方法
 - [[对话迷失现象（lost-in-conversation）]] — LLM 在多轮欠规范对话中系统性偏离用户真实需求，性能平均下降 39%
 - [[指令分片（instruction-sharding）]] — 将复杂指令拆分为多轮对话的评估方法论，五个属性定义
 - [[能力-可靠性分解（aptitude-reliability）]] — 将 LLM 性能分解为能力（最佳表现）和可靠性（一致性）两个维度的分析框架
@@ -110,4 +149,4 @@
 
 ## 最近活动
 
-查看 [[log/2026/05-15|今日日志]] 了解完整时间线。
+查看 [[log/2026/05-06|今日日志]] 了解完整时间线。
