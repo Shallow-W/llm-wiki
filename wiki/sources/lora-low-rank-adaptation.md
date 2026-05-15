@@ -96,11 +96,124 @@ LoRA 是全量微调的推广：如果将 LoRA 应用于所有权重矩阵并训
 
 ### 应用于 Transformer
 
-论文主要将 LoRA 应用于自注意力模块的四个权重矩阵：$W_q, W_k, W_v, W_o$。实践中，为简单和参数效率，大多数实验只适配 $W_q$ 和 $W_v$。MLP 模块、LayerNorm 和偏置被冻结。
+LoRA 原则上可以应用于神经网络中的任意稠密层，但论文专注于 Transformer 自注意力模块的权重矩阵。这一选择既有理论依据也有实践考量。
 
-可训练参数量：$|\Theta| = 2 \times \hat{L}_{\text{LoRA}} \times d_{\text{model}} \times r$
+#### Transformer 自注意力模块的权重结构
 
-其中 $\hat{L}_{\text{LoRA}}$ 是应用 LoRA 的权重矩阵数量。
+标准 Transformer 的每一层包含以下可学习权重：
+
+| 模块 | 权重矩阵 | 维度 | 功能 |
+|------|---------|------|------|
+| **自注意力** | $W_q \in \mathbb{R}^{d_{\text{model}} \times d_{\text{model}}}$ | $d_{\text{model}} \times d_{\text{model}}$ | 线性投影生成 query |
+| **自注意力** | $W_k \in \mathbb{R}^{d_{\text{model}} \times d_{\text{model}}}$ | $d_{\text{model}} \times d_{\text{model}}$ | 线性投影生成 key |
+| **自注意力** | $W_v \in \mathbb{R}^{d_{\text{model}} \times d_{\text{model}}}$ | $d_{\text{model}} \times d_{\text{model}}$ | 线性投影生成 value |
+| **自注意力** | $W_o \in \mathbb{R}^{d_{\text{model}} \times d_{\text{model}}}$ | $d_{\text{model}} \times d_{\text{model}}$ | 输出投影（多头拼接后） |
+| **MLP** | $W_{\text{up}} \in \mathbb{R}^{d_{\text{model}} \times d_{\text{ff}}}$ | $d_{\text{model}} \times 4d_{\text{model}}$ | 上投影 |
+| **MLP** | $W_{\text{down}} \in \mathbb{R}^{d_{\text{ff}} \times d_{\text{model}}}$ | $4d_{\text{model}} \times d_{\text{model}}$ | 下投影 |
+
+> **关于多头注意力的处理**：虽然多头注意力将 $W_q$ 等矩阵的输出切分为多个头（每个头的维度为 $d_k = d_{\text{model}} / h$），但 LoRA 将 $W_q$（或 $W_k, W_v$）**视为一个整体的 $d_{\text{model}} \times d_{\text{model}}$ 矩阵**来应用低秩分解，而非对每个头分别应用。这简化了实现且不影响效果。
+
+#### LoRA 的注入方式
+
+对于每个选定的权重矩阵 $W_0 \in \mathbb{R}^{d_{\text{model}} \times d_{\text{model}}}$，注入一对低秩矩阵：
+
+```
+原始路径：   x ──→ [W₀] ──→ W₀x                     （冻结）
+                              ↕ 坐标逐元素相加
+LoRA 路径：  x ──→ [A] ──→ [B] ──→ BAx × (α/r)      （可训练）
+```
+
+以 $W_q$ 为例，前向传播变为：
+
+$$q = W_q \cdot x + \frac{\alpha}{r} B_q A_q \cdot x$$
+
+其中 $A_q \in \mathbb{R}^{r \times d_{\text{model}}}$，$B_q \in \mathbb{R}^{d_{\text{model}} \times r}$。
+
+#### 只适配注意力权重，冻结 MLP
+
+论文做出一个重要设计选择：**只适配自注意力模块的权重矩阵，冻结 MLP 模块、LayerNorm 和偏置**。理由有三：
+
+1. **简单性**：减少需要调优的超参数（哪些层适配、每层的秩等）
+2. **参数效率**：在相同参数预算下，适配更多权重矩阵（用更小的 $r$）优于适配更少矩阵（用更大的 $r$）
+3. **实验验证**：消融实验（Table 5）证明注意力权重已经足够
+
+> 论文在 Section 9 的局限中承认，将 MLP 层、LayerNorm 层和偏置也纳入适配范围的实证研究留给了未来工作。后续研究（如 AdaLoRA）发现适配 MLP 也能带来增益，但 LoRA 原论文的核心结论不变。
+
+#### 应该适配哪些注意力矩阵？
+
+这是论文消融实验（Section 7.1, Table 5）的核心问题。在**固定 18M 参数预算**（约 35MB FP16）下，GPT-3 175B 的 96 层 Transformer：
+
+| 适配的权重矩阵 | 每层总秩 $r$ | WikiSQL | MultiNLI | 分析 |
+|---------------|-------------|---------|----------|------|
+| $W_q$ | $r=8$ | 70.4 | 91.0 | 基线 |
+| $W_k$ | $r=8$ | 70.0 | 90.8 | 与 $W_q$ 类似 |
+| $W_v$ | $r=8$ | **73.0** | 91.0 | 单矩阵中最优 |
+| $W_o$ | $r=8$ | **73.2** | **91.3** | 单矩阵中次优 |
+| $W_q, W_k$ | $r=4$ | 71.4 | 91.3 | 两矩阵但不含 $W_v$ |
+| **$W_q, W_v$** | **$r=4$** | **73.7** | **91.3** | **最佳组合** |
+| $W_q, W_k, W_v, W_o$ | $r=2$ | 73.7 | **91.7** | 四矩阵，略好但参数利用效率低 |
+
+**关键结论**：
+
+1. **$W_v$ 和 $W_o$ 单独效果优于 $W_q$ 和 $W_k$**：适配 $W_v$（73.0）或 $W_o$（73.2）比适配 $W_q$（70.4）或 $W_k$（70.0）效果好得多。这可能是因为 value 和 output 投影直接影响注意力输出的内容，而 query 和 key 主要影响注意力权重的分布
+2. **分散参数优于集中参数**：与其用 $r=8$ 适配单个 $W_q$（70.4），不如用 $r=4$ 同时适配 $W_q$ 和 $W_v$（73.7）——在**相同参数预算**下，适配更多矩阵一致优于适配更少矩阵
+3. **$W_q + W_v$ 是最优组合**：在参数效率和性能之间取得最佳平衡。因此论文**大多数实验默认只适配 $W_q$ 和 $W_v$**
+
+> **直觉理解**：想象你在调钢琴。$W_q$ 控制的是"你在听什么"（注意力权重），$W_v$ 控制的是"你听到了什么"（注意力内容），$W_o$ 控制的是"你怎么综合听到的信息"。同时调整"听什么"和"听到什么"比只调一边更有效。
+
+#### 可训练参数量计算
+
+对于 GPT-3 175B（$d_{\text{model}} = 12,288$，$L = 96$ 层），适配 $W_q$ 和 $W_v$（$\hat{L}_{\text{LoRA}} = 2$），秩 $r = 4$：
+
+$$|\Theta| = 2 \times \hat{L}_{\text{LoRA}} \times L \times d_{\text{model}} \times r = 2 \times 2 \times 96 \times 12{,}288 \times 4 = 18{,}874{,}368 \approx 4.7\text{M}$$
+
+> 这里 $\hat{L}_{\text{LoRA}}$ 是每层应用 LoRA 的权重矩阵种类数（$W_q$ 算一种、$W_v$ 算一种），$L$ 是 Transformer 层数。每对 $(A, B)$ 的参数量为 $r \times d_{\text{model}} + d_{\text{model}} \times r = 2 \times r \times d_{\text{model}}$。
+
+对比不同适配方法的参数公式：
+
+| 方法 | 可训练参数公式 | GPT-3 175B 实际值 |
+|------|---------------|------------------|
+| 全量微调 | 全部 175B | 175,255.8M |
+| BitFit | 仅偏置向量 | 14.2M |
+| Prefix-Embed | $d_{\text{model}} \times (l_p + l_i)$ | 3.2M |
+| Prefix-Layer | $L \times d_{\text{model}} \times (l_p + l_i)$ | 20.2M |
+| Adapter | $\hat{L}_{\text{Adpt}} \times (2 d_{\text{model}} r + r + d_{\text{model}}) + 2\hat{L}_{\text{LN}} d_{\text{model}}$ | 7.1M–40.1M |
+| **LoRA** | $2 \times \hat{L}_{\text{LoRA}} \times L \times d_{\text{model}} \times r$ | **4.7M**（$r=4$, $W_q{+}W_v$） |
+
+#### 推理延迟对比
+
+Table 1 展示了 GPT-2 Medium 上单次前向传播的延迟（毫秒，100 次平均，NVIDIA Quadro RTX8000）：
+
+| 方法 | 额外参数 | Batch=32, Seq=512 | Batch=16, Seq=256 | Batch=1, Seq=128 |
+|------|---------|-------------------|-------------------|------------------|
+| **Fine-Tune / LoRA** | — | 1449.4 | 338.0 | **19.8** |
+| AdapterL | 11M | 1482.0 (+2.2%) | 354.8 (+5.0%) | 23.9 (+20.7%) |
+| AdapterH | 11M | 1492.2 (+3.0%) | 366.3 (+8.4%) | 25.8 (+30.3%) |
+
+**关键发现**：
+
+- **LoRA = 零额外延迟**：因为可以预计算 $W = W_0 + BA$，推理时与全量微调完全一致
+- **Adapter 在在线推理场景（batch=1, 短序列）延迟增加最显著**：高达 30.3%，因为 Adapter 增加了模型深度，必须顺序计算
+- **模型并行时 Adapter 更糟**：额外层引入 AllReduce/Broadcast 同步操作
+
+#### 实际收益汇总
+
+| 指标 | 全量微调 | LoRA | 改善 |
+|------|---------|------|------|
+| 可训练参数（GPT-3 175B）| 175B | 4.7M | **37,000× 减少** |
+| 训练 VRAM（GPT-3 175B）| 1.2TB | 350GB | **3× 减少**（不需存冻结参数的优化器状态） |
+| Checkpoint 大小（r=4, q+v）| 350GB | 35MB | **10,000× 减少** |
+| 训练吞吐量（tokens/s/GPU）| 32.5 | 43.1 | **25% 提升**（不需计算冻结参数的梯度） |
+| 任务切换开销 | 加载完整 350GB 模型 | 加载 35MB LoRA 权重 | **10,000× 加速** |
+
+> **存储 100 个任务的模型**：全量微调需要 $100 \times 350\text{GB} = 35\text{TB}$。LoRA 只需要 $350\text{GB} + 100 \times 35\text{MB} \approx 354\text{GB}$——一个基座 + 100 个轻量适配器。
+
+#### 局限性
+
+论文诚实地指出了 LoRA 的一个局限：**当选择将 $BA$ 合并进 $W$ 以消除推理延迟时，无法在单次前向传播中 batch 不同任务的输入**（因为不同任务使用不同的 $A, B$）。解决方案：
+
+- **延迟不敏感场景**：不合并权重，动态选择每个样本对应的 LoRA 模块（类似 [[MinT]] 的 adapter 路由）
+- **延迟敏感场景**：按任务分 batch 推理，或使用合并后的独立服务实例
 
 ### 实际收益
 
