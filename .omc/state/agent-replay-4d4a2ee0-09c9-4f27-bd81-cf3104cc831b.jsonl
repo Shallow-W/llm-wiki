@@ -17,3 +17,4 @@
 {"t":0,"agent":"ac14111","agent_type":"general-purpose","event":"agent_stop","success":true,"duration_ms":625854}
 {"t":0,"agent":"a95fce7","agent_type":"general-purpose","event":"agent_stop","success":true,"duration_ms":862771}
 {"t":0,"agent":"a4951b6","agent_type":"general-purpose","event":"agent_stop","success":true,"duration_ms":869995}
+{"t":0,"agent":"a5052b8","agent_type":"general-purpose","event":"agent_start","parent_mode":"none"}
