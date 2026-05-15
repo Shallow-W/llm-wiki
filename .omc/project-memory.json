@@ -73,8 +73,38 @@
   "hotPaths": [
     {
       "path": "wiki\\index.md",
-      "accessCount": 5,
-      "lastAccessed": 1778729433642,
+      "accessCount": 47,
+      "lastAccessed": 1778815949707,
+      "type": "file"
+    },
+    {
+      "path": "log\\2026\\05-06.md",
+      "accessCount": 12,
+      "lastAccessed": 1778815761272,
+      "type": "file"
+    },
+    {
+      "path": "wiki\\concepts\\δ-mem-在线关联记忆.md",
+      "accessCount": 10,
+      "lastAccessed": 1778815836152,
+      "type": "file"
+    },
+    {
+      "path": "wiki\\sources\\delta-mem-efficient-online-memory.md",
+      "accessCount": 8,
+      "lastAccessed": 1778815822943,
+      "type": "file"
+    },
+    {
+      "path": "raw\\papers\\_context_rot_extracted.txt",
+      "accessCount": 3,
+      "lastAccessed": 1778815265225,
+      "type": "file"
+    },
+    {
+      "path": "log\\2026\\05-15.md",
+      "accessCount": 3,
+      "lastAccessed": 1778815983116,
       "type": "file"
     },
     {
@@ -99,6 +129,234 @@
       "path": "C:\\Users\\01\\.claude\\projects\\D--Item-repo-llm-wiki\\510a6bb6-5c5c-4ef8-87e3-0b9c01b68e57\\tool-results\\bcti6lrlz.txt",
       "accessCount": 1,
       "lastAccessed": 1778591479797,
+      "type": "file"
+    },
+    {
+      "path": "wiki\\concepts\\delta-rule-learning.md",
+      "accessCount": 1,
+      "lastAccessed": 1778814329960,
+      "type": "file"
+    },
+    {
+      "path": "wiki\\entities\\Jingdi-Lei.md",
+      "accessCount": 1,
+      "lastAccessed": 1778814402709,
+      "type": "file"
+    },
+    {
+      "path": "wiki\\entities\\Di-Zhang.md",
+      "accessCount": 1,
+      "lastAccessed": 1778814403550,
+      "type": "file"
+    },
+    {
+      "path": "wiki\\entities\\Soujanya-Poria.md",
+      "accessCount": 1,
+      "lastAccessed": 1778814404365,
+      "type": "file"
+    },
+    {
+      "path": "wiki\\entities\\Mind-Lab.md",
+      "accessCount": 1,
+      "lastAccessed": 1778814405249,
+      "type": "file"
+    },
+    {
+      "path": "wiki\\entities\\南洋理工大学.md",
+      "accessCount": 1,
+      "lastAccessed": 1778814406085,
+      "type": "file"
+    },
+    {
+      "path": "wiki\\entities\\复旦大学.md",
+      "accessCount": 1,
+      "lastAccessed": 1778814406990,
+      "type": "file"
+    },
+    {
+      "path": "C:\\Users\\01\\.claude\\projects\\D--Item-repo-llm-wiki\\4d4a2ee0-09c9-4f27-bd81-cf3104cc831b\\tool-results\\bmj01a0cm.txt",
+      "accessCount": 1,
+      "lastAccessed": 1778815166217,
+      "type": "file"
+    },
+    {
+      "path": "C:\\Users\\01\\.claude\\projects\\D--Item-repo-llm-wiki\\4d4a2ee0-09c9-4f27-bd81-cf3104cc831b\\tool-results\\ba8kuitrn.txt",
+      "accessCount": 1,
+      "lastAccessed": 1778815169932,
+      "type": "file"
+    },
+    {
+      "path": "wiki",
+      "accessCount": 1,
+      "lastAccessed": 1778815194309,
+      "type": "directory"
+    },
+    {
+      "path": "C:\\Users\\01\\.claude\\projects\\D--Item-repo-llm-wiki\\4d4a2ee0-09c9-4f27-bd81-cf3104cc831b\\tool-results\\bizov2kat.txt",
+      "accessCount": 1,
+      "lastAccessed": 1778815196698,
+      "type": "file"
+    },
+    {
+      "path": "C:\\Users\\01\\.claude\\projects\\D--Item-repo-llm-wiki\\4d4a2ee0-09c9-4f27-bd81-cf3104cc831b\\tool-results\\bdfkchb8j.txt",
+      "accessCount": 1,
+      "lastAccessed": 1778815196865,
+      "type": "file"
+    },
+    {
+      "path": "C:\\Users\\01\\.claude\\projects\\D--Item-repo-llm-wiki\\4d4a2ee0-09c9-4f27-bd81-cf3104cc831b\\tool-results\\bff634dzh.txt",
+      "accessCount": 1,
+      "lastAccessed": 1778815205151,
+      "type": "file"
+    },
+    {
+      "path": "C:\\Users\\01\\.claude\\projects\\D--Item-repo-llm-wiki\\4d4a2ee0-09c9-4f27-bd81-cf3104cc831b\\tool-results\\bnc12o9cz.txt",
+      "accessCount": 1,
+      "lastAccessed": 1778815278766,
+      "type": "file"
+    },
+    {
+      "path": "wiki\\sources\\llms-get-lost-in-multi-turn-conversation.md",
+      "accessCount": 1,
+      "lastAccessed": 1778815320144,
+      "type": "file"
+    },
+    {
+      "path": "wiki\\sources\\lora-low-rank-adaptation.md",
+      "accessCount": 1,
+      "lastAccessed": 1778815368232,
+      "type": "file"
+    },
+    {
+      "path": "wiki\\sources\\context-rot-how-increasing-input-tokens-impacts-llm.md",
+      "accessCount": 1,
+      "lastAccessed": 1778815429026,
+      "type": "file"
+    },
+    {
+      "path": "wiki\\concepts\\Context-Rot.md",
+      "accessCount": 1,
+      "lastAccessed": 1778815430075,
+      "type": "file"
+    },
+    {
+      "path": "wiki\\concepts\\对话迷失现象-lost-in-conversation.md",
+      "accessCount": 1,
+      "lastAccessed": 1778815431963,
+      "type": "file"
+    },
+    {
+      "path": "wiki\\concepts\\指令分片-instruction-sharding.md",
+      "accessCount": 1,
+      "lastAccessed": 1778815432754,
+      "type": "file"
+    },
+    {
+      "path": "wiki\\concepts\\能力-可靠性分解-aptitude-reliability.md",
+      "accessCount": 1,
+      "lastAccessed": 1778815433493,
+      "type": "file"
+    },
+    {
+      "path": "wiki\\concepts\\LoRA.md",
+      "accessCount": 1,
+      "lastAccessed": 1778815445877,
+      "type": "file"
+    },
+    {
+      "path": "wiki\\sources\\titans-learning-to-memorize-at-test-time.md",
+      "accessCount": 1,
+      "lastAccessed": 1778815452964,
+      "type": "file"
+    },
+    {
+      "path": "wiki\\entities\\Chroma.md",
+      "accessCount": 1,
+      "lastAccessed": 1778815466681,
+      "type": "file"
+    },
+    {
+      "path": "wiki\\entities\\Kelly-Hong.md",
+      "accessCount": 1,
+      "lastAccessed": 1778815467434,
+      "type": "file"
+    },
+    {
+      "path": "wiki\\entities\\Anton-Troynikov.md",
+      "accessCount": 1,
+      "lastAccessed": 1778815468238,
+      "type": "file"
+    },
+    {
+      "path": "wiki\\entities\\Jeff-Huber.md",
+      "accessCount": 1,
+      "lastAccessed": 1778815469047,
+      "type": "file"
+    },
+    {
+      "path": "wiki\\concepts\\图记忆.md",
+      "accessCount": 1,
+      "lastAccessed": 1778815505199,
+      "type": "file"
+    },
+    {
+      "path": "wiki\\concepts\\文本记忆.md",
+      "accessCount": 1,
+      "lastAccessed": 1778815506836,
+      "type": "file"
+    },
+    {
+      "path": "wiki\\concepts\\LOCOMO.md",
+      "accessCount": 1,
+      "lastAccessed": 1778815507630,
+      "type": "file"
+    },
+    {
+      "path": "wiki\\entities\\Mem0.md",
+      "accessCount": 1,
+      "lastAccessed": 1778815508558,
+      "type": "file"
+    },
+    {
+      "path": "wiki\\entities\\Deshraj-Yadav.md",
+      "accessCount": 1,
+      "lastAccessed": 1778815509756,
+      "type": "file"
+    },
+    {
+      "path": "wiki\\entities\\Prateek-Chhikara.md",
+      "accessCount": 1,
+      "lastAccessed": 1778815510497,
+      "type": "file"
+    },
+    {
+      "path": "wiki\\concepts\\Titans.md",
+      "accessCount": 1,
+      "lastAccessed": 1778815543378,
+      "type": "file"
+    },
+    {
+      "path": "wiki\\entities\\Ali-Behrouz.md",
+      "accessCount": 1,
+      "lastAccessed": 1778815544185,
+      "type": "file"
+    },
+    {
+      "path": "wiki\\entities\\Peilin-Zhong.md",
+      "accessCount": 1,
+      "lastAccessed": 1778815545028,
+      "type": "file"
+    },
+    {
+      "path": "wiki\\entities\\Vahab-Mirrokni.md",
+      "accessCount": 1,
+      "lastAccessed": 1778815545992,
+      "type": "file"
+    },
+    {
+      "path": "wiki\\entities\\Google-Research.md",
+      "accessCount": 1,
+      "lastAccessed": 1778815546990,
       "type": "file"
     }
   ],
