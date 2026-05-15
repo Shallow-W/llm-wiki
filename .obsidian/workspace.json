@@ -109,7 +109,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 231.5
+    "width": 288.5
   },
   "right": {
     "id": "cea95d1d64530bca",
@@ -215,7 +215,7 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "00c3d91ba69b55ce",
+  "active": "5663dd7ccb1f944d",
   "lastOpenFiles": [
     "log/2026/05-15.md.tmp.29552.1778815982661",
     "wiki/index.md.tmp.29552.1778815949295",
