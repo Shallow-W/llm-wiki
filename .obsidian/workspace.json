@@ -14,10 +14,10 @@
             "state": {
               "type": "pdf",
               "state": {
-                "file": "raw/papers/贪心分配异构资源，将服务实例部署在资源利用率最低的节点；路由时始终选择当前位置最近的节点转发请求，追求局部最优资源分配与路由效率。.pdf"
+                "file": "raw/papers/δ-mem-EfficientOnlineMemoryforLarge.pdf"
               },
               "icon": "lucide-file-text",
-              "title": "贪心分配异构资源，将服务实例部署在资源利用率最低的节点；路由时始终选择当前位置最近的节点转发请求，追求局部最优资源分配与路由效率。"
+              "title": "δ-mem-EfficientOnlineMemoryforLarge"
             }
           }
         ]
@@ -200,8 +200,10 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "00c3d91ba69b55ce",
+  "active": "5663dd7ccb1f944d",
   "lastOpenFiles": [
+    "raw/papers/贪心分配异构资源，将服务实例部署在资源利用率最低的节点；路由时始终选择当前位置最近的节点转发请求，追求局部最优资源分配与路由效率。.pdf",
+    "raw/papers/δ-mem-EfficientOnlineMemoryforLarge.pdf",
     "log/2026/05-14.md",
     "log/2026/05-14.md.tmp.29552.1778729409790",
     "wiki/index.md.tmp.29552.1778729364602",
@@ -228,7 +230,6 @@
     "asset/img/swarm-ide/image-1.png",
     "asset/img/swarm-ide/qrcode.png",
     "asset/img/swarm-ide/demo-cover.jpg",
-    "asset/img/swarm-ide",
     "raw/github_rep/swarm-ide/whitepaper-site/public/window.svg",
     "raw/github_rep/swarm-ide/whitepaper-site/public/wechat-qr.png",
     "raw/github_rep/swarm-ide/whitepaper-site/public/vercel.svg",
@@ -246,7 +247,6 @@
     "raw/github_rep/swarm-ide/backend/skills/topology/SKILL.md",
     "raw/github_rep/swarm-ide/backend/README.md",
     "raw/github_rep/swarm-ide/README_EN.md",
-    "raw/github_rep/swarm-ide/README.md",
-    "实验/edge-deployment-routing/docs/WORKFLOW.md"
+    "raw/github_rep/swarm-ide/README.md"
   ]
 }
