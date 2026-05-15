@@ -73,20 +73,20 @@
   "hotPaths": [
     {
       "path": "wiki\\index.md",
-      "accessCount": 60,
-      "lastAccessed": 1778830441681,
-      "type": "file"
-    },
-    {
-      "path": "log\\2026\\05-06.md",
-      "accessCount": 14,
-      "lastAccessed": 1778830413425,
+      "accessCount": 62,
+      "lastAccessed": 1778834135411,
       "type": "file"
     },
     {
       "path": "wiki\\sources\\delta-mem-efficient-online-memory.md",
-      "accessCount": 14,
-      "lastAccessed": 1778833571775,
+      "accessCount": 19,
+      "lastAccessed": 1778834439702,
+      "type": "file"
+    },
+    {
+      "path": "log\\2026\\05-06.md",
+      "accessCount": 15,
+      "lastAccessed": 1778834154769,
       "type": "file"
     },
     {

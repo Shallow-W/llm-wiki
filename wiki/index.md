@@ -12,8 +12,9 @@
 
 ---
 
-## 来源（15）
+## 来源（16）
 
+- [[mint-managed-infrastructure-training-serving-millions-llms|MinT: 百万级 LoRA 策略训练与服务基础设施]] — LoRA adapter revision 为核心管理单元，Scale Up/Down/Out 三轴扩展，训练-服务交接加速 18.3 倍，百万策略目录，冷加载 8.5-8.7 倍 | 2026-05-13 | #基础设施 #LoRA #GRPO #MoE #服务部署
 - [[openclaw-rl-turning-daily-usage-into-training-signals|OpenClaw-RL: 把日常使用变成训练信号]] — next-state 信号实时转化在线训练，混合 RL（evaluative + directive）+ overlap-guided hint selection，零中断推理，统一个人/通用 Agent RL 训练 | 2026-03 | #AgentRL #在线学习 #混合RL
 - [[agent0-bootstrapping-from-zero-data|Agent0: 从零数据自举起来]] — 双 Agent 协同进化 + 工具集成推理，零人工数据自举，ADPO 模糊感知优化，Qwen3-8B 数学+18% 通用+24% | 2025-11 | #Agent #自演化 #零数据 #协同进化
 - [[metaclaw-continuous-evolution-in-production|MetaClaw: 在生产环境里持续进化不停机]] — 技能驱动快速适配（梯度无关）+ 机会主义策略优化（RL+Cloud LoRA），无停机持续元学习，Kimi-K2.5 准确率 21.4%→40.6% | 2026-03 | #元学习 #持续学习 #生产部署 #技能库
@@ -88,8 +89,11 @@
 
 ---
 
-## 概念（40）
+## 概念（43）
 
+- [[Adapter-Revision-Path|Adapter-Revision Path]] — 基座常驻，仅 LoRA adapter 在训练-服务全生命周期流转的设计模式
+- [[Packed-MoE-LoRA-Tensors|Packed MoE LoRA Tensors]] — 将碎片化 MoE LoRA 小对象打包为紧凑连续表示，冷加载加速 8.5-8.7 倍
+- [[Policy-Catalog|Policy Catalog]] — 百万级策略可寻址目录，三层缓存（目录/CPU/GPU）分离可寻址性与同时驻留
 - [[混合RL-Hybrid-RL|混合 RL]] — 统一评估性信号（过程奖励模型）+ 指导性信号（hints）的 RL 训练目标，OpenClaw-RL 核心
 - [[Overlap-Guided-Hint-Selection]] — 基于覆盖率贪心选择互补 hints，避免冗余训练信号
 - [[Log-Probability-Difference-Clip]] — 对数概率差值裁剪，稳定 teacher-student RL 训练

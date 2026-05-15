@@ -36,7 +36,8 @@
               "title": "lora-low-rank-adaptation"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       },
       {
         "id": "c559ce8f3c4378b6",
@@ -110,8 +111,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 200,
-    "collapsed": true
+    "width": 200
   },
   "right": {
     "id": "cea95d1d64530bca",
@@ -217,8 +217,12 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "00c3d91ba69b55ce",
+  "active": "cb85510c68f6e883",
   "lastOpenFiles": [
+    "wiki/sources/delta-mem-efficient-online-memory.md",
+    "wiki/sources/delta-mem-efficient-online-memory.md.tmp.29552.1778834420503",
+    "log/2026/05-06.md.tmp.29552.1778834154428",
+    "wiki/index.md.tmp.29552.1778834134243",
     "wiki/entities/Mind-Lab.md.tmp.29552.1778834049800",
     "wiki/entities/Mind-Lab.md.tmp.29552.1778834039508",
     "wiki/entities/Mind-Lab.md.tmp.29552.1778834024207",
@@ -230,14 +234,9 @@
     "wiki/sources/mint-managed-infrastructure-training-serving-millions-llms.md",
     "wiki/sources/lora-low-rank-adaptation.md",
     "raw/papers/learning-to-think-offline.pdf",
-    "wiki/sources/delta-mem-efficient-online-memory.md",
     "log/2026/05-06.md",
     "wiki/entities/Mind-Lab.md",
     "log/2026/05-06.md.tmp.29552.1778830413087",
-    "wiki/index.md.tmp.29552.1778830288810",
-    "wiki/index.md.tmp.29552.1778830277585",
-    "wiki/index.md.tmp.29552.1778830260612",
-    "wiki/index.md.tmp.29552.1778830244681",
     "wiki/entities/Mengdi-Wang.md",
     "wiki/entities/Xiaolong-Jin.md",
     "wiki/entities/Xuyang-Chen.md",
