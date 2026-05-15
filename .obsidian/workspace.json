@@ -26,12 +26,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "wiki/sources/delta-mem-efficient-online-memory.md",
+                "file": "wiki/sources/lora-low-rank-adaptation.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "delta-mem-efficient-online-memory"
+              "title": "lora-low-rank-adaptation"
             }
           }
         ],
@@ -217,6 +217,8 @@
   },
   "active": "5663dd7ccb1f944d",
   "lastOpenFiles": [
+    "wiki/sources/delta-mem-efficient-online-memory.md.tmp.29552.1778817956570",
+    "wiki/sources/delta-mem-efficient-online-memory.md",
     "log/2026/05-15.md.tmp.29552.1778815982661",
     "wiki/index.md.tmp.29552.1778815949295",
     "wiki/index.md.tmp.29552.1778815947760",
@@ -227,7 +229,6 @@
     "wiki/index.md.tmp.29552.1778815783976",
     "wiki/index.md.tmp.29552.1778815704020",
     "wiki/concepts/δ-mem-在线关联记忆.md.tmp.29552.1778815678107",
-    "log/2026/05-06.md.tmp.29552.1778815651491",
     "wiki/entities/Google-Research.md",
     "wiki/entities/Vahab-Mirrokni.md",
     "wiki/entities/Peilin-Zhong.md",
@@ -252,7 +253,6 @@
     "wiki/sources/context-rot-how-increasing-input-tokens-impacts-llm.md",
     "wiki/sources/mem0-building-production-ready-ai-agents.md",
     "wiki/sources/lora-low-rank-adaptation.md",
-    "wiki/sources/llms-get-lost-in-multi-turn-conversation.md",
     "asset/img/swarm-ide/runtime-screenshot.png",
     "asset/img/swarm-ide/image-1.png",
     "asset/img/swarm-ide/qrcode.png",
