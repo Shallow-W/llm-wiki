@@ -1,6 +1,6 @@
 # 知识库索引
 
-最后更新：2026-05-06
+最后更新：2026-05-15
 
 这是整个知识库的内容导向目录。每次摄入后 LLM 都会更新它。回答查询时以此为入口。
 
@@ -27,13 +27,13 @@
 - [[delta-mem-efficient-online-memory|δ-mem: Efficient Online Memory for LLMs]] — 冻结骨干 + 8×8 在线关联记忆状态 + delta-rule 低秩修正，轻量高效 LLM 记忆机制 | 2026-05-13 | #LLM记忆 #在线学习 #delta-rule
 - [[swarm-ide|Swarm-IDE: 自组织的 Agent 蜂群]] — 去中心化多 Agent 协作平台，create+send 极简原语，动态嵌套 + 实时 Graph 可视化 + MCP 技能系统 | 2026-01-02 | #Agent #多Agent #开源 #MCP
 - [[agent-world|Agent-World: Scaling Real-World Environment Synthesis for Evolving General Agent Intelligence]] — 1978 环境 + 19822 工具的自我进化 Agent 训练平台，8B/14B 超越闭源模型 | 2026-04 | #Agent #RL #MCP
-- [[gstc-zero-cost-proxy-nas|Zero-Cost Proxy NAS-Driven Collaborative Deployment Optimization]] — GSTC 零成本代理 + JCQDA 部署 + LAMRA 动态替换，AI 服务全生命周期优化 | 2026-04-21 | #NAS #微服务
+- [[gstc-zero-cost-proxy-nas|Zero-Cost Proxy NAS-Driven Collaborative Deployment Optimization]] — GSTC 零成本代理 + JCQDA 部署 + LAMRA 动态替换，AI 服务全生命周期优化 | 2026-04-21 | #NAS #微服务 #精读
 - [[joint-deployment-request-routing-microservice-tpds|Joint Deployment and Request Routing for Microservice Call Graphs]] — GMDA-RMPR 两阶段启发式，联合优化微服务部署与路由 | 2023-11 | #微服务 #排队网络
 - [[joint-task-offloading-resource-allocation-model-placement-6g|Joint Task Offloading, Resource Allocation and Model Placement for AIaaS in 6G]] — DA-MAB 策略，边-网-云 AIaaS 两时间尺度优化 | 2024-11 | #6G #AIaaS
 
 ---
 
-## 实体（51）
+## 实体（53）
 
 - [[Peng Xia]] — UNC-Chapel Hill，Agent0/MetaClaw 共同一作，自演化 Agent 研究方向
 - [[Huaxiu Yao]] — UNC-Chapel Hill 教授，Agent0/MetaClaw 通讯作者，AIMing Lab
@@ -85,11 +85,13 @@
 - [[Yi Hu]] — 华中科技大学博士生，论文1和2共同作者
 - [[Bharadwaj Veeravalli]] — 新加坡国立大学教授，TPDS 论文共同作者
 - [[华中科技大学]] — 论文1和2的主要研究机构
+- [[Yue Yang]] — 华中科技大学研究生，GSTC 论文共同作者
+- [[Jing Lu]] — 华中科技大学研究生，GSTC 论文共同作者
 - [[北京邮电大学]] — 论文3的主要研究机构
 
 ---
 
-## 概念（43）
+## 概念（45）
 
 - [[Adapter-Revision-Path|Adapter-Revision Path]] — 基座常驻，仅 LoRA adapter 在训练-服务全生命周期流转的设计模式
 - [[Packed-MoE-LoRA-Tensors|Packed MoE LoRA Tensors]] — 将碎片化 MoE LoRA 小对象打包为紧凑连续表示，冷加载加速 8.5-8.7 倍
@@ -127,6 +129,8 @@
 - [[零成本代理]] — 无需训练即可评估架构性能
 - [[微服务调用图]] — 微服务间调用关系形成的图结构
 - [[M/M/C 排队模型]] — 经典多服务台排队论模型
+- [[JCQDA]] — 联合通信与队列感知部署算法，基于 M/M/C 和服务-服务器亲和的静态部署启发式
+- [[LAMRA]] — 负载感知模型替换算法，Pareto 前沿 + 加权评分的动态模型版本选择
 - [[Jackson 排队网络]] — 可解析求解的开放排队网络
 - [[AI as a Service (AIaaS)]] — 6G 网络中的 AI 服务基础设施模式
 - [[Lyapunov 优化]] — 将长期随机优化分解为短期确定性子问题
@@ -153,4 +157,4 @@
 
 ## 最近活动
 
-查看 [[log/2026/05-06|今日日志]] 了解完整时间线。
+查看 [[log/2026/05-15|今日日志]] 了解完整时间线。

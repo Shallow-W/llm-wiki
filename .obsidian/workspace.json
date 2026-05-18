@@ -4,22 +4,34 @@
     "type": "split",
     "children": [
       {
-        "id": "ff0da0420f2f603c",
+        "id": "c88aa142d25c7412",
         "type": "tabs",
-        "dimension": 60.91703056768559,
+        "dimension": 56.557377049180324,
         "children": [
           {
-            "id": "eb0a9c0f7018fa6c",
+            "id": "5210e591bda2e84b",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "wiki/sources/gstc-zero-cost-proxy-nas.md",
+                "file": "wiki/sources/gstc-mmc-1-23/report.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "gstc-zero-cost-proxy-nas"
+              "title": "report"
+            }
+          },
+          {
+            "id": "6fbe4268eeb172b1",
+            "type": "leaf",
+            "state": {
+              "type": "pdf",
+              "state": {
+                "file": "raw/papers/GSTC(MMC)_1.23.pdf"
+              },
+              "icon": "lucide-file-text",
+              "title": "GSTC(MMC)_1.23"
             }
           }
         ]
@@ -27,7 +39,7 @@
       {
         "id": "c559ce8f3c4378b6",
         "type": "tabs",
-        "dimension": 39.082969432314414,
+        "dimension": 43.44262295081967,
         "children": [
           {
             "id": "00c3d91ba69b55ce",
@@ -202,23 +214,42 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "eb0a9c0f7018fa6c",
+  "active": "00c3d91ba69b55ce",
   "lastOpenFiles": [
-    "CLAUDE.md",
-    "wiki/sources/evolver-from-trajectories-to-principles.md",
     "raw/papers/GSTC(MMC)_1.23.pdf",
-    "wiki/sources/evolver-from-trajectories-to-principles.md.tmp.29552.1778837566407",
+    "wiki/sources/gstc-mmc-1-23/report.md",
+    "wiki/sources/gstc-mmc-1-23/report.md.tmp.29552.1779091754796",
+    "wiki/sources/gstc-zero-cost-proxy-nas.md.tmp.29552.1779091670827",
+    "wiki/sources/gstc-mmc-1-23/images/header.png",
+    "wiki/sources/gstc-mmc-1-23/images/fig4-latency.png",
+    "wiki/sources/gstc-mmc-1-23/images/fig7-large-scale.png",
+    "wiki/sources/gstc-mmc-1-23/images/fig3-correlation.png",
+    "wiki/sources/gstc-mmc-1-23/images/fig2-encoding.png",
+    "wiki/sources/gstc-mmc-1-23/images/fig1-framework.png",
+    "wiki/sources/gstc-mmc-1-23/images/theorem3.png",
+    "wiki/sources/gstc-mmc-1-23/images/theorem2.png",
+    "wiki/sources/gstc-mmc-1-23/images/table2-correlation.png",
+    "wiki/sources/gstc-mmc-1-23/images/core-assumptions.png",
+    "wiki/sources/gstc-mmc-1-23/images",
+    "wiki/sources/gstc-mmc-1-23",
     "wiki/sources/lora-low-rank-adaptation.md",
-    "wiki/sources/lora-low-rank-adaptation.md.tmp.29552.1778836292302",
+    "log/2026/05-15.md.tmp.29552.1779091194235",
+    "wiki/index.md.tmp.29552.1779091132462",
+    "wiki/index.md.tmp.29552.1779091085393",
+    "wiki/index.md.tmp.29552.1779091071247",
+    "wiki/entities/Jing-Lu.md",
+    "wiki/entities/Yue-Yang.md",
+    "wiki/concepts/LAMRA.md",
+    "wiki/concepts/JCQDA.md",
     "wiki/sources/llms-get-lost-in-multi-turn-conversation.md",
-    "raw/papers/lora-low-rank-adaptation.pdf",
+    "wiki/sources/gstc-zero-cost-proxy-nas.md",
+    "wiki/sources/evolver-from-trajectories-to-principles.md",
     "wiki/sources/delta-mem-efficient-online-memory.md",
-    "wiki/sources/delta-mem-efficient-online-memory.md.tmp.29552.1778834420503",
-    "log/2026/05-06.md.tmp.29552.1778834154428",
-    "wiki/index.md.tmp.29552.1778834134243",
-    "wiki/entities/Mind-Lab.md.tmp.29552.1778834049800",
-    "wiki/entities/Mind-Lab.md.tmp.29552.1778834039508",
-    "wiki/entities/Mind-Lab.md.tmp.29552.1778834024207",
+    "wiki/sources/context-rot-how-increasing-input-tokens-impacts-llm.md",
+    "wiki/sources/agent0-bootstrapping-from-zero-data.md",
+    "wiki/sources/agent-world.md",
+    "CLAUDE.md",
+    "wiki/sources/evolver-from-trajectories-to-principles.md.tmp.29552.1778837566407",
     "wiki/concepts/Policy-Catalog.md",
     "wiki/concepts/Packed-MoE-LoRA-Tensors.md",
     "wiki/concepts/Adapter-Revision-Path.md",
@@ -229,26 +260,6 @@
     "wiki/entities/Xiaolong-Jin.md",
     "wiki/entities/Xuyang-Chen.md",
     "wiki/entities/Stanford-University.md",
-    "wiki/entities/Salesforce-Research.md",
-    "wiki/entities/Gen-Verse.md",
-    "wiki/entities/Ling-Yang.md",
-    "wiki/entities/Yinjie-Wang.md",
-    "wiki/concepts/工具集成推理-TIR.md",
-    "wiki/concepts/零数据自举.md",
-    "wiki/concepts/协同进化课程学习.md",
-    "wiki/concepts/ADPO-Ambiguity-Dynamic-Policy-Optimization.md",
-    "wiki/concepts/Next-State-Signal.md",
-    "wiki/concepts/Log-Probability-Difference-Clip.md",
-    "wiki/concepts/Overlap-Guided-Hint-Selection.md",
-    "asset/img/swarm-ide/runtime-screenshot.png",
-    "asset/img/swarm-ide/image-1.png",
-    "asset/img/swarm-ide/qrcode.png",
-    "asset/img/swarm-ide/demo-cover.jpg",
-    "raw/github_rep/swarm-ide/whitepaper-site/public/window.svg",
-    "raw/github_rep/swarm-ide/whitepaper-site/public/wechat-qr.png",
-    "raw/github_rep/swarm-ide/whitepaper-site/public/vercel.svg",
-    "raw/github_rep/swarm-ide/whitepaper-site/public/hero.jpg",
-    "raw/github_rep/swarm-ide/whitepaper-site/public/next.svg",
-    "raw/github_rep/swarm-ide/whitepaper-site/public/file.svg"
+    "wiki/entities/Salesforce-Research.md"
   ]
 }

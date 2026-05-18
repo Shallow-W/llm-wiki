@@ -2,7 +2,11 @@
   "permissions": {
     "allow": [
       "Edit(/.claude/skills/paper-deep-reading/**)",
-      "Bash(cd \"D:/Item/repo/llm-wiki/.claude/skills/paper-deep-reading/output/gstc-mmc-1-23\" && rm -f source_text.txt report.rendered.md images/page*.png && ls images/)"
+      "Bash(cd \"D:/Item/repo/llm-wiki/.claude/skills/paper-deep-reading/output/gstc-mmc-1-23\" && rm -f source_text.txt report.rendered.md images/page*.png && ls images/)",
+      "Bash(mkdir -p \"D:/Item/repo/llm-wiki/wiki/sources/gstc-mmc-1-23/images\")",
+      "Bash(cp \"D:/Item/repo/llm-wiki/.claude/skills/paper-deep-reading/output/gstc-mmc-1-23/report.md\" \"D:/Item/repo/llm-wiki/wiki/sources/gstc-mmc-1-23/report.md\")",
+      "Bash(cp \"D:/Item/repo/llm-wiki/.claude/skills/paper-deep-reading/output/gstc-mmc-1-23/images/\"*.png \"D:/Item/repo/llm-wiki/wiki/sources/gstc-mmc-1-23/images/\")",
+      "Bash(rm -rf \"D:/Item/repo/llm-wiki/.claude/skills/paper-deep-reading/output/gstc-mmc-1-23\" && ls \"D:/Item/repo/llm-wiki/wiki/sources/gstc-mmc-1-23/\")"
     ]
   }
 }
