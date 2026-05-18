@@ -4,6 +4,20 @@
   "title": "安装 Auto-claude-code-research skill",
   "titleGenerationStatus": "success",
   "createdAt": 1779081714427,
-  "updatedAt": 1779081728273,
-  "sessionId": null
+  "updatedAt": 1779082163451,
+  "lastResponseAt": 1779082163451,
+  "sessionId": "b9b75206-7334-4903-b713-f00e1f0ee439",
+  "providerState": {
+    "providerSessionId": "b9b75206-7334-4903-b713-f00e1f0ee439"
+  },
+  "usage": {
+    "model": "opus",
+    "inputTokens": 0,
+    "cacheCreationInputTokens": 0,
+    "cacheReadInputTokens": 0,
+    "contextWindow": 200000,
+    "contextTokens": 0,
+    "percentage": 0,
+    "contextWindowIsAuthoritative": true
+  }
 }
