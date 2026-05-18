@@ -14,12 +14,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "CLAUDE.md",
+                "file": "wiki/sources/gstc-zero-cost-proxy-nas.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "CLAUDE"
+              "title": "gstc-zero-cost-proxy-nas"
             }
           }
         ]
@@ -204,6 +204,7 @@
   },
   "active": "eb0a9c0f7018fa6c",
   "lastOpenFiles": [
+    "CLAUDE.md",
     "wiki/sources/evolver-from-trajectories-to-principles.md",
     "raw/papers/GSTC(MMC)_1.23.pdf",
     "wiki/sources/evolver-from-trajectories-to-principles.md.tmp.29552.1778837566407",

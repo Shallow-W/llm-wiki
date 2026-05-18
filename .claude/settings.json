@@ -1,7 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "Edit(/.claude/skills/paper-deep-reading/**)"
+      "Edit(/.claude/skills/paper-deep-reading/**)",
+      "Bash(cd \"D:/Item/repo/llm-wiki/.claude/skills/paper-deep-reading/output/gstc-mmc-1-23\" && rm -f source_text.txt report.rendered.md images/page*.png && ls images/)"
     ]
   }
 }
