@@ -1,7 +1,0 @@
-{
-  "tool_name": "Bash",
-  "tool_input_preview": "{\"command\":\"ls \\\"D:\\\\Item\\\\repo\\\\llm-wiki\\\\log\\\\2026\\\\\\\"\",\"description\":\"List existing log files for 2026\"}",
-  "error": "Exit code 2\n/usr/bin/bash: eval: line 1: unexpected EOF while looking for matching `\"'",
-  "timestamp": "2026-05-15T07:32:04.409Z",
-  "retry_count": 2
-}

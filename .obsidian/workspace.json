@@ -14,12 +14,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "wiki/sources/evolver-from-trajectories-to-principles.md",
+                "file": "CLAUDE.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "evolver-from-trajectories-to-principles"
+              "title": "CLAUDE"
             }
           }
         ]
@@ -202,8 +202,10 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "00c3d91ba69b55ce",
+  "active": "eb0a9c0f7018fa6c",
   "lastOpenFiles": [
+    "wiki/sources/evolver-from-trajectories-to-principles.md",
+    "raw/papers/GSTC(MMC)_1.23.pdf",
     "wiki/sources/evolver-from-trajectories-to-principles.md.tmp.29552.1778837566407",
     "wiki/sources/lora-low-rank-adaptation.md",
     "wiki/sources/lora-low-rank-adaptation.md.tmp.29552.1778836292302",
@@ -218,9 +220,7 @@
     "wiki/entities/Mind-Lab.md.tmp.29552.1778834024207",
     "wiki/concepts/Policy-Catalog.md",
     "wiki/concepts/Packed-MoE-LoRA-Tensors.md",
-    "wiki/concepts/Packed-MoE-LoRA-Tensors.md.tmp.29552.1778833946352",
     "wiki/concepts/Adapter-Revision-Path.md",
-    "wiki/concepts/Adapter-Revision-Path.md.tmp.29552.1778833904221",
     "wiki/sources/mint-managed-infrastructure-training-serving-millions-llms.md",
     "log/2026/05-06.md",
     "wiki/entities/Mind-Lab.md",
@@ -239,7 +239,6 @@
     "wiki/concepts/Next-State-Signal.md",
     "wiki/concepts/Log-Probability-Difference-Clip.md",
     "wiki/concepts/Overlap-Guided-Hint-Selection.md",
-    "wiki/concepts/混合RL-Hybrid-RL.md",
     "asset/img/swarm-ide/runtime-screenshot.png",
     "asset/img/swarm-ide/image-1.png",
     "asset/img/swarm-ide/qrcode.png",
