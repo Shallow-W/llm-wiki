@@ -14,12 +14,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "CLAUDE.md",
+                "file": "wiki/sources/evolver-from-trajectories-to-principles.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "CLAUDE"
+              "title": "evolver-from-trajectories-to-principles"
             }
           },
           {
@@ -108,7 +108,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 328.5
+    "width": 328.5,
+    "collapsed": true
   },
   "right": {
     "id": "cea95d1d64530bca",
@@ -214,8 +215,10 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "00c3d91ba69b55ce",
+  "active": "5210e591bda2e84b",
   "lastOpenFiles": [
+    "raw/papers/evolver-from-trajectories-to-principles.pdf",
+    "CLAUDE.md",
     "log/2026/05-20.md",
     "log/2026/05-20.md.tmp.27928.f76738503a39",
     "wiki/index.md.tmp.27928.06d5f3bc92ca",
@@ -259,8 +262,6 @@
     "wiki/sources/gstc-zero-cost-proxy-nas.md",
     "wiki/sources/evolver-from-trajectories-to-principles.md",
     "wiki/sources/delta-mem-efficient-online-memory.md",
-    "wiki/sources/context-rot-how-increasing-input-tokens-impacts-llm.md",
-    "wiki/sources/agent0-bootstrapping-from-zero-data.md",
-    "wiki/sources/agent-world.md"
+    "wiki/sources/context-rot-how-increasing-input-tokens-impacts-llm.md"
   ]
 }
