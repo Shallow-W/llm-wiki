@@ -14,12 +14,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "wiki/sources/gstc-mmc-1-23/report.md",
+                "file": "CLAUDE.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "report"
+              "title": "CLAUDE"
             }
           },
           {
@@ -108,7 +108,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 337.5
+    "width": 328.5
   },
   "right": {
     "id": "cea95d1d64530bca",
@@ -216,10 +216,30 @@
   },
   "active": "00c3d91ba69b55ce",
   "lastOpenFiles": [
-    "raw/papers/GSTC(MMC)_1.23.pdf",
+    "log/2026/05-20.md",
+    "log/2026/05-20.md.tmp.27928.f76738503a39",
+    "wiki/index.md.tmp.27928.06d5f3bc92ca",
+    "wiki/index.md.tmp.27928.8dda6ec35689",
+    "wiki/index.md.tmp.27928.c35a3c73d8e2",
+    "wiki/concepts/互补学习系统-Agent记忆.md",
+    "wiki/concepts/ARC-AGI-Stream.md",
+    "wiki/concepts/情节性记忆-Agent.md",
+    "wiki/concepts/记忆侵蚀.md",
+    "wiki/concepts/Agent记忆整合.md",
+    "wiki/entities/Zhengkun-Wu.md",
+    "wiki/entities/Zhengkun-Wu.md.tmp.27928.f2bb99350103",
+    "wiki/entities/Yanshan-Lin.md",
+    "wiki/entities/Tsinghua-IIIS.md",
+    "wiki/entities/UIUC.md",
+    "wiki/entities/Hao-Peng.md",
+    "wiki/entities/Hao-Peng.md.tmp.27928.eeb885e68a28",
+    "wiki/entities/Dylan-Zhang.md",
+    "wiki/entities/Dylan-Zhang.md.tmp.27928.2a125fa966ed",
+    "wiki/sources/useful-memories-become-faulty-when-continuously-updated-by-llms.md",
+    "wiki/sources/useful-memories-become-faulty-when-continuously-updated-by-llms.md.tmp.27928.be5ac1a3f690",
+    "CLAUDE.md.tmp.27928.3e9fc7684e5a",
+    "raw/papers/useful-memories-become-faulty-when-continuously-updated-by-llms.pdf",
     "wiki/sources/gstc-mmc-1-23/report.md",
-    "wiki/sources/gstc-mmc-1-23/report.md.tmp.29552.1779091754796",
-    "wiki/sources/gstc-zero-cost-proxy-nas.md.tmp.29552.1779091670827",
     "wiki/sources/gstc-mmc-1-23/images/header.png",
     "wiki/sources/gstc-mmc-1-23/images/fig4-latency.png",
     "wiki/sources/gstc-mmc-1-23/images/fig7-large-scale.png",
@@ -230,13 +250,7 @@
     "wiki/sources/gstc-mmc-1-23/images/theorem2.png",
     "wiki/sources/gstc-mmc-1-23/images/table2-correlation.png",
     "wiki/sources/gstc-mmc-1-23/images/core-assumptions.png",
-    "wiki/sources/gstc-mmc-1-23/images",
-    "wiki/sources/gstc-mmc-1-23",
     "wiki/sources/lora-low-rank-adaptation.md",
-    "log/2026/05-15.md.tmp.29552.1779091194235",
-    "wiki/index.md.tmp.29552.1779091132462",
-    "wiki/index.md.tmp.29552.1779091085393",
-    "wiki/index.md.tmp.29552.1779091071247",
     "wiki/entities/Jing-Lu.md",
     "wiki/entities/Yue-Yang.md",
     "wiki/concepts/LAMRA.md",
@@ -247,19 +261,6 @@
     "wiki/sources/delta-mem-efficient-online-memory.md",
     "wiki/sources/context-rot-how-increasing-input-tokens-impacts-llm.md",
     "wiki/sources/agent0-bootstrapping-from-zero-data.md",
-    "wiki/sources/agent-world.md",
-    "CLAUDE.md",
-    "wiki/sources/evolver-from-trajectories-to-principles.md.tmp.29552.1778837566407",
-    "wiki/concepts/Policy-Catalog.md",
-    "wiki/concepts/Packed-MoE-LoRA-Tensors.md",
-    "wiki/concepts/Adapter-Revision-Path.md",
-    "wiki/sources/mint-managed-infrastructure-training-serving-millions-llms.md",
-    "log/2026/05-06.md",
-    "wiki/entities/Mind-Lab.md",
-    "wiki/entities/Mengdi-Wang.md",
-    "wiki/entities/Xiaolong-Jin.md",
-    "wiki/entities/Xuyang-Chen.md",
-    "wiki/entities/Stanford-University.md",
-    "wiki/entities/Salesforce-Research.md"
+    "wiki/sources/agent-world.md"
   ]
 }

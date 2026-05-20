@@ -1,6 +1,6 @@
 # 知识库索引
 
-最后更新：2026-05-15
+最后更新：2026-05-20
 
 这是整个知识库的内容导向目录。每次摄入后 LLM 都会更新它。回答查询时以此为入口。
 
@@ -12,7 +12,9 @@
 
 ---
 
-## 来源（16）
+## 来源（17）
+
+- [[useful-memories-become-faulty-when-continuously-updated-by-llms|Useful Memories Become Faulty: LLM 记忆整合的失败模式]] — Agent 记忆整合并非无害，反复压缩经验导致效用倒 U 型退化，GPT-5.4 在 100% 已解题上丢失 47% 准确率，保留原始 Episode 远优于强制整合 | 2026-05-13 | #Agent记忆 #记忆整合 #记忆退化 #精读
 
 - [[mint-managed-infrastructure-training-serving-millions-llms|MinT: 百万级 LoRA 策略训练与服务基础设施]] — LoRA adapter revision 为核心管理单元，Scale Up/Down/Out 三轴扩展，训练-服务交接加速 18.3 倍，百万策略目录，冷加载 8.5-8.7 倍 | 2026-05-13 | #基础设施 #LoRA #GRPO #MoE #服务部署
 - [[openclaw-rl-turning-daily-usage-into-training-signals|OpenClaw-RL: 把日常使用变成训练信号]] — next-state 信号实时转化在线训练，混合 RL（evaluative + directive）+ overlap-guided hint selection，零中断推理，统一个人/通用 Agent RL 训练 | 2026-03 | #AgentRL #在线学习 #混合RL
@@ -88,10 +90,16 @@
 - [[Yue Yang]] — 华中科技大学研究生，GSTC 论文共同作者
 - [[Jing Lu]] — 华中科技大学研究生，GSTC 论文共同作者
 - [[北京邮电大学]] — 论文3的主要研究机构
+- [[Dylan-Zhang]] — UIUC 博士生，Agent 记忆整合论文共同一作/通讯作者
+- [[Hao-Peng]] — UIUC 教授，Agent 记忆研究资深作者
+- [[UIUC]] — 伊利诺伊大学厄巴纳-香槟分校，Agent 记忆论文第一署名机构
+- [[Tsinghua-IIIS]] — 清华大学交叉信息研究院，Agent 记忆论文第二署名机构
+- [[Yanshan-Lin]] — 清华 IIIS，Agent 记忆论文共同作者
+- [[Zhengkun-Wu]] — 清华 IIIS，Agent 记忆论文共同作者
 
 ---
 
-## 概念（45）
+## 概念（50）
 
 - [[Adapter-Revision-Path|Adapter-Revision Path]] — 基座常驻，仅 LoRA adapter 在训练-服务全生命周期流转的设计模式
 - [[Packed-MoE-LoRA-Tensors|Packed MoE LoRA Tensors]] — 将碎片化 MoE LoRA 小对象打包为紧凑连续表示，冷加载加速 8.5-8.7 倍
@@ -138,6 +146,11 @@
 - [[任务卸载]] — 将计算任务从边缘转移到资源充足的节点执行
 - [[边缘计算]] — 将计算能力下沉到靠近用户的位置
 - [[两时间尺度优化]] — 长期慢变量与短期快变量的协同优化
+- [[Agent记忆整合]] — LLM Agent 将轨迹压缩为文本记忆的有损重写过程，三大失败模式：错误分组、过度泛化、窄流过拟合
+- [[记忆侵蚀]] — 整合记忆效用随更新次数先升后降的倒 U 型现象，可降至无记忆基线以下
+- [[情节性记忆-Agent]] — 保留原始 episode 的 Agent 记忆形式，在多个基准上优于所有整合方法
+- [[ARC-AGI-Stream]] — 受控 Agent 记忆测试台：6 族 × 7 技能 + 双存储 + 暴露记忆操作词表
+- [[互补学习系统-Agent记忆]] — 快速情节存储 + 慢速抽象存储的双系统设计原则，强制整合违反此原则导致灾难性干扰
 
 ---
 
@@ -157,4 +170,4 @@
 
 ## 最近活动
 
-查看 [[log/2026/05-15|今日日志]] 了解完整时间线。
+查看 [[log/2026/05-20|今日日志]] 了解完整时间线。
