@@ -4,8 +4,8 @@
   "title": "Analyze GitHub agent projects and create wiki n...",
   "titleGenerationStatus": "success",
   "createdAt": 1778039860327,
-  "updatedAt": 1779092186656,
-  "lastResponseAt": 1779092186656,
+  "updatedAt": 1779352088223,
+  "lastResponseAt": 1779352088223,
   "sessionId": "510a6bb6-5c5c-4ef8-87e3-0b9c01b68e57",
   "providerState": {
     "providerSessionId": "510a6bb6-5c5c-4ef8-87e3-0b9c01b68e57"
@@ -13,12 +13,12 @@
   "currentNote": "CLAUDE.md",
   "usage": {
     "model": "opus",
-    "inputTokens": 0,
+    "inputTokens": 59979,
     "cacheCreationInputTokens": 0,
     "cacheReadInputTokens": 0,
     "contextWindow": 200000,
-    "contextTokens": 0,
-    "percentage": 0,
+    "contextTokens": 59979,
+    "percentage": 30,
     "contextWindowIsAuthoritative": true
   }
 }

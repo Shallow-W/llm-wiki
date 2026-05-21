@@ -73,8 +73,14 @@
   "hotPaths": [
     {
       "path": "wiki\\index.md",
-      "accessCount": 7,
-      "lastAccessed": 1779246430609,
+      "accessCount": 16,
+      "lastAccessed": 1779351988650,
+      "type": "file"
+    },
+    {
+      "path": "wiki\\entities\\复旦大学.md",
+      "accessCount": 5,
+      "lastAccessed": 1779351773823,
       "type": "file"
     },
     {
@@ -195,6 +201,108 @@
       "path": "blog\\rate-limiting-deep-dive.md",
       "accessCount": 1,
       "lastAccessed": 1779334551249,
+      "type": "file"
+    },
+    {
+      "path": "wiki\\sources\\agentic-harness-engineering.md",
+      "accessCount": 1,
+      "lastAccessed": 1779351659448,
+      "type": "file"
+    },
+    {
+      "path": "wiki\\entities\\Jiahang-Lin.md",
+      "accessCount": 1,
+      "lastAccessed": 1779351722023,
+      "type": "file"
+    },
+    {
+      "path": "wiki\\entities\\Shichun-Liu.md",
+      "accessCount": 1,
+      "lastAccessed": 1779351723796,
+      "type": "file"
+    },
+    {
+      "path": "wiki\\entities\\Chengjun-Pan.md",
+      "accessCount": 1,
+      "lastAccessed": 1779351724656,
+      "type": "file"
+    },
+    {
+      "path": "wiki\\entities\\Zhenhua-Han.md",
+      "accessCount": 1,
+      "lastAccessed": 1779351725832,
+      "type": "file"
+    },
+    {
+      "path": "wiki\\entities\\Tao-Gui.md",
+      "accessCount": 1,
+      "lastAccessed": 1779351775083,
+      "type": "file"
+    },
+    {
+      "path": "wiki\\entities\\上海期智智峰.md",
+      "accessCount": 1,
+      "lastAccessed": 1779351776310,
+      "type": "file"
+    },
+    {
+      "path": "wiki\\entities\\NexAU.md",
+      "accessCount": 1,
+      "lastAccessed": 1779351777497,
+      "type": "file"
+    },
+    {
+      "path": "wiki\\entities\\Terminal-Bench.md",
+      "accessCount": 1,
+      "lastAccessed": 1779351778476,
+      "type": "file"
+    },
+    {
+      "path": "wiki\\concepts\\Agentic-Harness-Engineering.md",
+      "accessCount": 1,
+      "lastAccessed": 1779351866792,
+      "type": "file"
+    },
+    {
+      "path": "wiki\\concepts\\Harness-Agent-Harness.md",
+      "accessCount": 1,
+      "lastAccessed": 1779351868402,
+      "type": "file"
+    },
+    {
+      "path": "wiki\\concepts\\Component-Observability.md",
+      "accessCount": 1,
+      "lastAccessed": 1779351869626,
+      "type": "file"
+    },
+    {
+      "path": "wiki\\concepts\\Experience-Observability.md",
+      "accessCount": 1,
+      "lastAccessed": 1779351870846,
+      "type": "file"
+    },
+    {
+      "path": "wiki\\concepts\\Decision-Observability.md",
+      "accessCount": 1,
+      "lastAccessed": 1779351872030,
+      "type": "file"
+    },
+    {
+      "path": "wiki\\concepts\\NexAU-Framework.md",
+      "accessCount": 1,
+      "lastAccessed": 1779351873220,
+      "type": "file"
+    },
+    {
+      "path": "wiki\\concepts\\Change-Manifest.md",
+      "accessCount": 1,
+      "lastAccessed": 1779351874290,
+      "type": "file"
+    },
+    {
+      "path": "log\\2026\\05-21.md",
+      "accessCount": 1,
+      "lastAccessed": 1779352037204,
       "type": "file"
     }
   ],

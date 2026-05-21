@@ -1,6 +1,6 @@
 # 知识库索引
 
-最后更新：2026-05-20
+最后更新：2026-05-21
 
 这是整个知识库的内容导向目录。每次摄入后 LLM 都会更新它。回答查询时以此为入口。
 
@@ -12,7 +12,7 @@
 
 ---
 
-## 来源（17）
+## 来源（18）
 
 - [[useful-memories-become-faulty-when-continuously-updated-by-llms|Useful Memories Become Faulty: LLM 记忆整合的失败模式]] — Agent 记忆整合并非无害，反复压缩经验导致效用倒 U 型退化，GPT-5.4 在 100% 已解题上丢失 47% 准确率，保留原始 Episode 远优于强制整合 | 2026-05-13 | #Agent记忆 #记忆整合 #记忆退化 #精读
 
@@ -32,10 +32,11 @@
 - [[gstc-zero-cost-proxy-nas|Zero-Cost Proxy NAS-Driven Collaborative Deployment Optimization]] — GSTC 零成本代理 + JCQDA 部署 + LAMRA 动态替换，AI 服务全生命周期优化 | 2026-04-21 | #NAS #微服务 #精读
 - [[joint-deployment-request-routing-microservice-tpds|Joint Deployment and Request Routing for Microservice Call Graphs]] — GMDA-RMPR 两阶段启发式，联合优化微服务部署与路由 | 2023-11 | #微服务 #排队网络
 - [[joint-task-offloading-resource-allocation-model-placement-6g|Joint Task Offloading, Resource Allocation and Model Placement for AIaaS in 6G]] — DA-MAB 策略，边-网-云 AIaaS 两时间尺度优化 | 2024-11 | #6G #AIaaS
+- [[agentic-harness-engineering|Agentic Harness Engineering: Observability-Driven Automatic Evolution of Coding-Agent Harnesses]] — 三种可观测性（组件/经验/决策）驱动 harness 自动闭环演化，Terminal-Bench 2 +7.3pp，跨模型迁移 +5.1~+10.1pp | 2025-04 | #Agent #自动演化 #编码Agent #精读
 
 ---
 
-## 实体（53）
+## 实体（61）
 
 - [[Peng Xia]] — UNC-Chapel Hill，Agent0/MetaClaw 共同一作，自演化 Agent 研究方向
 - [[Huaxiu Yao]] — UNC-Chapel Hill 教授，Agent0/MetaClaw 通讯作者，AIMing Lab
@@ -76,7 +77,7 @@
 - [[Di Zhang]] — 复旦大学，δ-mem 共同一作/通讯作者，LLM 记忆与 Agent
 - [[Soujanya Poria]] — 南洋理工大学教授，δ-mem 通讯作者，DECLARE Lab
 - [[南洋理工大学]] — 新加坡顶尖研究型大学，δ-mem 第一署名机构
-- [[复旦大学]] — 中国顶尖研究型大学，δ-mem 第二署名机构
+- [[复旦大学]] — 中国顶尖研究型大学，δ-mem 第二署名机构、AHE 第一署名机构
 - [[wiki/sources/paper/swarm-ide]] — 开源去中心化多 Agent 协作平台，create+send 极简原语，支持动态嵌套与实时 Graph 可视化
 - [[Guanting Dong]] — 中国人民大学博士生，Agent RL / 工具使用训练方向
 - [[Zhicheng Dou]] — 中国人民大学教授，Agent 系统方向
@@ -96,10 +97,18 @@
 - [[Tsinghua-IIIS]] — 清华大学交叉信息研究院，Agent 记忆论文第二署名机构
 - [[Yanshan-Lin]] — 清华 IIIS，Agent 记忆论文共同作者
 - [[Zhengkun-Wu]] — 清华 IIIS，Agent 记忆论文共同作者
+- [[Jiahang-Lin]] — 复旦大学，AHE 共同一作，编码 Agent 自动优化
+- [[Shichun-Liu]] — 复旦大学，AHE 共同一作
+- [[Chengjun-Pan]] — 复旦大学 & 上海期智智峰，AHE 共同作者
+- [[Zhenhua-Han]] — 复旦大学 & 上海期智智峰，AHE 共同作者
+- [[Tao-Gui]] — 复旦大学，AHE 通讯作者
+- [[上海期智智峰]] — 上海期智智峰科技有限公司，AHE 共同署名机构
+- [[NexAU]] — AHE 提出的解耦 Agent harness 框架，7 种组件文件化
+- [[Terminal-Bench]] — 终端编码任务基准，89 个任务，AHE 主评估基准
 
 ---
 
-## 概念（50）
+## 概念（57）
 
 - [[Adapter-Revision-Path|Adapter-Revision Path]] — 基座常驻，仅 LoRA adapter 在训练-服务全生命周期流转的设计模式
 - [[Packed-MoE-LoRA-Tensors|Packed MoE LoRA Tensors]] — 将碎片化 MoE LoRA 小对象打包为紧凑连续表示，冷加载加速 8.5-8.7 倍
@@ -151,6 +160,13 @@
 - [[情节性记忆-Agent]] — 保留原始 episode 的 Agent 记忆形式，在多个基准上优于所有整合方法
 - [[ARC-AGI-Stream]] — 受控 Agent 记忆测试台：6 族 × 7 技能 + 双存储 + 暴露记忆操作词表
 - [[互补学习系统-Agent记忆]] — 快速情节存储 + 慢速抽象存储的双系统设计原则，强制整合违反此原则导致灾难性干扰
+- [[Agentic-Harness-Engineering|AHE]] — 三种可观测性驱动编码 Agent harness 自动闭环演化，不修改权重仅优化组件
+- [[Harness-Agent-Harness|Harness]] — 编码 Agent 的模型外部可编辑组件集合（提示/工具/中间件/技能/记忆等）
+- [[Component-Observability|组件可观测性]] — 将 harness 组件以文件形式暴露，提供清晰动作空间和 diff/rollback
+- [[Experience-Observability|经验可观测性]] — Agent Debugger 将原始轨迹蒸馏为分层证据语料
+- [[Decision-Observability|决策可观测性]] — Change Manifest 配对预测声明，形成可审计因果链
+- [[NexAU-Framework|NexAU Framework]] — 7 种正交组件类型文件化的解耦 harness 框架
+- [[Change-Manifest|Change Manifest]] — 编辑-预测配对的审计机制，声明预期修复和风险回归
 
 ---
 
@@ -170,4 +186,4 @@
 
 ## 最近活动
 
-查看 [[log/2026/05-20|今日日志]] 了解完整时间线。
+查看 [[log/2026/05-21|今日日志]] 了解完整时间线。
