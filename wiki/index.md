@@ -12,7 +12,7 @@
 
 ---
 
-## 来源（18）
+## 来源（19）
 
 - [[useful-memories-become-faulty-when-continuously-updated-by-llms|Useful Memories Become Faulty: LLM 记忆整合的失败模式]] — Agent 记忆整合并非无害，反复压缩经验导致效用倒 U 型退化，GPT-5.4 在 100% 已解题上丢失 47% 准确率，保留原始 Episode 远优于强制整合 | 2026-05-13 | #Agent记忆 #记忆整合 #记忆退化 #精读
 
@@ -33,10 +33,11 @@
 - [[joint-deployment-request-routing-microservice-tpds|Joint Deployment and Request Routing for Microservice Call Graphs]] — GMDA-RMPR 两阶段启发式，联合优化微服务部署与路由 | 2023-11 | #微服务 #排队网络
 - [[joint-task-offloading-resource-allocation-model-placement-6g|Joint Task Offloading, Resource Allocation and Model Placement for AIaaS in 6G]] — DA-MAB 策略，边-网-云 AIaaS 两时间尺度优化 | 2024-11 | #6G #AIaaS
 - [[agentic-harness-engineering|Agentic Harness Engineering: Observability-Driven Automatic Evolution of Coding-Agent Harnesses]] — 三种可观测性（组件/经验/决策）驱动 harness 自动闭环演化，Terminal-Bench 2 +7.3pp，跨模型迁移 +5.1~+10.1pp | 2025-04 | #Agent #自动演化 #编码Agent #精读
+- [[multi-agent-architecture-search-via-agentic-supernet|Multi-agent Architecture Search via Agentic Supernet]] — 将 NAS 超网思想迁移到多 Agent 系统，查询条件采样动态分配资源，6 基准全面领先，训练成本仅为 AFlow 的 15% | ICML 2025 | #Agent #NAS #多Agent #自动演化 #精读
 
 ---
 
-## 实体（61）
+## 实体（70）
 
 - [[Peng Xia]] — UNC-Chapel Hill，Agent0/MetaClaw 共同一作，自演化 Agent 研究方向
 - [[Huaxiu Yao]] — UNC-Chapel Hill 教授，Agent0/MetaClaw 通讯作者，AIMing Lab
@@ -105,10 +106,19 @@
 - [[上海期智智峰]] — 上海期智智峰科技有限公司，AHE 共同署名机构
 - [[NexAU]] — AHE 提出的解耦 Agent harness 框架，7 种组件文件化
 - [[Terminal-Bench]] — 终端编码任务基准，89 个任务，AHE 主评估基准
+- [[Guibin-Zhang]] — 新加坡国立大学 & 同济大学，MaAS 共同一作
+- [[Luyang-Niu]] — 同济大学，MaAS 共同一作
+- [[Junfeng-Fang]] — 新加坡国立大学，MaAS 共同作者
+- [[Kun-Wang]] — 南洋理工大学教授，MaAS 通讯作者
+- [[Lei-Bai]] — 上海人工智能实验室，MaAS 共同作者
+- [[Xiang-Wang]] — 中国科学技术大学，MaAS 共同作者
+- [[新加坡国立大学]] — 新加坡顶尖研究型大学，MaAS 第一署名机构
+- [[同济大学]] — 中国上海研究型大学，MaAS 共同署名机构
+- [[中国科学技术大学]] — 中国合肥顶尖研究型大学，MaAS 第五署名机构
 
 ---
 
-## 概念（57）
+## 概念（63）
 
 - [[Adapter-Revision-Path|Adapter-Revision Path]] — 基座常驻，仅 LoRA adapter 在训练-服务全生命周期流转的设计模式
 - [[Packed-MoE-LoRA-Tensors|Packed MoE LoRA Tensors]] — 将碎片化 MoE LoRA 小对象打包为紧凑连续表示，冷加载加速 8.5-8.7 倍
@@ -167,6 +177,12 @@
 - [[Decision-Observability|决策可观测性]] — Change Manifest 配对预测声明，形成可审计因果链
 - [[NexAU-Framework|NexAU Framework]] — 7 种正交组件类型文件化的解耦 harness 框架
 - [[Change-Manifest|Change Manifest]] — 编辑-预测配对的审计机制，声明预期修复和风险回归
+- [[Agentic-Supernet|Agentic Supernet]] — 概率化、连续的多 Agent 架构分布，每层算子有条件概率
+- [[Multi-agent-Architecture-Search|Multi-agent Architecture Search (MaAS)]] — 将 NAS 超网思想迁移到多 Agent 系统，查询条件采样
+- [[Textual-Gradient|文本梯度]] — LLM 生成自然语言梯度来更新不可微算子（prompt、温度、节点结构）
+- [[Early-Exit-Operator|Early-exit Operator]] — 使 Supernet 深度查询相关的提前退出机制
+- [[Query-Dependent-Sampling|查询条件采样]] — 根据查询难度动态选择算子组合和层数
+- [[Controller-Network-Qphi|Controller Network Qϕ]] — MoE 风格的查询条件架构采样器
 
 ---
 
