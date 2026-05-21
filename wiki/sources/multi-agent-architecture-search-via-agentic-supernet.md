@@ -48,106 +48,234 @@ tags: [Agent, 精读, NAS, 多Agent, 自动演化]
 └──────────────────────────────────────────────────────────┘
 ```
 
-### 三个核心定义
+### 3.1 核心概念：从单系统到分布
 
-#### Definition 3.1：Agentic Operator
+MaAS 的根本思想转变：**不在所有查询上搜索一个统一的大而全系统，而是维护一个"系统池"（即 Supernet），让每个查询从这个池子里取出最适合自己的那个子系统**。
 
-一个算子 O 是一个复合 LLM-Agent 调用过程，包含：
+打个比方：传统方法相当于给所有病人开同一种药（不管感冒还是骨折），而 MaAS 相当于建了一个药房，根据病人症状自动配药——感冒只开感冒药（简单系统），重病才上全套检查（复杂系统）。
+
+### 3.2 Agentic Operator（算子）—— 基本构建块
+
+**定义**（Definition 3.1）：
+
+一个算子 O 是一个复合 LLM-Agent 调用过程：
 
 ```
 O = {{Mi}ᵢ₌₁ᵐ, P, {Ti}ᵢ₌₁ⁿ}
 ```
 
-其中 M 是 LLM 实例，P 是 prompt，T 是工具。例如：
-- CoT：m=1, n=0
-- Self-RAG：m=1, n=1（检索引擎）
-- Multi-agent Debate：多 LLM、多轮调用
+- **Mi**：LLM 实例（如 GPT-4o-mini），m 是调用的 LLM 数量
+- **P**：自然语言 prompt（指导 LLM 如何执行任务）
+- **Ti**：工具（如代码解释器、网络搜索），n 是工具数量
 
-#### Definition 3.2：Agentic Supernet
+**论文初始化的 8 种算子**：
 
-```
-A = {π, O} = {{πℓ(O)}O∈O}ℓ₌₁ᴸ
-πℓ(O) = p(O | A₁:ℓ₋₁)
-```
+| 算子 | m (LLM数) | n (工具数) | 说明 |
+|------|-----------|-----------|------|
+| CoT (O_CoT) | 1 | 0 | 单 LLM 逐步推理，零工具 |
+| Self-Consistency | 1 | 0 | 5 条 CoT 路径 + 多数投票 |
+| Self-Refine | 1 | 0 | CoT 生成 + 最多 5 轮自我反思迭代 |
+| LLM-Debate (O_Debate) | 3 | 0 | 3 个 LLM 辩论，最多 2 轮 |
+| Ensemble | 3 | 0 | 3 个不同 LLM 分别回答 + pairwise ranking 聚合 |
+| Testing | 1 | 1 | 生成测试用例（代码生成专用） |
+| ReAct | 1 | 多个 | 代码解释器、网络搜索、知识库等工具 |
+| Early-exit (O_exit) | 0 | 0 | 特殊算子，终止采样过程 |
 
-一个 L 层的概率化、连续架构分布。每层 ℓ 上每个算子 O 有一个条件概率 πℓ(O)，依赖于前面层的选择。这诱导了一个关于所有可能多层算子配置的联合分布 p(G)。
+关键理解：**大多数现有的单 Agent 或多 Agent 工作流都可以被视为一个算子**。CoT 是最简单的算子（1 个 LLM + 0 工具），Multi-agent Debate 是复杂算子（多 LLM + 多轮交互），ReAct 是带工具的算子。算子是"黑箱"——输入查询，输出答案，内部可以有任意复杂的逻辑。
 
-#### Definition 3.3：多 Agent 系统
+### 3.3 Agentic Supernet（Agent 超网）—— 架构分布
 
-```
-G = {V, E}, V ⊂ O, E ∈ V × V
-```
+**直觉理解**：
 
-一个 DAG，节点是选中的算子，边是连接关系。
+想象一个 L 层的"流水线"。每层有 8 个"插槽"，分别对应 8 种算子。Supernet 不是确定性地选择"第 1 层用 CoT、第 2 层用 Debate"，而是给每个选择赋予一个**概率**。就像一个多臂老虎机——每层有多个摇臂，以不同的概率拉动不同的臂。
 
-### Controller 网络：MoE 风格的查询条件采样
-
-控制器 Qϕ 实现为一个 Mixture-of-Experts 风格网络：
-
-```
-πℓ: q → Vℓ
-Si = FFN(v(q) ∥ Σ v(O∈V₁) ∥ ... ∥ Σ v(O∈Vℓ₋₁))
-```
-
-- v(·) 用 MiniLM/Sentence-BERT 做文本嵌入
-- 算子按得分降序激活，累积得分超过阈值 thres=0.3 时停止
-- **Early-exit 算子 Oexit**：如果某层采样到 Oexit，则提前终止，实现查询相关的深度
-
-### 优化目标
+一个从 Supernet 中采样出的多 Agent 系统，就是每层选出的算子按顺序串联起来形成的 DAG：
 
 ```
-max E(q,a)~D, G~P(G|q) [U(G; q, a) − λ·C(G; q)]
+Supernet (L=4 层):
+Layer 1: [CoT:0.35] [Debate:0.10] [ReAct:0.15] [Ensemble:0.05] [Self-Refine:0.10] [Testing:0.05] [Self-Consistency:0.08] [Early-exit:0.12]
+Layer 2: [CoT:0.15] [Debate:0.20] [ReAct:0.10] [Ensemble:0.05] [Self-Refine:0.05] [Testing:0.10] [Self-Consistency:0.05] [Early-exit:0.30]
+Layer 3: ...
+Layer 4: ...
+
+采样一次 → 得到一个具体的 4 层多 Agent 系统 G:
+Layer 1: CoT + ReAct
+Layer 2: Debate + Early-exit → 停止！
+结果: G = [CoT → ReAct → Debate]（3 个算子的 DAG）
 ```
 
-- U(·)：效用/性能（正确率、pass@1）
-- C(·)：成本（token 数、API 费用）
-- λ：权衡系数
-
-### 双层梯度更新
-
-**分布 π 的梯度**（可微）：
-
-用经验贝叶斯蒙特卡洛估计：
+**形式化定义**（Definition 3.2）：
 
 ```
-∇πL ≈ 1/K Σ(q,a) Σk₌₁ᴷ mk ∇π p(Gk)
-mk = p(a|q,Gk) / Σ p(a|q,Gi) − λ·C(Gk;q) / Σ C(Gi;q)
+Agentic Supernet: A = {π, O}
+  - π = {πℓ(O)}O∈O,ℓ₌₁ᴸ  — 参数化的条件概率分布
+  - O = {O₁, ..., O₈}      — 可用算子集合
+  - πℓ(O) = p(O | A₁:ℓ₋₁) — 第 ℓ 层选择算子 O 的概率，条件依赖于前 ℓ-1 层的选择
 ```
 
-mk 是成本感知的重要性权重——高正确率且低成本的架构获得更高权重。
+Supernet 诱导出所有可能的多 Agent 系统的**联合分布**：
 
-**算子 O 的梯度**（不可微，黑箱工具+自然语言）：
+```
+p(G) = ∏ᴸℓ₌₁ ∏O∈O πℓ(O)^I(O∈Vℓ)
+```
 
-用文本梯度（Textual Gradient）近似反向传播：
+其中 Vℓ 是第 ℓ 层实际被选中的算子集合，I(·) 是指示函数。
+
+**关键属性**：
+- **概率化**：不是"选哪个"，而是"以多大比例选哪个"。训练的过程就是调整这些比例。
+- **层间条件依赖**：第 2 层的选择取决于第 1 层选了什么。比如第 1 层选了 ReAct（已有工具），第 2 层可能更需要 Refine 而非另一个 ReAct。
+- **DAG 约束**：采样出的系统 G = {V, E} 必须是有向无环图，保证执行顺序。
+- **指数级候选空间**：每层可选多个算子 × L 层，候选架构数量巨大。但 Supernet 用参数化分布高效编码了整个空间。
+
+### 3.4 查询条件采样 —— "看菜下碟"
+
+Supernet 本身只是个分布，关键在于**如何根据输入查询从中采出一个合适的子系统**。这是 Controller 网络 Qϕ 的工作。
+
+**问题**：同样的 Supernet，面对"2+3=?"和"证明费马大定理"应该采出完全不同的架构。
+
+**Controller 的设计**：
+
+```
+输入: 查询 q（自然语言问题）+ 前面层已选的算子 {V₁, ..., Vℓ₋₁}
+输出: 当前层选中的算子集合 Vℓ
+
+计算过程:
+1. 编码查询:     v(q) = Embedding(q)           // 用 MiniLM/Sentence-BERT 编码
+2. 编码已有算子: v(Vₖ) = Σ v(O) for O∈Vₖ      // 对每层已选算子嵌入取平均
+3. 拼接上下文:   context = v(q) ∥ v(V₁) ∥ v(V₂) ∥ ... ∥ v(Vℓ₋₁)
+4. 计算激活分数: S = FFN(context)               // S ∈ R^|O|，每个算子一个分数
+5. 排序激活:     S↓ = sort(S, descending)       // 按分数降序排列
+6. 贪心选择:     选前 t 个算子，使得 Σⱼ₌₁ᵗ S↓[j] > thres  // thres=0.3
+```
+
+**每层选几个算子是动态的**：如果第一个算子的分数已经 > 0.3，则只选 1 个；如果分散，则选多个。thres=0.3 控制了每层的"开销"——越大则每层选的算子越多。
+
+**Early-exit 的作用**：
+
+Oexit 也是 8 个算子之一。如果某层采样到了 Oexit，整个采样过程提前终止：
+
+```
+Layer 1: [CoT: 选, ReAct: 选]   ← 2 个算子
+Layer 2: [Early-exit: 选]        ← 命中提前退出！
+结果: G = CoT → ReAct（2 层系统，简单便宜）
+```
+
+```
+Layer 1: [Debate: 选, Self-Consistency: 选]
+Layer 2: [ReAct: 选, Ensemble: 选]
+Layer 3: [Self-Refine: 选, Testing: 选]
+Layer 4: [CoT: 选, Early-exit: 选]
+结果: G = 完整 4 层系统（复杂但强大）
+```
+
+这就是论文的核心卖点——**查询相关的资源分配**：简单问题自动用浅层简单架构（省 token），复杂问题自动用深层复杂架构（保质量）。
+
+### 3.5 优化目标 —— 性能与成本的权衡
+
+**形式化**（Eq. 5）：
+
+```
+max_P(G|q) E(q,a)~D, G~P(G|q) [U(G; q, a) − λ · C(G; q)]
+```
+
+- **U(G; q, a)**：效用/性能函数——系统 G 对查询 q 产生答案 a 的质量（正确率、pass@1）
+- **C(G; q)**：成本函数——系统 G 处理查询 q 的 token 消耗 / API 费用
+- **λ**：成本惩罚系数（λ ∈ {1e−3, 5e−3, 1e−2}）
+- **P(G|q)**：要优化的条件分布——给定查询 q，生成系统 G 的概率
+
+注意目标不是找到一个最优 G，而是优化**分布 P(G|q)** 本身。这就是"优化超网"而非"优化架构"的含义。
+
+### 3.6 双层梯度更新 —— 如何训练超网
+
+训练需要同时更新两样东西：**分布参数 π**（每层选哪个算子的概率）和**算子 O**（算子内部的 prompt、温度、结构）。两者性质截然不同，需要不同的优化策略。
+
+#### 层 1：分布 π 的梯度（可微，蒙特卡洛估计）
+
+由于执行系统 G 涉及外部 API 调用，e(a|G) 不可微。论文用经验贝叶斯蒙特卡洛方法近似梯度：
+
+```
+∇πL ≈ (1/K) Σ(q,a)∈D Σk₌₁ᴷ mk · ∇π p(Gk)
+```
+
+其中 K=4 是采样次数（对同一查询采样 K 个不同架构），mk 是**成本感知的重要性权重**：
+
+```
+mk = [p(a|q,Gk) / Σᵢ p(a|q,Gi)] − λ · [C(Gk;q) / Σᵢ C(Gi;q)]
+```
+
+直观理解：**正确率高 + token 成本低的架构得到正权重，正确率低或成本高的架构得到负权重**。梯度更新会让 π 偏向那些"又好又便宜"的架构。
+
+为什么采样 K=4 次？消融实验表明 K=2 时方差太大性能不稳定，K=4 达到满意低方差估计，再大边际收益递减。
+
+#### 层 2：算子 O 的梯度（不可微，文本梯度）
+
+算子包含自然语言 prompt 和黑箱工具调用，无法用数值梯度更新。论文引入**文本梯度**（Textual Gradient），用 LLM 生成自然语言形式的"梯度分析"：
 
 ```
 ∇OL = TP ⊕ TT ⊕ TN
 ```
 
-- TP：prompt 的文本梯度（如"给 debate 算子添加过渡提示"）
-- TT：温度的文本梯度（如"降低 ensemble LLM 的温度以提高稳定性"）
-- TN：节点结构的文本梯度（如"合并/拆分/修改算子"）
+三种文本梯度分别更新算子的不同层面：
 
-文本梯度由 LLM 生成，作为自然语言形式的梯度分析。
+| 梯度类型 | 目标 | 示例更新 |
+|----------|------|----------|
+| TP（Prompt Gradient） | 算子的 prompt 文本 | "给 Debate 算子的 debater 之间添加过渡提示'请基于以上观点反驳'" |
+| TT（Temperature Gradient） | LLM 的温度参数 | "降低 Ensemble 中第三个 LLM 的温度到 0.3，以提高输出稳定性" |
+| TN（Node Structure Gradient） | 算子的代码结构 | "将 Testing 算子拆分为 UnitTest + IntegrationTest 两个子节点" |
 
-### Algorithm 1：MaAS 外层循环
+**文本梯度的实现**：一个专门的 gradient agent 接收"当前算子代码 + 执行结果 + 环境反馈"，输出 JSON 格式的改进建议（thought + description + code）。这与 ADAS 和 AgentSquare 的 textual feedback 机制类似。
+
+**消融实验验证**：移除文本梯度后性能下降最大（HumanEval −2.68pp, MATH −3.59pp），说明算子的自我演化能力是 MaAS 的核心贡献之一。
+
+### 3.7 完整算法流程
 
 ```
-Input: 数据集 D (训练集 Dtrain + 测试集 Dtest),
-       算子集 O, 初始分布 π, Controller Qϕ
+Algorithm 1: MaAS
+─────────────────────────────────────────────────
+Input:  数据集 D (训练集 Dtrain + 测试集 Dtest)
+        算子集 O = {CoT, Debate, Self-Consistency, 
+                    Self-Refine, Ensemble, Testing, 
+                    ReAct, Early-exit}
+        初始分布 π（随机初始化）
+        Controller 网络 Qϕ
 Output: 优化后的 Agentic Supernet {π, O}
 
 for (q, a) in Dtrain do
-    for layer ℓ ← 1 to L do
-        Vℓ ← πϕ(Vℓ | q, {Vh}h₌₁ˡ⁻¹)    // 条件采样
-        if ℓ = L or Oexit ∈ Vℓ then break  // 提前退出
-    G ← ⟨V₁, ..., Vℓ⟩                  // 构建多 Agent 系统
-    ˜a ← e(a|G)                        // 执行
-    ∇πL ← 蒙特卡洛估计                  // Eq. 11
-    ∇OL ← 文本梯度估计                  // Eq. 12
-    更新 π 和 O
-end for
+    ▸ Step 1: 查询条件采样
+    for layer ℓ ← 1 to L (=4) do
+        Vℓ ← Qϕ(Vℓ | q, {V₁,...,Vℓ₋₁})   // MoE 风格条件采样
+        if ℓ = L or O_exit ∈ Vℓ then break  // 提前退出
+    end
+    G ← ⟨V₁, V₂, ..., Vℓ⟩                  // 得到定制化 DAG
+
+    ▸ Step 2: 执行采样出的系统
+    ˜a ← Execute(G, q)                       // 实际运行多 Agent 系统
+
+    ▸ Step 3: 双层优化
+    ∇πL ← MonteCarlo(q, a, {G₁,...,GK})     // 蒙特卡洛估计分布梯度
+    ∇OL ← TextualGradient(G, q, ˜a, a)      // LLM 生成算子梯度
+    Update π via ∇πL                          // 更新选择概率
+    Update O via ∇OL                          // 更新算子内部
+
+    ▸ Step 4: 记录到 Archive（供后续文本梯度参考）
+    Archive.append(G, ˜a, feedback)
+end
 ```
+
+### 3.8 与 NAS 中 DARTS 的类比
+
+MaAS 的思想直接借鉴自神经架构搜索中的 DARTS (Liu et al., 2018)：
+
+| 维度 | DARTS (NAS) | MaAS (Agent NAS) |
+|------|-------------|-------------------|
+| 搜索空间 | CNN 单元中的卷积操作 | 多 Agent 系统中的算子 |
+| 搜索对象 | 最优网络拓扑 | 最优 Agent 架构 |
+| 参数化 | 每条边上的 softmax 权重 | 每层上的算子概率分布 π |
+| 优化方式 | 梯度下降 | 蒙特卡洛 + 文本梯度 |
+| 输出 | 一个确定性网络 | 一个查询条件分布 |
+| 额外机制 | 无 | Early-exit + 成本约束 |
+
+核心区别：DARTS 优化后得到一个确定性的最优网络，而 MaAS 优化后得到一个**分布**——每次查询都可以从中采样不同的架构。这使得 MaAS 天然支持不同难度的查询使用不同复杂度的系统。
 
 ## 实验设置
 

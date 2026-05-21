@@ -229,8 +229,9 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "dfb068da4461e161",
+  "active": "00c3d91ba69b55ce",
   "lastOpenFiles": [
+    "wiki/sources/multi-agent-architecture-search-via-agentic-supernet.md.tmp.47292.1779364288253",
     "wiki/sources/agentic-harness-engineering.md",
     "wiki/sources/multi-agent-architecture-search-via-agentic-supernet.md",
     "wiki/sources/paper/agent-world.md",
@@ -266,7 +267,6 @@
     "wiki/concepts/Experience-Observability.md",
     "wiki/concepts/Component-Observability.md",
     "wiki/concepts/Harness-Agent-Harness.md",
-    "wiki/concepts/Agentic-Harness-Engineering.md",
     "wiki/sources/paper/gstc-mmc-1-23/images/header.png",
     "wiki/sources/paper/gstc-mmc-1-23/images/fig4-latency.png",
     "wiki/sources/paper/gstc-mmc-1-23/images/fig7-large-scale.png",
