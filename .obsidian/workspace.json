@@ -229,8 +229,10 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "5663dd7ccb1f944d",
+  "active": "00c3d91ba69b55ce",
   "lastOpenFiles": [
+    "raw/papers/agentic-harness-engineering-observability-driven-automatic-evolution.pdf",
+    "raw/papers/agentic-harness-engineering.pdf",
     "blog/rate-limiting-deep-dive.md",
     "blog/rate-limiting-deep-dive.md.tmp.27836.403d7432604e",
     "blog",
@@ -252,7 +254,6 @@
     "wiki/concepts/记忆侵蚀.md",
     "wiki/concepts/Agent记忆整合.md",
     "wiki/entities/Zhengkun-Wu.md",
-    "wiki/entities/Zhengkun-Wu.md.tmp.27928.f2bb99350103",
     "wiki/entities/Yanshan-Lin.md",
     "wiki/entities/Tsinghua-IIIS.md",
     "wiki/entities/UIUC.md",
@@ -275,7 +276,6 @@
     "wiki/entities/Yue-Yang.md",
     "wiki/concepts/LAMRA.md",
     "wiki/concepts/JCQDA.md",
-    "wiki/sources/paper/llms-get-lost-in-multi-turn-conversation.md",
-    "wiki/sources/paper/gstc-zero-cost-proxy-nas.md"
+    "wiki/sources/paper/llms-get-lost-in-multi-turn-conversation.md"
   ]
 }

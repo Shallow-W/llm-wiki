@@ -1,7 +1,7 @@
 {
   "tool_name": "Bash",
-  "tool_input_preview": "{\"command\":\"ls -la \\\"D:\\\\Item\\\\repo\\\\llm-wiki\\\\blog\\\\\\\" 2>/dev/null || echo \\\"blog dir not found\\\"\",\"description\":\"Check if blog directory exists\"}",
+  "tool_input_preview": "{\"command\":\"ls \\\"D:\\\\Item\\\\repo\\\\llm-wiki\\\\raw\\\\papers\\\\\\\" | head -20\",\"description\":\"List existing papers in raw/papers\"}",
   "error": "Exit code 2\n/usr/bin/bash: eval: line 1: unexpected EOF while looking for matching `\"'",
-  "timestamp": "2026-05-21T03:32:10.392Z",
+  "timestamp": "2026-05-21T08:13:28.792Z",
   "retry_count": 1
 }
