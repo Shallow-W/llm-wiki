@@ -102,7 +102,7 @@ LLM 流式推理（reasoning → content → tool_calls）
 
 ## 在来源中的出现
 
-- [[swarm-ide|Swarm-IDE 来源摘要]] — 完整的技术拆解与代码分析
+- [[wiki/entities/swarm-ide|Swarm-IDE 来源摘要]] — 完整的技术拆解与代码分析
 
 ## 关系
 

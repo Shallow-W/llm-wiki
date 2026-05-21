@@ -1,6 +1,6 @@
 # 面向 AI 服务全生命周期的零成本代理 NAS 驱动协同部署优化
 
-![论文抬头：标题与作者](images/header.png)
+![论文抬头：标题与作者](header.png)
 
 - 作者：Kai Peng, Yue Yang, Jing Lu, Xinyi Yang, Yi Hu, and Menglan Hu
 - 学校：华中科技大学（Huazhong University of Science and Technology）
@@ -27,7 +27,7 @@
 - **JCQDA（联合通信与队列感知部署算法）**：基于 M/M/C 排队模型刻画通信、排队和处理延迟，通过服务-服务器亲和机制平衡通信延迟与排队延迟。
 - **LAMRA（负载感知模型替换算法）**：实时监控负载波动，从 GSTC 预评估架构库中选择合适架构，同步更新 JCQDA 部署方案。
 
-![GSTC 整体框架](images/fig1-framework.png)
+![GSTC 整体框架](fig1-framework.png)
 *图 1：AI 服务全生命周期协同优化模型的整体框架*
 
 上图展示了三层架构：用户访问层接收请求并转发至计算层；计算层由服务器集群组成，独立执行 JCQDA 部署策略和 LAMRA 动态替换；模型设计层使用 GSTC 构建满足服务需求的 AI 模型，并接收用户访问层的实时反馈以调整架构。
@@ -56,7 +56,7 @@ GSTC 的核心思想是将神经架构的信息传播特性量化为四个维度
 
 编码值落在区间 $\left[2^{-(n-1)}, 2^{n-1}\right]$ 内，均匀分布以放大差异。输入和输出节点编码为 1。
 
-![量化操作编码](images/fig2-encoding.png)
+![量化操作编码](fig2-encoding.png)
 *图 2：量化操作编码*
 
 #### 2.1.2 GSTC 四维度模型设计
@@ -177,7 +177,7 @@ $$
 
 其中 $\text{Avail}_m^v$ 为服务器 $v$ 上仍可部署的服务 $m$ 实例数，$\text{PS}_m^v$ 为 $v$ 上已部署的依赖服务实例数。
 
-![JCQDA 算法](images/algorithm1-jcqda.png)
+![JCQDA 算法](algorithm1-jcqda.png)
 *算法 1：联合通信与队列感知部署算法（JCQDA）*
 
 JCQDA 首先按 $N_m$ 降序排列所有服务，然后为每个服务计算所有服务器的亲和度并按降序排列，最后在资源允许的情况下逐服务器放置实例。此贪心策略的时间复杂度远低于精确求解，满足实时部署需求。
@@ -196,7 +196,7 @@ $$
 
 选择评分最高的版本替换当前部署版本。
 
-![LAMRA 算法](images/algorithm2-lamra.png)
+![LAMRA 算法](algorithm2-lamra.png)
 *算法 2：负载感知模型替换算法（LAMRA）*
 
 LAMRA 的关键在于 GSTC 预评估架构库的存在使得版本选择无需训练，结合 JCQDA 的部署参数同步更新，避免了模型替换带来的部署不当延迟问题。
@@ -208,7 +208,7 @@ LAMRA 的关键在于 GSTC 预评估架构库的存在使得版本选择无需�
 2. **相关性-性能映射**：更高的 $\tau$ 意味着所选架构更好地匹配"高性能低资源"目标，即 $C_m^{\text{GPU}}$ 趋于减小，$\mu_m$ 趋于增大
 3. **Slater 条件满足**：联合优化问题存在严格可行解，保证强对偶定理适用，凸规划的对偶间隙为零
 
-![核心假设](images/core-assumptions.png)
+![核心假设](core-assumptions.png)
 *核心假设：GSTC 相关性优势、相关性-性能映射、Slater 条件满足*
 
 #### 2.5.1 Theorem 1：资源利用率上界
@@ -221,7 +221,7 @@ $$\bar{\eta}^* > \bar{\eta}_0^*$$
 
 其中 $\bar{\eta}^*$ 和 $\bar{\eta}_0^*$ 分别为联合优化和基线在最优解处的平均资源利用率。核心原因在于 GSTC 架构的低 GPU 消耗使得同等资源约束下可部署更多实例，且冗余系数更高意味着更稳定的资源利用。
 
-![Theorem 2](images/theorem2.png)
+![Theorem 2](theorem2.png)
 *定理 2：联合优化具有更低的延迟下界*
 
 #### 2.5.2 Theorem 2：延迟下界
@@ -244,7 +244,7 @@ $$Q_{\text{sys}}^* > Q_{\text{sys},0}^*$$
 
 由于 GSTC 架构具有更高的任务性能（$Q_{r,0}^{\text{perf}} < Q_{r,\text{GSTC}}^{\text{perf}}$）且 Theorem 2 已证明 $T_{r,0} > T_{r,\text{joint}}$，代入 QoS 定义式 $Q_r = \alpha Q_r^{\text{perf}} - (1-\alpha)\frac{T_r}{T_{\max}}$ 可直接得证。
 
-![Theorem 3](images/theorem3.png)
+![Theorem 3](theorem3.png)
 *定理 3：联合优化具有更高的服务质量上界*
 
 #### 2.5.4 对偶间隙分析
@@ -259,12 +259,12 @@ $$Q_{\text{sys}}^* > Q_{\text{sys},0}^*$$
 
 论文在 NAS-Bench-101、NAS-Bench-201 和 TransNAS-Bench-101 三个搜索空间上对比了 GSTC 与经典代理（Grad norm、SNIP、GraSP、Fisher、Synflow、Zen-score）以及传统指标（FLOPs、#Params）。
 
-![GSTC 相关性散点图](images/fig3-correlation.png)
+![GSTC 相关性散点图](fig3-correlation.png)
 *图 3：GSTC 分数与采样未训练架构的后训练验证准确率之间的相关性散点图*
 
 上图展示了 8 个工业 AI 服务场景（CIFAR10、ImageNet16-120、目标分类、场景分类、语义分割、房间布局、表面法线、拼图）中 GSTC 分数与验证准确率的相关性。在 TransNAS-Bench-101 上，Scene Classification 的 Kendall's $\tau = 0.549$，Surface Normal 的 $\tau = 0.589$，表明 GSTC 在跨任务场景中仍保持强相关性。
 
-![相关性系数表](images/table2-correlation.png)
+![相关性系数表](table2-correlation.png)
 *表 2：零成本代理与原始代理（#Params 和 FLOPs）的相关性系数对比*
 
 表 2 显示，在 NAS-Bench-201（CIFAR-10）上，GSTC 的 Spearman's $\rho = 0.77$，高于 Synflow（0.73）和 #Params（0.75）；在 NAS-Bench-101（CIFAR-10）上，GSTC 的 Kendall's $\tau = 0.50$、$\rho = 0.70$，远超 FLOPs（0.31, 0.44），且避免了 Grad norm 的负相关。这一优势源于 GSTC 基于信息量的编码设计和四维评估体系，能够同时捕获结构特征和任务适应性。
@@ -273,7 +273,7 @@ $$Q_{\text{sys}}^* > Q_{\text{sys},0}^*$$
 
 论文将 JCQDA/LAMRA 与四个基线（CDRA、CDS、MDSGA、GRLS）在平均端到端延迟、服务准确率和 GPU 内存消耗三个指标上进行对比。
 
-![延迟对比](images/fig4-latency.png)
+![延迟对比](fig4-latency.png)
 *图 4：部署成本相同时不同算法的延迟对比*
 
 在静态部署中（图 4），当到达率为 400、请求链长度为 6、请求类型数为 30 时：
@@ -283,7 +283,7 @@ $$Q_{\text{sys}}^* > Q_{\text{sys},0}^*$$
 
 这得益于"服务-服务器亲和"设计和"通信-排队协同感知"机制，同时降低了跨服务器传输和等待时间。
 
-![大规模网络动态指标](images/fig7-large-scale.png)
+![大规模网络动态指标](fig7-large-scale.png)
 *图 7：大规模网络中不同算法的各项指标随时间周期的变化关系*
 
 在动态场景的小/中/大规模网络中（图 5-7）：

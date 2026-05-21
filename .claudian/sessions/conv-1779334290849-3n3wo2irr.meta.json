@@ -1,0 +1,23 @@
+{
+  "id": "conv-1779334290849-3n3wo2irr",
+  "providerId": "claude",
+  "title": "写一篇限流方法的博客文章",
+  "titleGenerationStatus": "success",
+  "createdAt": 1779334290865,
+  "updatedAt": 1779334567186,
+  "lastResponseAt": 1779334567186,
+  "sessionId": "ce3b84f7-4a1d-4355-87c3-f3c8723a5516",
+  "providerState": {
+    "providerSessionId": "ce3b84f7-4a1d-4355-87c3-f3c8723a5516"
+  },
+  "usage": {
+    "model": "opus",
+    "inputTokens": 0,
+    "cacheCreationInputTokens": 0,
+    "cacheReadInputTokens": 0,
+    "contextWindow": 200000,
+    "contextTokens": 0,
+    "percentage": 0,
+    "contextWindowIsAuthoritative": true
+  }
+}

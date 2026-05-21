@@ -12,7 +12,7 @@ tags: [Agent, 多Agent, 开源, MCP]
 
 Swarm-IDE 是一个去中心化的多 Agent 协作平台，以「create + send」两个极简原语为核心，支持 Agent 动态嵌套创建、任意 Agent 间通信、人类随时介入任意层级，并配备实时流式 Graph 可视化与微信式 IM 界面。
 
-![Swarm-IDE 运行界面截图](../../asset/img/swarm-ide/runtime-screenshot.png)
+![Swarm-IDE 运行界面截图](runtime-screenshot.png)
 *图：Swarm-IDE 运行时界面，左侧为会话列表，中间为聊天区与 Graph 拓扑，右侧为 Agent LLM 历史详情*
 
 ---

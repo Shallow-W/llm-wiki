@@ -27,7 +27,7 @@
 - [[llms-get-lost-in-multi-turn-conversation|LLMs Get Lost in Multi-turn Conversation]] — 20万+对话大规模实验揭示所有主流 LLM 在多轮欠规范对话中平均性能下降 39%，能力-可靠性分解，"对话迷失"现象 | 2025-05-09 | #LLM评估 #多轮对话 #可靠性
 - [[lora-low-rank-adaptation|LoRA: Low-Rank Adaptation of Large Language Models]] — 冻结预训练权重 + 注入低秩分解矩阵 BA，10,000× 减少可训练参数，零推理延迟的参数高效微调 | 2021-10 | #参数高效微调 #低秩分解 #Transformer
 - [[delta-mem-efficient-online-memory|δ-mem: Efficient Online Memory for LLMs]] — 冻结骨干 + 8×8 在线关联记忆状态 + delta-rule 低秩修正，轻量高效 LLM 记忆机制 | 2026-05-13 | #LLM记忆 #在线学习 #delta-rule
-- [[swarm-ide|Swarm-IDE: 自组织的 Agent 蜂群]] — 去中心化多 Agent 协作平台，create+send 极简原语，动态嵌套 + 实时 Graph 可视化 + MCP 技能系统 | 2026-01-02 | #Agent #多Agent #开源 #MCP
+- [[wiki/sources/paper/swarm-ide|Swarm-IDE: 自组织的 Agent 蜂群]] — 去中心化多 Agent 协作平台，create+send 极简原语，动态嵌套 + 实时 Graph 可视化 + MCP 技能系统 | 2026-01-02 | #Agent #多Agent #开源 #MCP
 - [[agent-world|Agent-World: Scaling Real-World Environment Synthesis for Evolving General Agent Intelligence]] — 1978 环境 + 19822 工具的自我进化 Agent 训练平台，8B/14B 超越闭源模型 | 2026-04 | #Agent #RL #MCP
 - [[gstc-zero-cost-proxy-nas|Zero-Cost Proxy NAS-Driven Collaborative Deployment Optimization]] — GSTC 零成本代理 + JCQDA 部署 + LAMRA 动态替换，AI 服务全生命周期优化 | 2026-04-21 | #NAS #微服务 #精读
 - [[joint-deployment-request-routing-microservice-tpds|Joint Deployment and Request Routing for Microservice Call Graphs]] — GMDA-RMPR 两阶段启发式，联合优化微服务部署与路由 | 2023-11 | #微服务 #排队网络
@@ -77,7 +77,7 @@
 - [[Soujanya Poria]] — 南洋理工大学教授，δ-mem 通讯作者，DECLARE Lab
 - [[南洋理工大学]] — 新加坡顶尖研究型大学，δ-mem 第一署名机构
 - [[复旦大学]] — 中国顶尖研究型大学，δ-mem 第二署名机构
-- [[Swarm-IDE]] — 开源去中心化多 Agent 协作平台，create+send 极简原语，支持动态嵌套与实时 Graph 可视化
+- [[wiki/sources/paper/swarm-ide]] — 开源去中心化多 Agent 协作平台，create+send 极简原语，支持动态嵌套与实时 Graph 可视化
 - [[Guanting Dong]] — 中国人民大学博士生，Agent RL / 工具使用训练方向
 - [[Zhicheng Dou]] — 中国人民大学教授，Agent 系统方向
 - [[中国人民大学]] — 高瓴人工智能学院

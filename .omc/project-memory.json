@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "lastScanned": 1779244695313,
+  "lastScanned": 1779334296078,
   "projectRoot": "D:\\Item\\repo\\llm-wiki",
   "techStack": {
     "languages": [],
@@ -36,35 +36,35 @@
       "path": "asset",
       "purpose": null,
       "fileCount": 0,
-      "lastAccessed": 1779244695153,
+      "lastAccessed": 1779334295930,
       "keyFiles": []
     },
     "llm_talk": {
       "path": "llm_talk",
       "purpose": null,
       "fileCount": 0,
-      "lastAccessed": 1779244695155,
+      "lastAccessed": 1779334295931,
       "keyFiles": []
     },
     "log": {
       "path": "log",
       "purpose": null,
       "fileCount": 0,
-      "lastAccessed": 1779244695156,
+      "lastAccessed": 1779334295932,
       "keyFiles": []
     },
     "raw": {
       "path": "raw",
       "purpose": null,
       "fileCount": 0,
-      "lastAccessed": 1779244695156,
+      "lastAccessed": 1779334295934,
       "keyFiles": []
     },
     "wiki": {
       "path": "wiki",
       "purpose": null,
       "fileCount": 1,
-      "lastAccessed": 1779244695157,
+      "lastAccessed": 1779334295934,
       "keyFiles": [
         "index.md"
       ]
@@ -189,6 +189,12 @@
       "path": "wiki\\sources\\evolver-from-trajectories-to-principles.md",
       "accessCount": 1,
       "lastAccessed": 1779249452520,
+      "type": "file"
+    },
+    {
+      "path": "blog\\rate-limiting-deep-dive.md",
+      "accessCount": 1,
+      "lastAccessed": 1779334551249,
       "type": "file"
     }
   ],
