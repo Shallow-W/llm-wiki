@@ -28,12 +28,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "wiki/sources/paper/agent-world.md",
+                "file": "wiki/sources/multi-agent-architecture-search-via-agentic-supernet.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "agent-world"
+              "title": "multi-agent-architecture-search-via-agentic-supernet"
             }
           },
           {
@@ -229,8 +229,11 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "5663dd7ccb1f944d",
+  "active": "dfb068da4461e161",
   "lastOpenFiles": [
+    "wiki/sources/agentic-harness-engineering.md",
+    "wiki/sources/multi-agent-architecture-search-via-agentic-supernet.md",
+    "wiki/sources/paper/agent-world.md",
     "wiki/index.md.tmp.47292.1779354672537",
     "wiki/concepts/Controller-Network-Qphi.md",
     "wiki/concepts/Query-Dependent-Sampling.md",
@@ -254,11 +257,9 @@
     "wiki/entities/Luyang-Niu.md",
     "wiki/entities/Guibin-Zhang.md",
     "wiki/entities/南洋理工大学.md.tmp.47292.1779354532293",
-    "wiki/sources/multi-agent-architecture-search-via-agentic-supernet.md",
     "raw/papers/multi-agent-supernet-text.txt",
     "raw/papers/Multi-agent Architecture Search via Agentic Supernet.pdf",
     "log/2026/05-21.md",
-    "wiki/index.md.tmp.47292.1779351962558",
     "wiki/concepts/Change-Manifest.md",
     "wiki/concepts/NexAU-Framework.md",
     "wiki/concepts/Decision-Observability.md",
@@ -266,7 +267,6 @@
     "wiki/concepts/Component-Observability.md",
     "wiki/concepts/Harness-Agent-Harness.md",
     "wiki/concepts/Agentic-Harness-Engineering.md",
-    "wiki/entities/Terminal-Bench.md",
     "wiki/sources/paper/gstc-mmc-1-23/images/header.png",
     "wiki/sources/paper/gstc-mmc-1-23/images/fig4-latency.png",
     "wiki/sources/paper/gstc-mmc-1-23/images/fig7-large-scale.png",
