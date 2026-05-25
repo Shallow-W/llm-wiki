@@ -26,14 +26,12 @@
             "id": "dfb068da4461e161",
             "type": "leaf",
             "state": {
-              "type": "markdown",
+              "type": "pdf",
               "state": {
-                "file": "wiki/sources/paper/openclaw-rl-turning-daily-usage-into-training-signals.md",
-                "mode": "source",
-                "source": false
+                "file": "raw/papers/evolver-from-trajectories-to-principles.pdf"
               },
-              "icon": "lucide-file",
-              "title": "openclaw-rl-turning-daily-usage-into-training-signals"
+              "icon": "lucide-file-text",
+              "title": "evolver-from-trajectories-to-principles"
             }
           },
           {
@@ -231,6 +229,8 @@
   },
   "active": "dfb068da4461e161",
   "lastOpenFiles": [
+    "wiki/sources/paper/evolver-from-trajectories-to-principles.md",
+    "wiki/sources/paper/openclaw-rl-turning-daily-usage-into-training-signals.md",
     "wiki/sources/paper/metaclaw-continuous-evolution-in-production.md",
     "raw/papers/δ-mem-EfficientOnlineMemoryforLarge.pdf",
     "raw/papers/evolver-from-trajectories-to-principles.pdf",
@@ -265,8 +265,6 @@
     "wiki/concepts/NexAU-Framework.md",
     "wiki/concepts/Decision-Observability.md",
     "wiki/concepts/Experience-Observability.md",
-    "wiki/concepts/Component-Observability.md",
-    "wiki/concepts/Harness-Agent-Harness.md",
     "wiki/sources/paper/gstc-mmc-1-23/images/header.png",
     "wiki/sources/paper/gstc-mmc-1-23/images/fig4-latency.png",
     "wiki/sources/paper/gstc-mmc-1-23/images/fig7-large-scale.png",
