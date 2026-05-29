@@ -49,7 +49,7 @@
             }
           }
         ],
-        "currentTab": 2
+        "currentTab": 1
       },
       {
         "id": "c559ce8f3c4378b6",
@@ -229,11 +229,11 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "00c3d91ba69b55ce",
+  "active": "dfb068da4461e161",
   "lastOpenFiles": [
+    "CLAUDE.md",
     "wiki/sources/paper/agent-world.md",
     "raw/papers/Multi-agent Architecture Search via Agentic Supernet.pdf",
-    "CLAUDE.md",
     "raw/papers/GSTC(MMC)_1.23.pdf",
     "raw/papers/evolver-from-trajectories-to-principles.pdf",
     "wiki/sources/paper/evolver-from-trajectories-to-principles.md",
