@@ -45,7 +45,8 @@
       "environmentVariables": "",
       "environmentHash": "",
       "installationMethodsByHost": {
-        "DESKTOP-82B42DC": "native-windows"
+        "DESKTOP-82B42DC": "native-windows",
+        "Mac-mini.local": "native-windows"
       },
       "wslDistroOverridesByHost": {}
     }

@@ -1,11 +1,11 @@
 {
   "id": "conv-1779244690584-5j16aev8t",
   "providerId": "claude",
-  "title": "下载 arXiv 论文并生成准确度报告",
+  "title": "Greet user in Chinese",
   "titleGenerationStatus": "success",
   "createdAt": 1779244690586,
-  "updatedAt": 1779249527455,
-  "lastResponseAt": 1779249527455,
+  "updatedAt": 1780031638671,
+  "lastResponseAt": 1780031633658,
   "sessionId": "a10679bd-e1ee-42d9-86b1-8ac0e00c439b",
   "providerState": {
     "providerSessionId": "a10679bd-e1ee-42d9-86b1-8ac0e00c439b"

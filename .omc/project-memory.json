@@ -1,7 +1,7 @@
 {
   "version": "1.0.0",
-  "lastScanned": 1779334296078,
-  "projectRoot": "D:\\Item\\repo\\llm-wiki",
+  "lastScanned": 1780031571526,
+  "projectRoot": "/Users/shallow/Desktop/repo/llm-wiki",
   "techStack": {
     "languages": [],
     "frameworks": [],
@@ -36,341 +36,42 @@
       "path": "asset",
       "purpose": null,
       "fileCount": 0,
-      "lastAccessed": 1779334295930,
+      "lastAccessed": 1780031571510,
       "keyFiles": []
     },
-    "llm_talk": {
-      "path": "llm_talk",
+    "blog": {
+      "path": "blog",
       "purpose": null,
-      "fileCount": 0,
-      "lastAccessed": 1779334295931,
-      "keyFiles": []
+      "fileCount": 1,
+      "lastAccessed": 1780031571511,
+      "keyFiles": [
+        "rate-limiting-deep-dive.md"
+      ]
     },
     "log": {
       "path": "log",
       "purpose": null,
       "fileCount": 0,
-      "lastAccessed": 1779334295932,
+      "lastAccessed": 1780031571511,
       "keyFiles": []
     },
     "raw": {
       "path": "raw",
       "purpose": null,
-      "fileCount": 0,
-      "lastAccessed": 1779334295934,
+      "fileCount": 1,
+      "lastAccessed": 1780031571511,
       "keyFiles": []
     },
     "wiki": {
       "path": "wiki",
       "purpose": null,
       "fileCount": 1,
-      "lastAccessed": 1779334295934,
+      "lastAccessed": 1780031571512,
       "keyFiles": [
         "index.md"
       ]
     }
   },
-  "hotPaths": [
-    {
-      "path": "wiki\\index.md",
-      "accessCount": 23,
-      "lastAccessed": 1779354720852,
-      "type": "file"
-    },
-    {
-      "path": "raw\\papers\\multi-agent-supernet-text.txt",
-      "accessCount": 6,
-      "lastAccessed": 1779365699125,
-      "type": "file"
-    },
-    {
-      "path": "wiki\\entities\\复旦大学.md",
-      "accessCount": 5,
-      "lastAccessed": 1779351773823,
-      "type": "file"
-    },
-    {
-      "path": "wiki\\sources\\multi-agent-architecture-search-via-agentic-supernet.md",
-      "accessCount": 4,
-      "lastAccessed": 1779364309560,
-      "type": "file"
-    },
-    {
-      "path": "CLAUDE.md",
-      "accessCount": 3,
-      "lastAccessed": 1779246010235,
-      "type": "file"
-    },
-    {
-      "path": "wiki\\entities\\南洋理工大学.md",
-      "accessCount": 3,
-      "lastAccessed": 1779354534065,
-      "type": "file"
-    },
-    {
-      "path": "wiki\\entities\\上海人工智能实验室.md",
-      "accessCount": 3,
-      "lastAccessed": 1779354536518,
-      "type": "file"
-    },
-    {
-      "path": "log\\2026\\05-21.md",
-      "accessCount": 3,
-      "lastAccessed": 1779354759976,
-      "type": "file"
-    },
-    {
-      "path": "C:\\Users\\01\\.claude\\projects\\D--Item-repo-llm-wiki\\a10679bd-e1ee-42d9-86b1-8ac0e00c439b\\tool-results\\bmodw6t87.txt",
-      "accessCount": 1,
-      "lastAccessed": 1779244858435,
-      "type": "file"
-    },
-    {
-      "path": "C:\\Users\\01\\.claude\\projects\\D--Item-repo-llm-wiki\\a10679bd-e1ee-42d9-86b1-8ac0e00c439b\\tool-results\\bjv0wilgf.txt",
-      "accessCount": 1,
-      "lastAccessed": 1779246095287,
-      "type": "file"
-    },
-    {
-      "path": "C:\\Users\\01\\.claude\\projects\\D--Item-repo-llm-wiki\\a10679bd-e1ee-42d9-86b1-8ac0e00c439b\\tool-results\\bgfdks48q.txt",
-      "accessCount": 1,
-      "lastAccessed": 1779246095478,
-      "type": "file"
-    },
-    {
-      "path": "wiki\\sources\\useful-memories-become-faulty-when-continuously-updated-by-llms.md",
-      "accessCount": 1,
-      "lastAccessed": 1779246223741,
-      "type": "file"
-    },
-    {
-      "path": "",
-      "accessCount": 1,
-      "lastAccessed": 1779246247012,
-      "type": "directory"
-    },
-    {
-      "path": "wiki\\entities\\Dylan-Zhang.md",
-      "accessCount": 1,
-      "lastAccessed": 1779246275398,
-      "type": "file"
-    },
-    {
-      "path": "wiki\\entities\\Hao-Peng.md",
-      "accessCount": 1,
-      "lastAccessed": 1779246276396,
-      "type": "file"
-    },
-    {
-      "path": "wiki\\entities\\UIUC.md",
-      "accessCount": 1,
-      "lastAccessed": 1779246277680,
-      "type": "file"
-    },
-    {
-      "path": "wiki\\entities\\Tsinghua-IIIS.md",
-      "accessCount": 1,
-      "lastAccessed": 1779246278450,
-      "type": "file"
-    },
-    {
-      "path": "wiki\\entities\\Yanshan-Lin.md",
-      "accessCount": 1,
-      "lastAccessed": 1779246279481,
-      "type": "file"
-    },
-    {
-      "path": "wiki\\entities\\Zhengkun-Wu.md",
-      "accessCount": 1,
-      "lastAccessed": 1779246280380,
-      "type": "file"
-    },
-    {
-      "path": "wiki\\concepts\\Agent记忆整合.md",
-      "accessCount": 1,
-      "lastAccessed": 1779246364771,
-      "type": "file"
-    },
-    {
-      "path": "wiki\\concepts\\记忆侵蚀.md",
-      "accessCount": 1,
-      "lastAccessed": 1779246365927,
-      "type": "file"
-    },
-    {
-      "path": "wiki\\concepts\\情节性记忆-Agent.md",
-      "accessCount": 1,
-      "lastAccessed": 1779246366904,
-      "type": "file"
-    },
-    {
-      "path": "wiki\\concepts\\ARC-AGI-Stream.md",
-      "accessCount": 1,
-      "lastAccessed": 1779246368014,
-      "type": "file"
-    },
-    {
-      "path": "wiki\\concepts\\互补学习系统-Agent记忆.md",
-      "accessCount": 1,
-      "lastAccessed": 1779246368817,
-      "type": "file"
-    },
-    {
-      "path": "log\\2026\\05-20.md",
-      "accessCount": 1,
-      "lastAccessed": 1779246431560,
-      "type": "file"
-    },
-    {
-      "path": "wiki\\sources\\evolver-from-trajectories-to-principles.md",
-      "accessCount": 1,
-      "lastAccessed": 1779249452520,
-      "type": "file"
-    },
-    {
-      "path": "blog\\rate-limiting-deep-dive.md",
-      "accessCount": 1,
-      "lastAccessed": 1779334551249,
-      "type": "file"
-    },
-    {
-      "path": "wiki\\sources\\agentic-harness-engineering.md",
-      "accessCount": 1,
-      "lastAccessed": 1779351659448,
-      "type": "file"
-    },
-    {
-      "path": "wiki\\entities\\Jiahang-Lin.md",
-      "accessCount": 1,
-      "lastAccessed": 1779351722023,
-      "type": "file"
-    },
-    {
-      "path": "wiki\\entities\\Shichun-Liu.md",
-      "accessCount": 1,
-      "lastAccessed": 1779351723796,
-      "type": "file"
-    },
-    {
-      "path": "wiki\\entities\\Chengjun-Pan.md",
-      "accessCount": 1,
-      "lastAccessed": 1779351724656,
-      "type": "file"
-    },
-    {
-      "path": "wiki\\entities\\Zhenhua-Han.md",
-      "accessCount": 1,
-      "lastAccessed": 1779351725832,
-      "type": "file"
-    },
-    {
-      "path": "wiki\\entities\\Tao-Gui.md",
-      "accessCount": 1,
-      "lastAccessed": 1779351775083,
-      "type": "file"
-    },
-    {
-      "path": "wiki\\entities\\上海期智智峰.md",
-      "accessCount": 1,
-      "lastAccessed": 1779351776310,
-      "type": "file"
-    },
-    {
-      "path": "wiki\\entities\\NexAU.md",
-      "accessCount": 1,
-      "lastAccessed": 1779351777497,
-      "type": "file"
-    },
-    {
-      "path": "wiki\\entities\\Terminal-Bench.md",
-      "accessCount": 1,
-      "lastAccessed": 1779351778476,
-      "type": "file"
-    },
-    {
-      "path": "wiki\\concepts\\Agentic-Harness-Engineering.md",
-      "accessCount": 1,
-      "lastAccessed": 1779351866792,
-      "type": "file"
-    },
-    {
-      "path": "wiki\\concepts\\Harness-Agent-Harness.md",
-      "accessCount": 1,
-      "lastAccessed": 1779351868402,
-      "type": "file"
-    },
-    {
-      "path": "wiki\\concepts\\Component-Observability.md",
-      "accessCount": 1,
-      "lastAccessed": 1779351869626,
-      "type": "file"
-    },
-    {
-      "path": "wiki\\concepts\\Experience-Observability.md",
-      "accessCount": 1,
-      "lastAccessed": 1779351870846,
-      "type": "file"
-    },
-    {
-      "path": "wiki\\concepts\\Decision-Observability.md",
-      "accessCount": 1,
-      "lastAccessed": 1779351872030,
-      "type": "file"
-    },
-    {
-      "path": "wiki\\concepts\\NexAU-Framework.md",
-      "accessCount": 1,
-      "lastAccessed": 1779351873220,
-      "type": "file"
-    },
-    {
-      "path": "wiki\\concepts\\Change-Manifest.md",
-      "accessCount": 1,
-      "lastAccessed": 1779351874290,
-      "type": "file"
-    },
-    {
-      "path": "wiki\\entities\\Guibin-Zhang.md",
-      "accessCount": 1,
-      "lastAccessed": 1779354538102,
-      "type": "file"
-    },
-    {
-      "path": "wiki\\entities\\Luyang-Niu.md",
-      "accessCount": 1,
-      "lastAccessed": 1779354540389,
-      "type": "file"
-    },
-    {
-      "path": "wiki\\entities\\Junfeng-Fang.md",
-      "accessCount": 1,
-      "lastAccessed": 1779354542719,
-      "type": "file"
-    },
-    {
-      "path": "wiki\\entities\\Kun-Wang.md",
-      "accessCount": 1,
-      "lastAccessed": 1779354543593,
-      "type": "file"
-    },
-    {
-      "path": "wiki\\entities\\Lei-Bai.md",
-      "accessCount": 1,
-      "lastAccessed": 1779354544540,
-      "type": "file"
-    },
-    {
-      "path": "wiki\\entities\\Xiang-Wang.md",
-      "accessCount": 1,
-      "lastAccessed": 1779354545538,
-      "type": "file"
-    },
-    {
-      "path": "wiki\\entities\\新加坡国立大学.md",
-      "accessCount": 1,
-      "lastAccessed": 1779354546703,
-      "type": "file"
-    }
-  ],
+  "hotPaths": [],
   "userDirectives": []
 }

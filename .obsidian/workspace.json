@@ -6,7 +6,7 @@
       {
         "id": "c88aa142d25c7412",
         "type": "tabs",
-        "dimension": 80.38558256496228,
+        "dimension": 69.377990430622,
         "children": [
           {
             "id": "5210e591bda2e84b",
@@ -28,31 +28,33 @@
             "state": {
               "type": "pdf",
               "state": {
-                "file": "raw/papers/evolver-from-trajectories-to-principles.pdf"
+                "file": "raw/papers/Multi-agent Architecture Search via Agentic Supernet.pdf"
               },
               "icon": "lucide-file-text",
-              "title": "evolver-from-trajectories-to-principles"
+              "title": "Multi-agent Architecture Search via Agentic Supernet"
             }
           },
           {
             "id": "6fbe4268eeb172b1",
             "type": "leaf",
             "state": {
-              "type": "pdf",
+              "type": "markdown",
               "state": {
-                "file": "raw/papers/GSTC(MMC)_1.23.pdf"
+                "file": "CLAUDE.md",
+                "mode": "source",
+                "source": false
               },
-              "icon": "lucide-file-text",
-              "title": "GSTC(MMC)_1.23"
+              "icon": "lucide-file",
+              "title": "CLAUDE"
             }
           }
         ],
-        "currentTab": 1
+        "currentTab": 2
       },
       {
         "id": "c559ce8f3c4378b6",
         "type": "tabs",
-        "dimension": 19.61441743503772,
+        "dimension": 30.62200956937799,
         "children": [
           {
             "id": "00c3d91ba69b55ce",
@@ -227,17 +229,20 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "dfb068da4461e161",
+  "active": "00c3d91ba69b55ce",
   "lastOpenFiles": [
+    "wiki/sources/paper/agent-world.md",
+    "raw/papers/Multi-agent Architecture Search via Agentic Supernet.pdf",
+    "CLAUDE.md",
+    "raw/papers/GSTC(MMC)_1.23.pdf",
+    "raw/papers/evolver-from-trajectories-to-principles.pdf",
     "wiki/sources/paper/evolver-from-trajectories-to-principles.md",
     "wiki/sources/paper/openclaw-rl-turning-daily-usage-into-training-signals.md",
     "wiki/sources/paper/metaclaw-continuous-evolution-in-production.md",
     "raw/papers/δ-mem-EfficientOnlineMemoryforLarge.pdf",
-    "raw/papers/evolver-from-trajectories-to-principles.pdf",
     "wiki/sources/multi-agent-architecture-search-via-agentic-supernet.md",
     "wiki/sources/multi-agent-architecture-search-via-agentic-supernet.md.tmp.47292.1779364288253",
     "wiki/sources/agentic-harness-engineering.md",
-    "wiki/sources/paper/agent-world.md",
     "wiki/index.md.tmp.47292.1779354672537",
     "wiki/concepts/Controller-Network-Qphi.md",
     "wiki/concepts/Query-Dependent-Sampling.md",
@@ -254,17 +259,13 @@
     "wiki/entities/Xiang-Wang.md",
     "wiki/entities/Xiang-Wang.md.tmp.47292.1779354545132",
     "wiki/entities/Lei-Bai.md",
-    "wiki/entities/Lei-Bai.md.tmp.47292.1779354544157",
     "wiki/entities/Kun-Wang.md",
-    "wiki/entities/Kun-Wang.md.tmp.47292.1779354543181",
     "wiki/entities/Junfeng-Fang.md",
     "wiki/entities/Luyang-Niu.md",
     "wiki/entities/Guibin-Zhang.md",
     "log/2026/05-21.md",
     "wiki/concepts/Change-Manifest.md",
     "wiki/concepts/NexAU-Framework.md",
-    "wiki/concepts/Decision-Observability.md",
-    "wiki/concepts/Experience-Observability.md",
     "wiki/sources/paper/gstc-mmc-1-23/images/header.png",
     "wiki/sources/paper/gstc-mmc-1-23/images/fig4-latency.png",
     "wiki/sources/paper/gstc-mmc-1-23/images/fig7-large-scale.png",
