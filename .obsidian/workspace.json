@@ -11,10 +11,12 @@
             "id": "5577938fdbaba9b0",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
-              "icon": "lucide-file",
-              "title": "新标签页"
+              "type": "pdf",
+              "state": {
+                "file": "raw/papers/agentic-harness-engineering-observability-driven-automatic-evolution.pdf"
+              },
+              "icon": "lucide-file-text",
+              "title": "agentic-harness-engineering-observability-driven-automatic-evolution"
             }
           }
         ]
@@ -74,7 +76,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 311.5
+    "width": 392.5
   },
   "right": {
     "id": "cea95d1d64530bca",
@@ -182,33 +184,34 @@
   },
   "active": "5577938fdbaba9b0",
   "lastOpenFiles": [
+    "raw/papers/llms-get-lost-in-multi-turn-conversation.pdf",
+    "raw/papers/GSTC(MMC)_1.23.pdf",
+    "raw/papers/learning-to-think-offline.pdf",
+    "raw/papers/evolver-from-trajectories-to-principles.pdf",
+    "raw/papers/context-rot-how-increasing-input-tokens-impacts-llm.pdf",
+    "raw/papers/agentic-harness-engineering-observability-driven-automatic-evolution.pdf",
+    "raw/papers/agent0-bootstrapping-from-zero-data.pdf",
+    "raw/papers/agent-world.pdf",
+    "raw/papers/贪心分配异构资源，将服务实例部署在资源利用率最低的节点；路由时始终选择当前位置最近的节点转发请求，追求局部最优资源分配与路由效率。.pdf",
+    "raw/papers/启发式部署算法，先将服务按实例数量降序排序，再部署到与其他节点平均距离最短的节点；路由阶段采用 Dijkstra 算法确定路径，适用于服务部署与路由的两阶段优化。.pdf",
+    "raw/papers/Multi-agent Architecture Search via Agentic Supernet.pdf",
     "wiki/sources/paper/agent-world.md",
     "CLAUDE.md",
-    "raw/papers/Multi-agent Architecture Search via Agentic Supernet.pdf",
-    "raw/papers/GSTC(MMC)_1.23.pdf",
-    "raw/papers/evolver-from-trajectories-to-principles.pdf",
     "wiki/sources/paper/evolver-from-trajectories-to-principles.md",
     "wiki/sources/paper/openclaw-rl-turning-daily-usage-into-training-signals.md",
     "wiki/sources/paper/metaclaw-continuous-evolution-in-production.md",
-    "raw/papers/δ-mem-EfficientOnlineMemoryforLarge.pdf",
     "wiki/sources/multi-agent-architecture-search-via-agentic-supernet.md",
-    "wiki/sources/multi-agent-architecture-search-via-agentic-supernet.md.tmp.47292.1779364288253",
     "wiki/sources/agentic-harness-engineering.md",
-    "wiki/index.md.tmp.47292.1779354672537",
     "wiki/concepts/Controller-Network-Qphi.md",
     "wiki/concepts/Query-Dependent-Sampling.md",
-    "wiki/concepts/Query-Dependent-Sampling.md.tmp.47292.1779354638690",
     "wiki/concepts/Early-Exit-Operator.md",
-    "wiki/concepts/Early-Exit-Operator.md.tmp.47292.1779354637508",
     "wiki/concepts/Textual-Gradient.md",
     "wiki/concepts/Multi-agent-Architecture-Search.md",
-    "wiki/concepts/Multi-agent-Architecture-Search.md.tmp.47292.1779354635009",
     "wiki/concepts/Agentic-Supernet.md",
     "wiki/entities/中国科学技术大学.md",
     "wiki/entities/同济大学.md",
     "wiki/entities/新加坡国立大学.md",
     "wiki/entities/Xiang-Wang.md",
-    "wiki/entities/Xiang-Wang.md.tmp.47292.1779354545132",
     "wiki/entities/Lei-Bai.md",
     "wiki/entities/Kun-Wang.md",
     "wiki/entities/Junfeng-Fang.md",
