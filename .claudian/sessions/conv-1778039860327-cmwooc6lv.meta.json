@@ -4,13 +4,13 @@
   "title": "阅读并将 AFlow 论文归档到知识库",
   "titleGenerationStatus": "success",
   "createdAt": 1778039860327,
-  "updatedAt": 1780031703844,
+  "updatedAt": 1780370148964,
   "lastResponseAt": 1780031703844,
   "sessionId": "510a6bb6-5c5c-4ef8-87e3-0b9c01b68e57",
   "providerState": {
     "providerSessionId": "510a6bb6-5c5c-4ef8-87e3-0b9c01b68e57"
   },
-  "currentNote": "CLAUDE.md",
+  "currentNote": "wiki/sources/paper/agent-world.md",
   "usage": {
     "model": "opus",
     "inputTokens": 0,
