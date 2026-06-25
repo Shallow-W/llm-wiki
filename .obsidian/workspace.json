@@ -11,12 +11,14 @@
             "id": "5577938fdbaba9b0",
             "type": "leaf",
             "state": {
-              "type": "pdf",
+              "type": "markdown",
               "state": {
-                "file": "raw/papers/agentic-harness-engineering-observability-driven-automatic-evolution.pdf"
+                "file": "未命名.md",
+                "mode": "source",
+                "source": false
               },
-              "icon": "lucide-file-text",
-              "title": "agentic-harness-engineering-observability-driven-automatic-evolution"
+              "icon": "lucide-file",
+              "title": "未命名"
             }
           }
         ]
@@ -76,7 +78,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 392.5
+    "width": 255.5
   },
   "right": {
     "id": "cea95d1d64530bca",
@@ -184,17 +186,18 @@
   },
   "active": "5577938fdbaba9b0",
   "lastOpenFiles": [
+    "未命名 1.md",
+    "未命名.md",
+    "raw/papers/agentic-harness-engineering-observability-driven-automatic-evolution.pdf",
     "raw/papers/llms-get-lost-in-multi-turn-conversation.pdf",
     "raw/papers/GSTC(MMC)_1.23.pdf",
     "raw/papers/learning-to-think-offline.pdf",
     "raw/papers/evolver-from-trajectories-to-principles.pdf",
     "raw/papers/context-rot-how-increasing-input-tokens-impacts-llm.pdf",
-    "raw/papers/agentic-harness-engineering-observability-driven-automatic-evolution.pdf",
     "raw/papers/agent0-bootstrapping-from-zero-data.pdf",
     "raw/papers/agent-world.pdf",
     "raw/papers/贪心分配异构资源，将服务实例部署在资源利用率最低的节点；路由时始终选择当前位置最近的节点转发请求，追求局部最优资源分配与路由效率。.pdf",
     "raw/papers/启发式部署算法，先将服务按实例数量降序排序，再部署到与其他节点平均距离最短的节点；路由阶段采用 Dijkstra 算法确定路径，适用于服务部署与路由的两阶段优化。.pdf",
-    "raw/papers/Multi-agent Architecture Search via Agentic Supernet.pdf",
     "wiki/sources/paper/agent-world.md",
     "CLAUDE.md",
     "wiki/sources/paper/evolver-from-trajectories-to-principles.md",
@@ -219,7 +222,6 @@
     "wiki/entities/Guibin-Zhang.md",
     "log/2026/05-21.md",
     "wiki/concepts/Change-Manifest.md",
-    "wiki/concepts/NexAU-Framework.md",
     "wiki/sources/paper/gstc-mmc-1-23/images/header.png",
     "wiki/sources/paper/gstc-mmc-1-23/images/fig4-latency.png",
     "wiki/sources/paper/gstc-mmc-1-23/images/fig7-large-scale.png",
